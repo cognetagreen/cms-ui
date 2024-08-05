@@ -8,7 +8,7 @@ import {
   BreadcrumbLink 
 } from '@chakra-ui/react';
 import GridCardIcon from "../assets/StatisticsCardImage/GridCardIcon.png";
-import StatisticsCardLayout from '../components/Layouts/StatisticsCardLayout';
+import LatestValueCardLayout from '../components/Layouts/LatestValueCardLayout';
 import ChartLayout from '../components/Layouts/ChartLayouts/ChartLayout';
 import DigitalHorizontalBar from '../components/widgets/charts/DigitalHorizontalBar';
 import { GiThunderball } from "react-icons/gi";
@@ -25,23 +25,23 @@ const GridDashboard = () => {
   return (
       <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
         <Breadcrumb spacing="8px" separator={<FaCaretRight color="gray.500" />} mb={5}>
-        <BreadcrumbItem>
+        <BreadcrumbItem color="rgba(0, 79, 134, 1)" fontSize={12}>
           <BreadcrumbLink>
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} to="/portfolio">
+          <BreadcrumbLink color="rgba(0, 79, 134, 1)" fontSize={12} as={Link} to="/portfolio">
             Portfolio
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink>
+          <BreadcrumbLink color="rgba(0, 79, 134, 1)" fontWeight={600} fontSize={12}>
             Sites
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} to="/grid">
+          <BreadcrumbLink color="rgba(0, 79, 134, 1)" fontWeight={600} fontSize={12} as={Link} to="/grid">
             Portfolio
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -55,8 +55,10 @@ const GridDashboard = () => {
           >
               <GridItem colSpan={1} rowSpan={2}>
                   <SimpleGrid minChildWidth='289px' spacing={{ base: 3, lg: 3 }}>
-                      <StatisticsCardLayout
+                      <LatestValueCardLayout
                           title={'PV Power'}
+                          deviceLabel='Cal'
+                          telemetry='BP_Plant_Daily_Energy'
                           titleColor='#003F6B'
                           stat={'5,000kW'}
                           statColor={"#8842E0"}
@@ -70,8 +72,10 @@ const GridDashboard = () => {
                           showArrow={false}
                           sparkline={<Box> {/* Add sparkline component here */} </Box>}
                       />
-                      <StatisticsCardLayout
+                      <LatestValueCardLayout
                           title={'Daily Energy'}
+                          deviceLabel='Calculation'
+                          telemetry='BP_Plant_Daily_Energy'
                           titleColor='#003F6B'
                           stat={'1,000,000kW'}
                           statColor={"#8842E0"}
@@ -85,8 +89,10 @@ const GridDashboard = () => {
                           showArrow={false}
                           sparkline={<Box> {/* Add sparkline component here */} </Box>}
                       />
-                      <StatisticsCardLayout
+                      <LatestValueCardLayout
                           title={'Lifetime Energy'}
+                          deviceLabel='Cal'
+                          telemetry='BP_Plant_Daily_Energy'
                           titleColor='#003F6B'
                           stat={'7kW'}
                           statColor={"#8842E0"}

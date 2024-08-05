@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const StatisticsCardAPI  = async (deviceLabel : string, telemetry : string, title : string) => {
+const GetCustomersAPI  = async (textSearch : string) => {
     const BASE_URL = "http://localhost:7001/api";
 
     const token = localStorage.getItem("token");
@@ -10,17 +10,15 @@ const StatisticsCardAPI  = async (deviceLabel : string, telemetry : string, titl
     }else {
         const body = {
             "token" : token,
-            "deviceLabel" : deviceLabel,
-            "telemetry" : telemetry,
-            "title" : title,
+            "textSearch" : textSearch,
         };
         try {
-            const response = await axios.post(`${BASE_URL}/v1/getStatisticsData`, body);
-            return response;
+            const response = await axios.post(`${BASE_URL}/v1/getCustomers`, body);
+            return response.data;
         } catch (error) {
             console.error(error)
         }
     }
 }
 
-export default StatisticsCardAPI;
+export default GetCustomersAPI;

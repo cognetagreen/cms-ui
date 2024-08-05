@@ -11,10 +11,13 @@ import {
     StatArrow,
     Text,
   } from '@chakra-ui/react';
+import UseLatestCard from '../../Services/Hooks/UseLatestCard';
 
   
-  interface StatsCardLayoutProps {
+  interface LatestValueLayoutProps {
     title: string;
+    deviceLabel : string;
+    telemetry : string;
     titleColor : string;
     stat: string;
     statColor : string;
@@ -29,8 +32,12 @@ import {
     sparkline: React.ReactNode;
   }
   
-  export default function StatisticsCardLayout(props: StatsCardLayoutProps) {
-    const { title, titleColor, stat, src, w, h, border,value2,value2Color ,showArrow, sparkline, statColor } = props;
+  export default function LatestValueCardLayout(props: LatestValueLayoutProps) {
+    const { title, deviceLabel, telemetry, titleColor, src, w, h, border,value2,value2Color ,showArrow, sparkline, statColor } = props;
+    
+    const latestValue = UseLatestCard(deviceLabel, telemetry , title) || [0];
+    let stat = Number(latestValue[0]);
+    
     return (
       <Stat
         px={{ base: 2, md: 4 }}

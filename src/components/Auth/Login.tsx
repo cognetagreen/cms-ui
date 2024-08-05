@@ -15,6 +15,9 @@ import { useState } from 'react'
 import swal from 'sweetalert';
 import UseAuth from '../../Services/Hooks/UseAuth'
 import { useNavigate } from 'react-router';
+import CustomerHandlingService from '../../Services/CustomerHandlingService';
+import { useCustomerOptionsContext } from '../../Context/CustomerOptionsContext';
+import { useSelectedCustomerIDContext } from '../../Context/SelectedCustomerIDContext';
 
 export default function Login() {
   
@@ -28,6 +31,9 @@ export default function Login() {
       navigate('/forgotPassword')
     }
 
+    const {setCustomerOptions} = useCustomerOptionsContext();
+    const {setSelectedCustomerID} = useSelectedCustomerIDContext();
+
     const handleSubmit = async (event : any) => {
         event.preventDefault();
         const response = await login(username, password);
@@ -38,6 +44,13 @@ export default function Login() {
             icon: "error",
           });
         }else {
+          try {
+            const textSearch = "kW";
+            await CustomerHandlingService(textSearch, setCustomerOptions, setSelectedCustomerID);
+            
+          } catch (error) {
+            console.error("Error fetching customer data:", error);
+          }
           navigate('/');
         }
 

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { GetAuthToken, GetRefreshedToken, sendLogOutRequest, sendResetPasswordRequest } from '../../api/Authentication/AuthAPIs';
-import {jwtDecode} from 'jwt-decode'; // Correct import without destructuring
+import {jwtDecode} from 'jwt-decode';
 
 // Define the shape of the authentication context
 interface AuthContextType {
@@ -85,6 +85,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('tokenExpirationDate');
+        localStorage.removeItem("SelectedCustomerId");
+        localStorage.removeItem("customerOptions");
         setIsAuthenticated(false);
         return true;
       }

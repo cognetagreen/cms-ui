@@ -70,7 +70,7 @@ export default function Footer() {
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }} zIndex={"sticky"}>
         <Logo />
-        <Text>© 2022 Cogneta -V0.1.2024. All rights reserved</Text>
+        <Text>© 2024 Cogneta -V0.1.2024. All rights reserved</Text>
         <Stack direction={'row'} spacing={6}>
           <SocialButton label={'Twitter'} href={'#'}>
             <FaTwitter />

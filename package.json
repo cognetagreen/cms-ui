@@ -14,6 +14,7 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "axios": "^1.7.2",
+    "chakra-react-select": "^4.9.1",
     "framer-motion": "^11.3.8",
     "fusioncharts": "^4.0.2",
     "gridjs": "^6.2.0",

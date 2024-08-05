@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from '../Navbar'
+import Navbar from '../Navbar/Navbar'
 import Footer from '../Footer'
 
 const Layout:React.FC<{children : React.JSX.Element}> = ({children}) => {

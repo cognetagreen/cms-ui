@@ -6,16 +6,23 @@ import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './Services/Hooks/UseAuth';
+import { CustomerOptionsProvider } from './Context/CustomerOptionsContext';
+import { SelectedCustomerIDProvider } from './Context/SelectedCustomerIDContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <>
     <ChakraProvider>
       <AuthProvider>
         <BrowserRouter>
-          <App />
+          <CustomerOptionsProvider>
+            <SelectedCustomerIDProvider>
+              <App />
+            </SelectedCustomerIDProvider>
+          </CustomerOptionsProvider>
         </BrowserRouter>
       </AuthProvider>
     </ChakraProvider>

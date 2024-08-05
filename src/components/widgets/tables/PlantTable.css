@@ -278,7 +278,8 @@ th.gridjs-th-fixed {
   float: right;
 }
 .gridjs-search-input {
-  width: 200px;
+  width: 150px;
+  height: 30px;
   margin-right: 10px;
   position: relative;
   top: -50px;  /************i changes***********/
