@@ -94,7 +94,9 @@ const MainDashboard = () => {
             width={["full", "auto"]}
             height={"550px"}
           >
-            <PlantTable />
+            <PlantTable
+              paginationLimitProps={10}
+            />
           </PlantTableLayout>
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-7}>

@@ -1,9 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Grid } from 'gridjs-react';
 import { _ } from "gridjs-react";
 import './PlantTable.css';
 import { MdFullscreen } from "react-icons/md";
 import { Icon } from '@chakra-ui/react';
+
+
+interface PlantTableProps {
+  paginationLimitProps : number
+}
 
 const data = [
   ['Plant Name', 'PV', '900', 'Vienna', '2,675.7', '259.10', 'Col Name', '3478'],
@@ -19,22 +24,34 @@ const data = [
   ['Plant Name', 'PV', '259.10', 'Berlin', '2,675.7', '259.10', 'Col Name', '5678']
 ]
 
-const PlantTable = () => {
+const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps}) => {
   const tableRef = useRef(null);
-  const [paginationLimit, setPaginationLimit] = useState<number>(10)
+  const [paginationLimit, setPaginationLimit] = useState<number>(paginationLimitProps)
   
   const handleFullScreen = () => {
     if (tableRef.current) {
       if (document.fullscreenElement) {
         document.exitFullscreen();
-        setPaginationLimit(10);
       } else {
         (tableRef.current as HTMLElement)?.requestFullscreen();
-        setPaginationLimit(20);
+        setPaginationLimit(20); // Increase pagination limit in fullscreen mode
       }
     }
   };
 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        setPaginationLimit(paginationLimitProps);
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [paginationLimitProps]);
   return (
     <div ref={tableRef} className="plant-table-container">
       <Grid
@@ -46,7 +63,7 @@ const PlantTable = () => {
           limit: paginationLimit,
           summary: false,
         }}
-        autoWidth = {true} 
+        autoWidth = {false} 
         className={{
           table: 'plant-table',
           thead: 'gridjs-thead',

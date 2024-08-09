@@ -83,19 +83,29 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
             </TabList>
             <TabPanels>
                 <TabPanel>
-                    <PlantTable />
+                    <PlantTable
+                      paginationLimitProps={10}
+                    />
                 </TabPanel>
                 <TabPanel>
-                    <PlantTable />
+                    <PlantTable 
+                      paginationLimitProps={10}
+                    />
                 </TabPanel>
                 <TabPanel>
-                    <PlantTable />
+                    <PlantTable 
+                      paginationLimitProps={10}
+                    />
                 </TabPanel>
                 <TabPanel>
-                    <PlantTable />
+                    <PlantTable 
+                      paginationLimitProps={10}
+                    />
                 </TabPanel>
                 <TabPanel>
-                    <PlantTable />
+                    <PlantTable 
+                      paginationLimitProps={10}
+                    />
                 </TabPanel>
             </TabPanels>
         </Tabs>

@@ -11,9 +11,9 @@ const PowerFlowSVG:React.FC<PowerFlowSVGProps> = ({SolarValue, DGValue, GridValu
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
-    width={"100%"}
+    width={1600}
     height={1080}
-    viewBox="-0 425 1080 1080"
+    viewBox="95 425 1042 980"
     xmlSpace="preserve"
   >
     <desc>{"Created with Fabric.js 5.2.4"}</desc>
@@ -41,7 +41,7 @@ const PowerFlowSVG:React.FC<PowerFlowSVGProps> = ({SolarValue, DGValue, GridValu
         y={-540}
         rx={0}
         ry={0}
-        width={1306}
+        width={1406}
         height={235}
       />
     </g>

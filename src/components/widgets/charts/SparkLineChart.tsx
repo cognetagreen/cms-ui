@@ -59,6 +59,9 @@ const SparklineChart : React.FC<SparkLineChartProps> = ({data ,color}) => {
         }],
         credits : {
             enabled : false
+        },
+        exporting : {
+            enabled : false
         }
     }
     return (

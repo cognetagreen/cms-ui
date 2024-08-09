@@ -13,6 +13,13 @@ import {
 import ChartLayout from '../components/Layouts/ChartLayouts/ChartLayout';
 import PowerFlowSVG from '../assets/PlantView/PowerFlow';
 import { PiFlowArrowBold } from "react-icons/pi";
+import PlantViewCalculationCardLayout from '../components/Layouts/PlantViewCalculationCardLayout';
+import AreaSplineChart from '../components/widgets/charts/AreaSplineChart';
+import ColumnChart from '../components/widgets/charts/ColumnChart';
+import { FaChartArea, FaChartColumn } from 'react-icons/fa6';
+import PlantTable from '../components/widgets/tables/PlantTable';
+import { MdGrid4X4 } from 'react-icons/md';
+import PlantViewTableLayout from '../components/Layouts/TableLayouts/PlantViewTableLayout';
   const PlantViewDashboard = () => {
     return (
       <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -83,7 +90,7 @@ import { PiFlowArrowBold } from "react-icons/pi";
                     />
                 </GridItem>
 
-                <GridItem w={"117px"} h={58}>
+                <GridItem w={"auto"} h={58}>
                     <FieldsetLayout
                                 fieldsetStyle={{
                                     border : "2px solid #A3A3A3",
@@ -123,13 +130,13 @@ import { PiFlowArrowBold } from "react-icons/pi";
                                 ]}
                     />
                 </GridItem>
-                <GridItem w={"90px"} h={59}>
+                <GridItem w={"auto"} h={59}>
                     <FieldsetLayout
                                 fieldsetStyle={{
                                     border : "2px solid #A3A3A3",
                                     borderRadius : "5px",
                                     fontFamily : "inter",
-                                    padding : "9px 0px",
+                                    padding : "9px 5px",
                                     display : "flex",
                                     flexDirection : "column",
                                     justfyContent : "space-around"
@@ -153,13 +160,13 @@ import { PiFlowArrowBold } from "react-icons/pi";
                                 ]}
                     />
                 </GridItem>
-                <GridItem w={"80px"} h={58}>
+                <GridItem w={"auto"} h={58}>
                     <FieldsetLayout
                                 fieldsetStyle={{
                                     border : "2px solid #A3A3A3",
                                     borderRadius : "5px",
                                     fontFamily : "inter",
-                                    padding : "9px 0px",
+                                    padding : "9px 5px",
                                     display : "flex",
                                     flexDirection : "column",
                                     justfyContent : "space-around"
@@ -183,13 +190,13 @@ import { PiFlowArrowBold } from "react-icons/pi";
                                 ]}
                     />
                 </GridItem>
-                <GridItem w={"90px"} h={58}>
+                <GridItem w={"auto"} h={58}>
                     <FieldsetLayout
                                 fieldsetStyle={{
                                     border : "2px solid #A3A3A3",
                                     borderRadius : "5px",
                                     fontFamily : "inter",
-                                    padding : "9px 0px",
+                                    padding : "9px 5px",
                                     display : "flex",
                                     flexDirection : "column",
                                     justfyContent : "space-around"
@@ -288,20 +295,121 @@ import { PiFlowArrowBold } from "react-icons/pi";
                     />
                 </GridItem>
             </Grid>
-            <ChartLayout
-                width={["full", "93vw"]}
-                height='265px'
-                title='Plant'
-                px='0'
-                icon={PiFlowArrowBold}
+            <Box my={5}>
+                <ChartLayout
+                    width={["full", "100%"]}
+                    height='265px'
+                    title='Plant'
+                    px='0'
+                    icon={PiFlowArrowBold}
+                >
+                    <PowerFlowSVG
+                        SolarValue={100}
+                        DGValue={200}
+                        GridValue={300}
+                        LoadValue={400}
+                    />
+                </ChartLayout>
+            </Box>
+            <Grid
+                h={"auto"}
+                templateRows="repeat(1, 1fr)"
+                templateColumns="repeat(3, 1fr)"
+                gap={1}
+                mb={0}
             >
-                <PowerFlowSVG
-                    SolarValue={100}
-                    DGValue={200}
-                    GridValue={300}
-                    LoadValue={400}
-                />
-            </ChartLayout>
+                <GridItem h={300}>
+                    <PlantViewCalculationCardLayout
+                        width={["full", "auto"]}
+                        height='full'
+                        title='Solar'
+                    />
+                </GridItem>
+                <GridItem h={300}>
+                    <PlantViewCalculationCardLayout
+                        width={["full", "auto"]}
+                        height='full'
+                        title='DG'
+                    />
+                </GridItem>
+                <GridItem h={300}>
+                    <PlantViewCalculationCardLayout
+                        width={["full", "auto"]}
+                        height='full'
+                        title='Grid'
+                    />
+                </GridItem>
+            </Grid>
+            <Grid
+                h={"auto"}
+                templateRows="repeat(1, 1fr)"
+                templateColumns="repeat(2, 1fr)"
+                gap={1}
+                // mb={0}
+            >
+                <GridItem w={"auto"}>
+                    <ChartLayout
+                        title='Power Curve'
+                        width={["full", "auto"]}
+                        height='317px'
+                        icon={FaChartArea}
+                    >
+                        <AreaSplineChart />
+                    </ChartLayout>
+                </GridItem>
+                <GridItem w={"auto"}>
+                    <ChartLayout
+                        title=''
+                        width={["full", "auto"]}
+                        height='317px'
+                        icon={FaChartColumn}
+                    >
+                        <ColumnChart />
+                    </ChartLayout>
+                </GridItem>
+            </Grid>
+            <Grid 
+                h={410}
+                templateRows="repeat(2, 1fr)"
+                templateColumns="repeat(2, 1fr)"
+                gap={1}
+                mb={4}
+            >
+                <GridItem colSpan={1} rowSpan={2} height={404} w={"auto"}>
+                    <PlantViewTableLayout
+                     title='Inverter'
+                     width={["full", "100%"]}
+                     height='400px'
+                    >
+                
+                        <PlantTable 
+                            paginationLimitProps={8}
+                        />
+                    </PlantViewTableLayout>
+                </GridItem>
+                <GridItem rowSpan={1} colSpan={1} height={150}>
+                    <PlantViewTableLayout
+                     title='Inverter'
+                     width={["full", "100%"]}
+                     height='150px'
+                    >
+                        <PlantTable 
+                            paginationLimitProps={5}
+                        />
+                    </PlantViewTableLayout>
+                </GridItem>
+                <GridItem rowSpan={1} colSpan={1} h={244} mt={-12}>
+                    <PlantViewTableLayout
+                     title='Inverter'
+                     width={["full", "100%"]}
+                     height='244px'
+                    >
+                        <PlantTable 
+                            paginationLimitProps={5}
+                        />
+                    </PlantViewTableLayout>
+                </GridItem>
+            </Grid>
       </Box>
     );
   };

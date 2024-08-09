@@ -13,18 +13,17 @@ HighchartsFullScreen(Highcharts);
 
 const options = {
   chart: {
-    type: 'bar',
+    type: 'column',
     backgroundColor: "transparent",
-    height: "240px",
-    with : "100%",
+    height: "280px",
     options3d: {
       enabled : true,
-      alpha: 10, // Adjust this to control the tilt
-      beta: 15,  // Adjust this to control the rotation
+      alpha: 20, // Adjust this to control the tilt
+      beta: 0,  // Adjust this to control the rotation
       depth: 0, // Adjust this to control the depth of the bars
-      viewDistance: 25
+      // viewDistance: 25
     },
-    // margin : 1
+
   },
   title: {
     text: null
@@ -33,19 +32,21 @@ const options = {
     data: [
       { y: 122.5, color: '#0086CC'}, // Front color
       { y: 44.5, color: '#03BB7D' },
+      { y: 41.5, color: '#03B' },
+      { y: 441.5, color: '#03BA' },
+      { y: 444.5, color: '#04AF7D' },
+      { y: 434.5, color: '#000' },
+      { y: 414.5, color: '#888' },
     ]
   }],
   plotOptions: {
-    bar: {
+    column: {
       dataLabels: {
         enabled: false
       },
-      depth: 65, // Set the depth of the bars
-      stacking: 'normal',
-      options3d : {
-        enabled : true,
-        beta : 5
-      }
+      pointWidth : 40,
+      borderWidth : 20,
+      borderRadius : 50
     }
   },
   legend: {
@@ -57,12 +58,6 @@ const options = {
     labels : {
       enabled : false
     },
-    plotLines: [{
-      color: '#D1D8DD',
-      width: 2,
-      value: 1.5,
-      zIndex: 5,
-    }],
     gridLineWidth: 0,
   },
   yAxis : {
@@ -70,7 +65,7 @@ const options = {
       text: null
     },
     plotLines: [{
-      color: '#D1D8DD',
+      color: '#000000',
       width: 2,
       value: -0,
       zIndex: 5 
