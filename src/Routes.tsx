@@ -6,6 +6,7 @@ import ForgotPassword from './components/Auth/ForgotPassword'
 import GridDashboard from './Dashboards/GridDashboard'
 import Layout from './components/Layouts/Layout'
 import MainDashboard from './Dashboards/MainDashboard'
+import PlantViewDashboard from './Dashboards/PlantViewDashboard'
 
 const Routes : RouteObject[] = [
     {
@@ -41,6 +42,16 @@ const Routes : RouteObject[] = [
             <AuthGuard>
                 <Layout>
                     <GridDashboard />
+                </Layout>
+            </AuthGuard>
+        )
+    },
+    {
+        path : '/plantview',
+        element : (
+            <AuthGuard>
+                <Layout>
+                    <PlantViewDashboard />
                 </Layout>
             </AuthGuard>
         )

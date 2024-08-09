@@ -143,8 +143,10 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           color={"#FFFFFFFF"}
           fontWeight={600}
           showLabel={showLabels}
+          as={Link}
+          to={'/plantview'}
         >
-          &nbsp; Articles
+          &nbsp; Plant view
         </NavItem>
         <NavItem
           icon={Analysis}

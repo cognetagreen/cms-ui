@@ -15,9 +15,10 @@ interface ChartLayoutProps {
   icon?: IconType;
   width: string[];
   height: string;
+  px? : string;
 }
 
-const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, width, height }) => {
+const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, width, height, px }) => {
   return (
     <Box
       w={width}
@@ -25,6 +26,7 @@ const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, wi
       borderRadius="5px"
       bgColor={useColorModeValue('white', 'gray.800')}
       p={3}
+      px={px}
       mt={5}
       boxShadow="md"
       overflow={"hidden"}

@@ -1,15 +1,13 @@
 import axios from 'axios';
 
-const GetCustomersAPI  = async (textSearch : string) => {
-    const BASE_URL = "http://localhost:7001/api";
+const BASE_URL = "http://localhost:7001/api";
 
-    const token = localStorage.getItem("token");
-
-    if(!token) {
+const GetCustomersAPI  = async (textSearch : string, jwt : string) => {
+    if(!jwt) {
         throw new Error("JWT not found!")
     }else {
         const body = {
-            "token" : token,
+            "token" : jwt,
             "textSearch" : textSearch,
         };
         try {
@@ -21,4 +19,21 @@ const GetCustomersAPI  = async (textSearch : string) => {
     }
 }
 
-export default GetCustomersAPI;
+const GetCustomerAPI  = async (customerID : string, jwt : string) => {
+    if(!jwt) {
+        throw new Error("JWT not found!")
+    }else {
+        const body = {
+            "token" : jwt,
+            "checkID" : customerID,
+        };
+        try {
+            const response = await axios.post(`${BASE_URL}/v1/getCustomer/${customerID}`, body);
+            return response.data;
+        } catch (error) {
+            console.error(error)
+        }
+    }
+}
+
+export {GetCustomersAPI, GetCustomerAPI};

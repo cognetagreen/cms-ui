@@ -26,7 +26,6 @@ import SidebarContent from "./SidebarContent";
 import useAuth from "../../Services/Hooks/UseAuth";
 import cogneta_logo from "../../assets/cogneta_logo.png";
 import { Select } from "chakra-react-select";
-import { Customer } from "../../Context/CustomerOptionsContext";
 import { useCustomerOptionsContext } from "../../Context/CustomerOptionsContext";
 import { useSelectedCustomerIDContext } from "../../Context/SelectedCustomerIDContext";
 
@@ -76,16 +75,16 @@ const Navbar: React.FC<{ children: React.JSX.Element }> = ({ children }) => {
   const {selectedCustomerID, setSelectedCustomerID} = useSelectedCustomerIDContext();
 
   const handlePlantChange = (selectedOption: any) => {
-    console.log(selectedOption);
     setSelectedCustomerID(selectedOption?.value);
-    localStorage.setItem("SelectedCustomerId", selectedOption?.value || "")
+    localStorage.setItem("SelectedCustomerId", selectedOption?.value || "");
+    window.location.reload();
   };
-  console.log(customerOptions)
-  console.log(selectedCustomerID)
+  // console.log(customerOptions)
+  // console.log(selectedCustomerID)
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   useEffect(() => {
     if (customerOptions) {
-      console.log(customerOptions)
+      // console.log(customerOptions)
       setSelectedCustomerId(selectedCustomerID);
       localStorage.setItem("SelectedCustomerId", selectedCustomerID || "")
     } 

@@ -1,28 +1,40 @@
+import { lazy, Suspense } from "react";
 import {
-   Box,
-  HStack, 
-  VStack, 
+  Box, 
   Grid, 
   GridItem,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink
 } from "@chakra-ui/react";
-import ChartLayout from "../components/Layouts/ChartLayouts/ChartLayout";
-import StatisticsCard from "../components/widgets/StatisticsCard";
-import LocationMapChart from "../components/widgets/charts/LocationMapChart";
-import DonutPieChart from "../components/widgets/charts/DonutPieChart";
-import PlantTableLayout from "../components/Layouts/TableLayouts/PlantTableLayout";
-import BarChart from "../components/widgets/charts/BarChart";
-import ColumnBarChart from "../components/widgets/charts/ColumnLineChart";
+
 import { IoLocation } from "react-icons/io5";
 import { FaChartBar, FaChartColumn } from "react-icons/fa6";
 import { PiChartDonutFill } from "react-icons/pi";
 import { MdGrid4X4 } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { FaCaretRight } from "react-icons/fa";
+import UsePieChart from "../Services/Hooks/UseEnergyYield";
+import ChartLayout from "../components/Layouts/ChartLayouts/ChartLayout";
+import PlantTable from "../components/widgets/tables/PlantTable";
+import StatisticsCard from "../components/widgets/StatisticsCard";
+import LocationMapChart from "../components/widgets/charts/LocationMapChart";
+import PlantTableLayout from "../components/Layouts/TableLayouts/PlantTableLayout";
+import BarChart from "../components/widgets/charts/BarChart";
+import ColumnBarChart from "../components/widgets/charts/ColumnLineChart";
+import UseAssetSummary from "../Services/Hooks/UseAssetSummary";
+const DonutPieChart = lazy(() => import('../components/widgets/charts/DonutPieChart'));
 
 const MainDashboard = () => {
+  
+  var textSearch = "inverter-1";
+  var key = "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt";
+  const EnergyYield = UsePieChart(textSearch, key) || [];
+
+  var searchObj = {
+    inverter : `B1_Inverter_Inverter_0_AC_Active_Power_Watt`
+  }
+  const AssetSummary = UseAssetSummary(searchObj) || [];
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
       <Breadcrumb spacing="8px" separator={<FaCaretRight color="gray.500" />} mb={5}>
@@ -67,7 +79,7 @@ const MainDashboard = () => {
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]}>
           <ChartLayout
-            title="HighCharts"
+            title="Energy Yield"
             width={["full", "auto"]}
             height={"270px"}
             icon={FaChartColumn}
@@ -82,27 +94,31 @@ const MainDashboard = () => {
             width={["full", "auto"]}
             height={"550px"}
           >
-            <DonutPieChart />
+            <PlantTable />
           </PlantTableLayout>
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-7}>
           <ChartLayout
-            title="HighCharts"
+            title="Source Contribution"
             width={["full", "463px"]}
             height={"270px"}
             icon={PiChartDonutFill}
           >
-            <DonutPieChart />
+            <Suspense>
+              <DonutPieChart apiData={EnergyYield} />
+            </Suspense>
           </ChartLayout>
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-14}>
           <ChartLayout
-            title="HighCharts"
+            title="Asset Summary"
             width={["full", "463px"]}
             height={"270px"}
             icon={PiChartDonutFill}
           >
-            <DonutPieChart />
+            <Suspense fallback={<div style={{position:"relative", top : "45%", left : "45%"}}>Loading...</div>}>
+              <DonutPieChart  apiData={AssetSummary}/>
+            </Suspense>
           </ChartLayout>
         </GridItem>
       </Grid>
