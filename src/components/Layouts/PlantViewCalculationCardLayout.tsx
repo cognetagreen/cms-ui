@@ -65,10 +65,10 @@ const PlantViewCalculationCardLayout: React.FC<PlantViewCalculationCardLayoutPro
     >
       <HStack>
         <Text 
-          mt={10}
+          mt={6}
           ml={4}
           mb={5}
-         fontSize={"25px"}
+         fontSize={"29px"}
          fontFamily={"inter"} 
          fontWeight={600} 
          color={useColorModeValue('#000000', 'white')}

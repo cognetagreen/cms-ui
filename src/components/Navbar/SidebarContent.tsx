@@ -154,6 +154,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           color={"#FFFFFFFF"}
           fontWeight={600}
           showLabel={showLabels}
+          as={Link}
+          to={'/dg'}
         >
           &nbsp; Collections
         </NavItem>
@@ -163,6 +165,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           color={"#FFFFFFFF"}
           fontSize={"md"}
           fontWeight={600}
+          as={Link}
+          to={'/bess_overview'}
         >
           &nbsp; Checklists
         </NavItem>

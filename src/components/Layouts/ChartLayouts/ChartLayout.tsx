@@ -12,13 +12,14 @@ interface ChartLayoutProps {
   children: React.ReactNode;
   title: string;
   bg? : string;
-  icon?: IconType;
+  icon?: IconType | undefined;
   width: string[];
   height: string;
   px? : string;
 }
 
 const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, width, height, px }) => {
+  const iconColor = useColorModeValue('#004F86', 'white');
   return (
     <Box
       w={width}
@@ -33,7 +34,9 @@ const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, wi
       bg = {bg}
     >
       <HStack>
-        <Icon as={icon} boxSize={5} color={useColorModeValue('#004F86', 'white')}/>
+        {icon && (
+          <Icon as={icon} boxSize={5} color={iconColor} />
+        )}
         <Text 
          fontSize={"sm"}
          fontFamily={"inter"} 

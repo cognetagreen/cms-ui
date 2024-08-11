@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './Services/Hooks/UseAuth';
 import { CustomerOptionsProvider } from './Context/CustomerOptionsContext';
 import { SelectedCustomerIDProvider } from './Context/SelectedCustomerIDContext';
+import { BESSNavTabsProvider } from './Context/BESSNavTabsContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -20,7 +21,9 @@ root.render(
         <BrowserRouter>
           <CustomerOptionsProvider>
             <SelectedCustomerIDProvider>
-              <App />
+              <BESSNavTabsProvider>
+                <App />
+              </BESSNavTabsProvider>
             </SelectedCustomerIDProvider>
           </CustomerOptionsProvider>
         </BrowserRouter>

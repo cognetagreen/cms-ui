@@ -33,13 +33,12 @@ const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, t
     >
       <HStack height={"40px"}>
         <Text 
-         fontSize={"sm"}
+         fontSize={"16px"}
          fontFamily={"inter"} 
          fontWeight={600} 
          color={useColorModeValue('#004F86', 'white')}
          letterSpacing={1}
          mt ={-5}
-         ml={5}
          >{title}</Text>
       </HStack>
       <Box as='main' pb={6} height={"full"} width={"full"} _dark={{color : "white"}}>

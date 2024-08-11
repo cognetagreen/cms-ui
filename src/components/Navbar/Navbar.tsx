@@ -15,6 +15,9 @@ import {
   useColorMode,
   FormControl,
   FormLabel,
+  Tabs,
+  TabList,
+  Tab,
 } from "@chakra-ui/react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { FaBell, FaSignOutAlt } from "react-icons/fa";
@@ -28,6 +31,8 @@ import cogneta_logo from "../../assets/cogneta_logo.png";
 import { Select } from "chakra-react-select";
 import { useCustomerOptionsContext } from "../../Context/CustomerOptionsContext";
 import { useSelectedCustomerIDContext } from "../../Context/SelectedCustomerIDContext";
+import { Link } from "react-router-dom";
+import { useBESSNavTabsContext } from "../../Context/BESSNavTabsContext";
 
 interface JwtHeader {
   firstName: string;
@@ -90,6 +95,7 @@ const Navbar: React.FC<{ children: React.JSX.Element }> = ({ children }) => {
     } 
   }, []);
 
+  const { BESSNavTabs } = useBESSNavTabsContext();
 
   return (
     <Box as="section" bg="#F2F3F8" _dark={{ bg: "gray.700" }} minH="100vh">
@@ -151,6 +157,35 @@ const Navbar: React.FC<{ children: React.JSX.Element }> = ({ children }) => {
               />
             </Box>
           </FormControl>
+          {/* For Battery - Tabs Required- Work for battery Only */}
+          {BESSNavTabs && <Tabs variant={"soft-rounded"} colorScheme="gray">
+            <TabList>
+              <Tab 
+                fontWeight={600} 
+                color={"#004F86"} 
+                fontFamily={"inter"} 
+                _selected={{color : "#004F86", bg:"#D9D9D9"}}
+                as={Link}
+                to={"/bess_overview"}
+              >BESS Overview</Tab>
+              <Tab 
+                fontWeight={600} 
+                color={"#004F86"} 
+                fontFamily={"inter"} 
+                _selected={{color : "#004F86", bg:"#D9D9D9"}}
+                as={Link}
+                to={"/bess_kpi"}
+              >KPI</Tab>
+              <Tab 
+                fontWeight={600} 
+                color={"#004F86"} 
+                fontFamily={"inter"} 
+                _selected={{color : "#004F86", bg:"#D9D9D9"}}
+                as={Link}
+                to={"/bess_overview"}
+              >Health</Tab>
+            </TabList>
+          </Tabs>}
         </Flex>
         <Flex align="center">
           <IconButton

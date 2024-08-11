@@ -423,18 +423,3 @@ th.gridjs-th-fixed {
     position: relative;
     bottom: 35px;
   }
-
-  /* For WebKit-based browsers (Chrome, Safari, Opera) */
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* For Firefox */
-* {
-  scrollbar-width: none; /* Firefox */
-}
-
-/* For Internet Explorer and Edge */
-* {
-  -ms-overflow-style: none;  /* IE and Edge */
-}

@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 const LineChart = () => {
     const options = {
         chart: {
-            type: 'line',
+            type: 'spline',
             backgroundColor : "transparent",
             height : "210px"
         },

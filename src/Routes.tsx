@@ -1,12 +1,13 @@
 import { RouteObject, Navigate } from 'react-router'
 import Login from './components/Auth/Login'
-import Home from './pages/Home'
 import AuthGuard from './Services/AuthGuard'
 import ForgotPassword from './components/Auth/ForgotPassword'
 import GridDashboard from './Dashboards/GridDashboard'
 import Layout from './components/Layouts/Layout'
 import MainDashboard from './Dashboards/MainDashboard'
 import PlantViewDashboard from './Dashboards/PlantViewDashboard'
+import DGDashboard from './Dashboards/DGDashboard'
+import BESS_OverviewDashboard from './Dashboards/BESS_OverviewDashboard'
 
 const Routes : RouteObject[] = [
     {
@@ -52,6 +53,26 @@ const Routes : RouteObject[] = [
             <AuthGuard>
                 <Layout>
                     <PlantViewDashboard />
+                </Layout>
+            </AuthGuard>
+        )
+    },
+    {
+        path : '/dg',
+        element : (
+            <AuthGuard>
+                <Layout>
+                    <DGDashboard />
+                </Layout>
+            </AuthGuard>
+        )
+    },
+    {
+        path : '/bess_overview',
+        element : (
+            <AuthGuard>
+                <Layout>
+                    <BESS_OverviewDashboard />
                 </Layout>
             </AuthGuard>
         )
