@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   Box, 
   Grid, 
@@ -21,12 +21,26 @@ import StatisticsCard from "../components/widgets/StatisticsCard";
 import LocationMapChart from "../components/widgets/charts/LocationMapChart";
 import PlantTableLayout from "../components/Layouts/TableLayouts/PlantTableLayout";
 import BarChart from "../components/widgets/charts/BarChart";
-import ColumnBarChart from "../components/widgets/charts/ColumnLineChart";
+import ColumnLineChart from "../components/widgets/charts/ColumnLineChart";
 import UseAssetSummary from "../Services/Hooks/UseAssetSummary";
 const DonutPieChart = lazy(() => import('../components/widgets/charts/DonutPieChart'));
 
 const MainDashboard = () => {
   
+  const [timeWindow, setTimeWindow] = useState({ startTs: 0, endTs: 0, aggregate: "NONE" });
+
+    const handleTimeWindowChange = (from: string, to: string, aggregate: string) => {
+        function inMS (date:string) {
+          return new Date(date).getTime();
+        }
+        var startTs = inMS(from)
+        var endTs = inMS(to)
+
+        setTimeWindow({ startTs, endTs, aggregate });
+        console.log(from, to, aggregate)
+        // Fetch and update the data based on the new time window
+    };
+
   var textSearch = "inverter-1";
   var key = "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt";
   const EnergyYield = UsePieChart(textSearch, key) || [];
@@ -63,6 +77,7 @@ const MainDashboard = () => {
             width={["auto", "auto"]}
             height={"270px"}
             icon={IoLocation}
+            onTimeWindowChange = {handleTimeWindowChange}
           >
             <LocationMapChart lat="19.07283000" long="72.88261000" />
           </ChartLayout>
@@ -73,6 +88,7 @@ const MainDashboard = () => {
             width={["full", "auto"]}
             height={"270px"}
             icon={FaChartBar}
+            onTimeWindowChange = {handleTimeWindowChange}
           >
             <BarChart />
           </ChartLayout>
@@ -83,8 +99,10 @@ const MainDashboard = () => {
             width={["full", "auto"]}
             height={"270px"}
             icon={FaChartColumn}
+            timeWindow = {true}
+            onTimeWindowChange = {handleTimeWindowChange}
           >
-            <ColumnBarChart />
+            <ColumnLineChart />
           </ChartLayout>
         </GridItem>
         <GridItem rowSpan={2} colSpan={[1, 2]} mt={-7}>
@@ -102,9 +120,10 @@ const MainDashboard = () => {
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-7}>
           <ChartLayout
             title="Source Contribution"
-            width={["full", "463px"]}
+            width={["full", "auto"]}
             height={"270px"}
             icon={PiChartDonutFill}
+            onTimeWindowChange = {handleTimeWindowChange}
           >
             <Suspense>
               <DonutPieChart apiData={EnergyYield} />
@@ -114,9 +133,10 @@ const MainDashboard = () => {
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-14}>
           <ChartLayout
             title="Asset Summary"
-            width={["full", "463px"]}
+            width={["full", "auto"]}
             height={"270px"}
             icon={PiChartDonutFill}
+            onTimeWindowChange = {handleTimeWindowChange}
           >
             <Suspense fallback={<div style={{position:"relative", top : "45%", left : "45%"}}>Loading...</div>}>
               <DonutPieChart  apiData={AssetSummary}/>

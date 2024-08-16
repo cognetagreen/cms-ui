@@ -13,7 +13,7 @@ export const BESSNavTabsProvider = ({ children }: { children: ReactNode }) => {
 
   const location = useLocation();
   useEffect(() => {
-    if (location.pathname === '/bess_overview' || location.pathname === '/bess_kpi' || location.pathname === '/bess_health') {
+    if (location.pathname === '/bess/overview' || location.pathname === '/bess/kpi' || location.pathname === '/bess/health') {
       setBESSNavTabs(true);
     } else {
       setBESSNavTabs(false);

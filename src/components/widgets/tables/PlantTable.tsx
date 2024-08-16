@@ -5,9 +5,14 @@ import './PlantTable.css';
 import { MdFullscreen } from "react-icons/md";
 import { Icon } from '@chakra-ui/react';
 
+interface APIData {
+  column : string[];
+  dataFromAPI : string[][]; 
+}
 
 interface PlantTableProps {
-  paginationLimitProps : number
+  paginationLimitProps : number;
+  apiData? : APIData[];
 }
 
 const data = [
@@ -24,10 +29,11 @@ const data = [
   ['Plant Name', 'PV', '259.10', 'Berlin', '2,675.7', '259.10', 'Col Name', '5678']
 ]
 
-const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps}) => {
+const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData}) => {
   const tableRef = useRef(null);
   const [paginationLimit, setPaginationLimit] = useState<number>(paginationLimitProps)
-  
+  console.log(apiData)
+
   const handleFullScreen = () => {
     if (tableRef.current) {
       if (document.fullscreenElement) {
@@ -55,8 +61,8 @@ const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps}) => {
   return (
     <div ref={tableRef} className="plant-table-container">
       <Grid
-      columns={['Name', 'Type', 'Capacities', 'Country', 'PV Power', 'Irr', 'Energy Today', 'PRV']}
-      data={data.map((value, index) => [...value])}
+      columns={apiData && apiData[0]?.column ? apiData[0].column : ['Name', 'Type', 'Capacities', 'Country', 'PV Power', 'Irr', 'Energy Today', 'PRV']}
+      data={apiData && apiData[0]?.dataFromAPI ? apiData[0].dataFromAPI :data.map((value, index) => [...value])}
       search={true}
         sort={true}
         pagination={{

@@ -166,7 +166,7 @@ const Navbar: React.FC<{ children: React.JSX.Element }> = ({ children }) => {
                 fontFamily={"inter"} 
                 _selected={{color : "#004F86", bg:"#D9D9D9"}}
                 as={Link}
-                to={"/bess_overview"}
+                to={"/bess/overview"}
               >BESS Overview</Tab>
               <Tab 
                 fontWeight={600} 
@@ -174,7 +174,7 @@ const Navbar: React.FC<{ children: React.JSX.Element }> = ({ children }) => {
                 fontFamily={"inter"} 
                 _selected={{color : "#004F86", bg:"#D9D9D9"}}
                 as={Link}
-                to={"/bess_kpi"}
+                to={"/bess/kpi"}
               >KPI</Tab>
               <Tab 
                 fontWeight={600} 
@@ -182,7 +182,7 @@ const Navbar: React.FC<{ children: React.JSX.Element }> = ({ children }) => {
                 fontFamily={"inter"} 
                 _selected={{color : "#004F86", bg:"#D9D9D9"}}
                 as={Link}
-                to={"/bess_overview"}
+                to={"/bess/health"}
               >Health</Tab>
             </TabList>
           </Tabs>}

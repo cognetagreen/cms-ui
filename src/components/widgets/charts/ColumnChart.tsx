@@ -15,7 +15,7 @@ const options = {
   chart: {
     type: 'column',
     backgroundColor: "transparent",
-    height: "280px",
+    height: "270px",
     options3d: {
       enabled : true,
       alpha: 20, // Adjust this to control the tilt

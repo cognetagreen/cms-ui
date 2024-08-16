@@ -23,14 +23,67 @@ import PlantViewTableLayout from '../components/Layouts/TableLayouts/PlantViewTa
 import PlantTable from '../components/widgets/tables/PlantTable'
 import PlantViewRuntime from '../assets/PlantView/PlantViewRuntime'
 import GeneratorPowerDG from '../assets/GeneratorPowerDG'
+import { useCallback, useEffect, useState } from 'react'
+import UseGeneratorTable from '../Services/Hooks/UseGeneratorTable'
 
-const runtimeWidget = [1,2,3,4,5,6];
+
+interface APIData {
+    column : string[];
+    dataFromAPI : string[][]; 
+  }
+
+
 const DGDashboard = () => {
-    var searchObj = {
-        inverter : `B1_Inverter_Inverter_0_AC_Active_Power_Watt`
-      }
-      const pieData = UseAssetSummary(searchObj) || [];
-  return (
+    const [loop, setLoop] = useState<boolean>(true)
+    const [timeWindow, setTimeWindow] = useState({ startTs: 1723692525498, endTs: 1723692825498, aggregate: 'NONE' });
+    const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
+    
+    // const GeneratorTableData = () : APIData[] => {
+    //     console.log(666,timeWindow)
+        const GeneratorTableData = UseGeneratorTable(searchTag, timeWindow);
+    //     return data || [{ column: [], dataFromAPI: [] }];
+    // }    
+    
+    const timeSetter = useCallback(() => {
+        const currentTime = new Date();
+        const now = new Date(currentTime.getTime());
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+        const  endTs = now.getTime();
+        const startTs = fiveMinutesAgo.getTime();
+        const aggregate = "NONE";
+        setTimeWindow({startTs, endTs, aggregate})
+
+        console.log(now.toISOString(), fiveMinutesAgo.toISOString(), endTs, startTs)
+
+    }, [])
+
+    useEffect(() => {
+        if(loop) {
+            timeSetter();
+            const interval = setInterval(timeSetter, 10000); // 3-minute interval
+            return () => clearInterval(interval);
+        }
+    }, [loop])
+
+    const handleTimeWindowChange = (from: string, to: string, aggregate: string) => {
+        function inMS(date: string) {
+            return new Date(date).getTime();
+        }
+        const startTs = inMS(from);
+        const endTs = inMS(to);
+        setTimeWindow({ startTs, endTs, aggregate });
+        setLoop(false)
+        console.log(timeWindow);
+    };
+        
+        var searchObj = {
+            inverter : "B1_Inverter_Inverter_0_AC_Active_Power_Watt"
+          }
+          const pieData = UseAssetSummary(searchObj) || [];
+        const runtimeWidget = [1,2,3,4,5,6];
+        
+
+return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
             <Breadcrumb spacing="8px" separator={<FaCaretRight color="gray.500" />} mb={5}>
                 <BreadcrumbItem color="rgba(0, 79, 134, 1)" fontSize={12}>
@@ -165,9 +218,11 @@ const DGDashboard = () => {
                         title='Generators'
                         width={["full", "auto"]}
                         height='271px'
+                        onTimeWindowChange = {handleTimeWindowChange}
                     >
                         <PlantTable
                             paginationLimitProps={4}
+                            apiData={GeneratorTableData || [{ column: [], dataFromAPI: [] }]}
                         />
                     </PlantViewTableLayout>
                 </GridItem>

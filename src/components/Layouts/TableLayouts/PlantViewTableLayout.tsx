@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   HStack,
-  Icon,
+  IconButton,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { IconType } from 'react-icons';
+import { TimeWindow } from '../../../Services/TimeWindow';
+import { RxCounterClockwiseClock } from 'react-icons/rx';
 
 interface PlantViewTableLayoutProps {
   children: React.ReactNode;
@@ -15,9 +17,26 @@ interface PlantViewTableLayoutProps {
   width: string[];
   height: string;
   px? : string;
+  onTimeWindowChange?: (from: string, to: string, aggregate: string) => void;
+
 }
 
-const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, title, bg, width, height, px }) => {
+const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, title, bg, width, height, px, onTimeWindowChange }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // useEffect(() => {
+  //   if (onTimeWindowChange) {
+  //     const now = new Date();
+  //     const from = new Date(now.getTime() - 5 * 60 * 1000).toISOString(); // 5 minutes ago
+  //     const to = now.toISOString();
+  //     const aggregate = 'none';
+
+  //     onTimeWindowChange(from, to, aggregate);
+  //     const interval = setInterval(onTimeWindowChange, 300000); // 5-minute interval
+  //     return () => clearInterval(interval);
+  //   }
+  // }, []);
+
   return (
     <Box
       w={width}
@@ -31,7 +50,15 @@ const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, t
       overflow={"auto"}
       bg = {bg}
     >
-      <HStack height={"40px"}>
+      <HStack height={"40px"} spacing={5}>
+        <Box mt={-5}>
+          <IconButton
+                  aria-label='Time Window'
+                  icon={<RxCounterClockwiseClock />}
+                  onClick={onOpen}
+          />
+          <TimeWindow isOpen={isOpen} onClose={onClose} onSave={onTimeWindowChange || (()=>{})} />
+        </Box>
         <Text 
          fontSize={"16px"}
          fontFamily={"inter"} 

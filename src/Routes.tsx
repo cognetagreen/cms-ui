@@ -8,6 +8,8 @@ import MainDashboard from './Dashboards/MainDashboard'
 import PlantViewDashboard from './Dashboards/PlantViewDashboard'
 import DGDashboard from './Dashboards/DGDashboard'
 import BESS_OverviewDashboard from './Dashboards/BESS_OverviewDashboard'
+import BESS_KPIDashboard from './Dashboards/BESS_KPIDashboard'
+import BESS_HealthDashboard from './Dashboards/BESS_HealthDashboard'
 
 const Routes : RouteObject[] = [
     {
@@ -68,11 +70,31 @@ const Routes : RouteObject[] = [
         )
     },
     {
-        path : '/bess_overview',
+        path : '/bess/overview',
         element : (
             <AuthGuard>
                 <Layout>
                     <BESS_OverviewDashboard />
+                </Layout>
+            </AuthGuard>
+        )
+    },
+    {
+        path : '/bess/kpi',
+        element : (
+            <AuthGuard>
+                <Layout>
+                    <BESS_KPIDashboard />
+                </Layout>
+            </AuthGuard>
+        )
+    },
+    {
+        path : '/bess/health',
+        element : (
+            <AuthGuard>
+                <Layout>
+                    <BESS_HealthDashboard />
                 </Layout>
             </AuthGuard>
         )

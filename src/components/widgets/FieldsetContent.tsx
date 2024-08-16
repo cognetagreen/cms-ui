@@ -75,7 +75,7 @@ export const Fieldset_Mode = () => {
                                             <div style={{width:"14px", height:"14px", background: "#7EC800", borderRadius: "50%", marginRight : "2px"}}></div>FR
                                         </div>
                                     </label>,
-                                    <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 550, color : "#4A4A4A", display : "flex", flexDirection : "row", padding : "0px 5px 0 5px"}}>
+                                    <label key="label2" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 550, color : "#4A4A4A", display : "flex", flexDirection : "row", padding : "0px 5px 0 5px"}}>
                                         <div style={{display : "flex", margin: "0 10px 0 0", alignItems: "center"}}>
                                             <div style={{width:"14px", height:"14px", background: "#D9D9D9", borderRadius: "50%", marginRight : "2px"}}></div>EXT
                                         </div>
@@ -113,7 +113,7 @@ export const Fieldset_Power = () => {
                                     <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 600, color : "#4A4A4A", padding : "5px 15px 0 5px"}}>
                                         P-230.3 kW
                                     </label>,
-                                    <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 600, color : "#4A4A4A", padding : "5px 15px 0 5px"}}>
+                                    <label key="label2" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 600, color : "#4A4A4A", padding : "5px 15px 0 5px"}}>
                                         F-49.97 Hz
                                     </label>            
                                 ]}
@@ -146,7 +146,7 @@ export const Fieldset_State = () => {
                                     <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 600, color : "#4A4A4A", padding : "5px 0px 0 5px"}}>
                                         P-230.3 kW
                                     </label>,
-                                    <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 600, color : "#4A4A4A", padding : "5px 0px 0 5px"}}>
+                                    <label key="label2" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 600, color : "#4A4A4A", padding : "5px 0px 0 5px"}}>
                                         F-49.97 Hz
                                     </label>            
                                 ]}
@@ -179,7 +179,7 @@ export const Fieldset_Temp = () => {
                                     <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 500, color : "#4A4A4A", padding : "5px 5px 0 5px"}}>
                                         Max &nbsp; <b>26.00&#x2103;</b>
                                     </label>,
-                                    <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 500, color : "#4A4A4A", padding : "5px 5px 0 5px"}}>
+                                    <label key="label2" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 500, color : "#4A4A4A", padding : "5px 5px 0 5px"}}>
                                         Avg &nbsp; <b>22.5&#x2103;</b>
                                     </label>            
                                 ]}
@@ -243,7 +243,7 @@ export const Fieldset_Devices = () => {
                                             </div>
                                         </div>
                                     </label>,
-                                    <label key="label1" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 500, color : "#4A4A4A", padding : "0px 15px 0 5px"}}>
+                                    <label key="label2" style={{fontFamily : "inter", fontSize : "12px", fontWeight : 500, color : "#4A4A4A", padding : "0px 15px 0 5px"}}>
                                         <div style={{display:"flex",flexDirection:"row", paddingRight:"10px", alignItems:"center", alignContent:"center"}}>
                                             <div style={{display:"flex", alignItems:"center", paddingRight:"5px"}}>
                                                 <div style={{width:"5px", height:"5px", borderRadius:"50%", background:"#B0B0B0", marginRight:"5px"}}></div>

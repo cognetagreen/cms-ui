@@ -7,7 +7,7 @@ const AreaChart = () => {
         chart: {
             type: 'area',
             backgroundColor : "transparent",
-            height : "210px"
+            height : "290px"
         },
         title: {
             text: ''

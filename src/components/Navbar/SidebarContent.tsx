@@ -35,7 +35,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
     <Box
       as="nav"
       pos="fixed"
-      top="14"
+      top="10"
       left="0"
       zIndex="sticky"
       h="full"
@@ -166,7 +166,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           fontSize={"md"}
           fontWeight={600}
           as={Link}
-          to={'/bess_overview'}
+          to={'/bess/overview'}
         >
           &nbsp; Checklists
         </NavItem>
