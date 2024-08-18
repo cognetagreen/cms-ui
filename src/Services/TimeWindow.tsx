@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     FormControl,
     FormLabel,
@@ -17,10 +18,13 @@ import React, { useState, useEffect } from "react";
 interface TimeWindowProps {
     isOpen: boolean;
     onClose: () => void;
+    // firstInterval : [number, string];
+    // onFirstInit : (startTs: number, endTs: number, aggregate: string) => void;
     onSave: (from: string, to: string, aggregation: string) => void;
+    onReset : (reset : boolean) => void;
 }
 
-export const TimeWindow: React.FC<TimeWindowProps> = ({ isOpen, onClose, onSave }) => {
+export const TimeWindow: React.FC<TimeWindowProps> = ({ isOpen, onClose, onSave, onReset }) => {
     const OverlayOne = () => (
         <ModalOverlay
             bg="blackAlpha.300"
@@ -34,24 +38,29 @@ export const TimeWindow: React.FC<TimeWindowProps> = ({ isOpen, onClose, onSave 
     const [toTime, setToTime] = useState<string>("");
     const [aggregation, setAggregation] = useState<string>("NONE");
 
-    useEffect(() => {
-        // Set default time range for the last 5 minutes
-        const currentTime = new Date();
-        const now = new Date(currentTime.getTime() - (currentTime.getTimezoneOffset() * 60000));
-        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+    // Call the custom hook directly in the component body
+    // const realTimeInterval = useInitTimeHandle(firstInterval[0], firstInterval[1]);
 
-        // Format the time as required by the <Input type="datetime-local" />
-        const formatDate = (date: Date) => {
-            console.log(date.toISOString())
-            return date.toISOString().slice(0, 16);
-        };
+    // useEffect(() => {
+        // const { startTs, endTs } = realTimeInterval;
+        // onFirstInit(startTs, endTs, aggregation);
+    //     const formatDate = (date: number) => {
+    //         return new Date(date).toISOString().slice(0, 16);
+    //     };
 
-        setFromTime(formatDate(fiveMinutesAgo));
-        setToTime(formatDate(now));
-    }, []);
+    //     setFromTime(formatDate(startTs));
+    //     setToTime(formatDate(endTs));
+    // }, [realTimeInterval]);
+    
+    
 
     const handleSave = () => {
         onSave(fromTime, toTime, aggregation);
+        onClose();
+    };
+
+    const handleReset = () => {
+        onReset(false)
         onClose();
     };
 
@@ -92,11 +101,16 @@ export const TimeWindow: React.FC<TimeWindowProps> = ({ isOpen, onClose, onSave 
                         </Select>
                     </FormControl>
                 </ModalBody>
-                <ModalFooter>
-                    <Button colorScheme="blue" mr={3} onClick={handleSave}>
-                        Save
+                <ModalFooter display={"flex"} justifyContent={"space-between"}>
+                    <Button colorScheme="red" mr={3} onClick={handleReset}>
+                        Reset
                     </Button>
-                    <Button onClick={onClose}>Close</Button>
+                    <Box>
+                        <Button colorScheme="blue" mr={3} onClick={handleSave}>
+                            Save
+                        </Button>
+                        <Button onClick={onClose}>Close</Button>
+                    </Box>
                 </ModalFooter>
             </ModalContent>
         </Modal>

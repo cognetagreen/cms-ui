@@ -23,8 +23,9 @@ import PlantViewTableLayout from '../components/Layouts/TableLayouts/PlantViewTa
 import PlantTable from '../components/widgets/tables/PlantTable'
 import PlantViewRuntime from '../assets/PlantView/PlantViewRuntime'
 import GeneratorPowerDG from '../assets/GeneratorPowerDG'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import UseGeneratorTable from '../Services/Hooks/UseGeneratorTable'
+import { useTimeHandle } from '../Services/TimeWindowSetting'
 
 
 interface APIData {
@@ -34,54 +35,53 @@ interface APIData {
 
 
 const DGDashboard = () => {
-    const [loop, setLoop] = useState<boolean>(true)
-    const [timeWindow, setTimeWindow] = useState({ startTs: 1723692525498, endTs: 1723692825498, aggregate: 'NONE' });
-    const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
-    
-    // const GeneratorTableData = () : APIData[] => {
-    //     console.log(666,timeWindow)
-        const GeneratorTableData = UseGeneratorTable(searchTag, timeWindow);
-    //     return data || [{ column: [], dataFromAPI: [] }];
-    // }    
-    
-    const timeSetter = useCallback(() => {
-        const currentTime = new Date();
-        const now = new Date(currentTime.getTime());
-        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-        const  endTs = now.getTime();
-        const startTs = fiveMinutesAgo.getTime();
-        const aggregate = "NONE";
-        setTimeWindow({startTs, endTs, aggregate})
-
-        console.log(now.toISOString(), fiveMinutesAgo.toISOString(), endTs, startTs)
-
-    }, [])
-
-    useEffect(() => {
-        if(loop) {
-            timeSetter();
-            const interval = setInterval(timeSetter, 10000); // 3-minute interval
-            return () => clearInterval(interval);
-        }
-    }, [loop])
-
+    const TimeHandle = useTimeHandle()
+    const InitTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE");
+    const [manualChanges, setManualChanges] = useState<boolean>(false);
+    const [timeWindow, setTimeWindow] = useState(InitTimeWindow);
+    const [GeneratorTableData, setGeneratorTableData] = useState<APIData[]>([{ column: [], dataFromAPI: [] }]);
     const handleTimeWindowChange = (from: string, to: string, aggregate: string) => {
         function inMS(date: string) {
             return new Date(date).getTime();
         }
         const startTs = inMS(from);
         const endTs = inMS(to);
-        setTimeWindow({ startTs, endTs, aggregate });
-        setLoop(false)
-        console.log(timeWindow);
+        setManualChanges(!manualChanges);
+        setTimeWindow({ startTs, endTs, aggregate });    
     };
-        
-        var searchObj = {
-            inverter : "B1_Inverter_Inverter_0_AC_Active_Power_Watt"
-          }
-          const pieData = UseAssetSummary(searchObj) || [];
-        const runtimeWidget = [1,2,3,4,5,6];
-        
+    const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
+    const fetchedGeneratorTableData =  UseGeneratorTable(searchTag, timeWindow);
+        useEffect(() => {
+            if (fetchedGeneratorTableData) {
+                setGeneratorTableData(fetchedGeneratorTableData);
+            }
+        }, [fetchedGeneratorTableData]);
+        // Automatically update the timeWindow every 5 minutes
+    useEffect(() => {
+        if (!manualChanges) {
+            const intervalId = setInterval(() => {
+                const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE");
+                setTimeWindow(updatedTimeWindow);
+            }, 10000); // 300000 ms = 5 minutes
+    
+            // Cleanup interval on component unmount
+            return () => clearInterval(intervalId);
+        }
+    }, [TimeHandle]);
+
+    const handleReset = (Reset : boolean) => {
+        setManualChanges(Reset);
+        const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE");
+            setTimeWindow(updatedTimeWindow);
+    }
+
+    const runtimeWidget = [1,2,3,4,5,6];
+
+    const searchObj = {
+        inverter: "B1_Inverter_Inverter_0_AC_Active_Power_Watt"
+    };
+
+    const pieData = UseAssetSummary(searchObj) || [];
 
 return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -218,7 +218,10 @@ return (
                         title='Generators'
                         width={["full", "auto"]}
                         height='271px'
+                        // interval={[7, "hour"]}
+                        // onInit={handleFirstInit}
                         onTimeWindowChange = {handleTimeWindowChange}
+                        onReset={handleReset}
                     >
                         <PlantTable
                             paginationLimitProps={4}
@@ -263,4 +266,4 @@ return (
   )
 }
 
-export default DGDashboard
+export default DGDashboard;

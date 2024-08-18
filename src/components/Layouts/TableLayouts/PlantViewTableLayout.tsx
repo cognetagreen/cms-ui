@@ -17,25 +17,14 @@ interface PlantViewTableLayoutProps {
   width: string[];
   height: string;
   px? : string;
+  // interval? : [number, string];
+  // onInit? : (startTs: number, endTs: number, aggregate: string) => void;
   onTimeWindowChange?: (from: string, to: string, aggregate: string) => void;
-
+  onReset? : (Reset : boolean) => void;
 }
 
-const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, title, bg, width, height, px, onTimeWindowChange }) => {
+const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, title, bg, width, height, px, onTimeWindowChange, onReset }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  // useEffect(() => {
-  //   if (onTimeWindowChange) {
-  //     const now = new Date();
-  //     const from = new Date(now.getTime() - 5 * 60 * 1000).toISOString(); // 5 minutes ago
-  //     const to = now.toISOString();
-  //     const aggregate = 'none';
-
-  //     onTimeWindowChange(from, to, aggregate);
-  //     const interval = setInterval(onTimeWindowChange, 300000); // 5-minute interval
-  //     return () => clearInterval(interval);
-  //   }
-  // }, []);
 
   return (
     <Box
@@ -57,7 +46,15 @@ const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, t
                   icon={<RxCounterClockwiseClock />}
                   onClick={onOpen}
           />
-          <TimeWindow isOpen={isOpen} onClose={onClose} onSave={onTimeWindowChange || (()=>{})} />
+          <TimeWindow 
+              isOpen={isOpen} 
+              onClose={onClose} 
+              // firstInterval={interval || [5, "minute"]} 
+              // onFirstInit={onInit || (() => {})} 
+              onSave={onTimeWindowChange || (()=>{})} 
+              onReset={onReset || (() => {})}
+          />
+
         </Box>
         <Text 
          fontSize={"16px"}

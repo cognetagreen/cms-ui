@@ -60,7 +60,7 @@ const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, wi
                 icon={<RxCounterClockwiseClock />}
                 onClick={onOpen}
         />}
-        <TimeWindow isOpen={isOpen} onClose={onClose} onSave={onTimeWindowChange || (()=>{})} />
+        {/* <TimeWindow isOpen={isOpen} onClose={onClose}  onSave={onTimeWindowChange || (()=>{})} /> */}
       </Flex>
       <Box as='main' pb={6} height={"full"} width={"full"} _dark={{color : "white"}}>
         {children}

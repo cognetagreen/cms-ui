@@ -7,10 +7,8 @@ interface APIData {
 
 const UseGeneratorTable = (searchTag: Object, timeWindow: { startTs: number, endTs: number, aggregate: string }) => {
     const [data, setData] = useState<APIData[] | null>(null);
-    const hasFetchedRef = useRef(false);
 
     const fetchTelemetryData = useCallback(async () => {
-        console.log("shakir", timeWindow)
 
         try {
             const response = await GeneratorTableAPI(searchTag, timeWindow);
@@ -21,14 +19,9 @@ const UseGeneratorTable = (searchTag: Object, timeWindow: { startTs: number, end
     }, [timeWindow]);
 
     useEffect(() => {
-        console.log(9, searchTag, timeWindow)
-        if (true) {
-            console.log("zakir")
-            fetchTelemetryData();
-            hasFetchedRef.current = true;
-        }
         
-
+        fetchTelemetryData();
+        
         const interval = setInterval(fetchTelemetryData, 300000); // 5-minute interval
         return () => clearInterval(interval);
     }, [fetchTelemetryData]);

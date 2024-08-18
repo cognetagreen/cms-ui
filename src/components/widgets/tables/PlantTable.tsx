@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { Grid } from 'gridjs-react';
 import { _ } from "gridjs-react";
 import './PlantTable.css';
@@ -96,4 +96,4 @@ const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData})
   );
 }
 
-export default PlantTable;
+export default memo(PlantTable);
