@@ -17,13 +17,12 @@ interface PlantViewTableLayoutProps {
   width: string[];
   height: string;
   px? : string;
-  // interval? : [number, string];
-  // onInit? : (startTs: number, endTs: number, aggregate: string) => void;
-  onTimeWindowChange?: (from: string, to: string, aggregate: string) => void;
+  timeWindow? : boolean;
+  onTimeWindowChange?: (from: string, to: string, aggregate: string, interval : number) => void;
   onReset? : (Reset : boolean) => void;
 }
 
-const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, title, bg, width, height, px, onTimeWindowChange, onReset }) => {
+const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, title, bg, width, height, px, timeWindow, onTimeWindowChange, onReset }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -41,16 +40,14 @@ const PlantViewTableLayout: React.FC<PlantViewTableLayoutProps> = ({ children, t
     >
       <HStack height={"40px"} spacing={5}>
         <Box mt={-5}>
-          <IconButton
+          {timeWindow && <IconButton
                   aria-label='Time Window'
                   icon={<RxCounterClockwiseClock />}
                   onClick={onOpen}
-          />
+          />}
           <TimeWindow 
               isOpen={isOpen} 
               onClose={onClose} 
-              // firstInterval={interval || [5, "minute"]} 
-              // onFirstInit={onInit || (() => {})} 
               onSave={onTimeWindowChange || (()=>{})} 
               onReset={onReset || (() => {})}
           />

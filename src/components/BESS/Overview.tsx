@@ -16,19 +16,24 @@ import SparkBarChart from "../widgets/charts/SparkBarChart";
 import { CiTempHigh } from "react-icons/ci";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import PieChart from "../widgets/charts/PieChart";
+import React from "react";
 
-const tableRows = [["Units Available", "30"], 
-                    ["Chargeable Energy ", "55.02kW"],
-                    ["Units Running", "28"],
-                    ["Reactive Power", "10.01MVAR"],
-                    ["Chargeable Power", "90.03kW"],
-                    ["Dischargeable Energy", "5.01kWh"],
-                    ["Dischargeable Power", "115.05kW"],
-                    ["Apparent Power", "11.52MVA"],
-                    ["Active power", "-10.01MW"], 
-                    ["Grid Forming Voltage Slew", "80.01%/s"]];
-                    
-export const StateOfBattery = ( {} ) => {
+interface StateOfBatteryProps {
+    data : string[];
+}
+
+export const StateOfBattery : React.FC<StateOfBatteryProps> = ( {data} ) => {
+    
+    const tableRows = [["Units Available", data[0]], 
+                        ["Chargeable Energy ", `${data[1]}kW`],
+                        ["Units Running", data[2]],
+                        ["Reactive Power", `${data[3]}MVAR`],
+                        ["Chargeable Power", `${data[3]}kW`],
+                        ["Dischargeable Energy", `${data[3]}kWh`],
+                        ["Dischargeable Power", `${data[3]}kW`],
+                        ["Apparent Power", `${data[3]}MVA`],
+                        ["Active power", `${data[3]}MW`], 
+                        ["Grid Forming Voltage Slew", `${data[3]}%/s`]];
     return (
         <ChartLayout
             title="State Of Battery"

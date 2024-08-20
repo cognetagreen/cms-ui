@@ -22,8 +22,8 @@ const UseGeneratorTable = (searchTag: Object, timeWindow: { startTs: number, end
         
         fetchTelemetryData();
         
-        const interval = setInterval(fetchTelemetryData, 300000); // 5-minute interval
-        return () => clearInterval(interval);
+        // const interval = setInterval(fetchTelemetryData, 300000); // 5-minute interval
+        // return () => clearInterval(interval);
     }, [fetchTelemetryData]);
 
     return data;

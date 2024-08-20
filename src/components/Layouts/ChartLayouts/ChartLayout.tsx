@@ -22,10 +22,11 @@ interface ChartLayoutProps {
   height: string;
   px? : string;
   timeWindow? : boolean;
-  onTimeWindowChange?: (from: string, to: string, aggregate: string) => void;
+  onTimeWindowChange?: (from: string, to: string, aggregate: string, interval : number) => void;
+  onReset? : (Reset : boolean) => void;
 }
 
-const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, width, height, px, timeWindow, onTimeWindowChange }) => {
+const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, width, height, px, timeWindow, onTimeWindowChange, onReset }) => {
   const iconColor = useColorModeValue('#004F86', 'white');
   const { isOpen, onOpen, onClose } = useDisclosure();
   
@@ -60,7 +61,7 @@ const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, wi
                 icon={<RxCounterClockwiseClock />}
                 onClick={onOpen}
         />}
-        {/* <TimeWindow isOpen={isOpen} onClose={onClose}  onSave={onTimeWindowChange || (()=>{})} /> */}
+        <TimeWindow isOpen={isOpen} onClose={onClose} onReset={onReset || (()=>{})}  onSave={onTimeWindowChange || (()=>{})} />
       </Flex>
       <Box as='main' pb={6} height={"full"} width={"full"} _dark={{color : "white"}}>
         {children}

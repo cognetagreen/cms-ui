@@ -36,18 +36,18 @@ interface APIData {
 
 const DGDashboard = () => {
     const TimeHandle = useTimeHandle()
-    const InitTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE");
-    const [manualChanges, setManualChanges] = useState<boolean>(false);
+    const InitTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE", [5, "minute"]);
+    const [manualChanges, setManualChanges] = useState<boolean>(true);
     const [timeWindow, setTimeWindow] = useState(InitTimeWindow);
     const [GeneratorTableData, setGeneratorTableData] = useState<APIData[]>([{ column: [], dataFromAPI: [] }]);
-    const handleTimeWindowChange = (from: string, to: string, aggregate: string) => {
+    const handleTimeWindowChange = (from: string, to: string, aggregate: string, interval: number) => {
         function inMS(date: string) {
             return new Date(date).getTime();
         }
         const startTs = inMS(from);
         const endTs = inMS(to);
-        setManualChanges(!manualChanges);
-        setTimeWindow({ startTs, endTs, aggregate });    
+        setManualChanges(false);
+        setTimeWindow({ startTs, endTs, aggregate, interval });    
     };
     const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
     const fetchedGeneratorTableData =  UseGeneratorTable(searchTag, timeWindow);
@@ -58,11 +58,11 @@ const DGDashboard = () => {
         }, [fetchedGeneratorTableData]);
         // Automatically update the timeWindow every 5 minutes
     useEffect(() => {
-        if (!manualChanges) {
+        if (manualChanges) {
             const intervalId = setInterval(() => {
-                const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE");
+                const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE", [5, "minute"]);
                 setTimeWindow(updatedTimeWindow);
-            }, 10000); // 300000 ms = 5 minutes
+            }, 300000); // 300000 ms = 5 minutes
     
             // Cleanup interval on component unmount
             return () => clearInterval(intervalId);
@@ -71,7 +71,7 @@ const DGDashboard = () => {
 
     const handleReset = (Reset : boolean) => {
         setManualChanges(Reset);
-        const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE");
+        const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE", [5, "minute"]);
             setTimeWindow(updatedTimeWindow);
     }
 

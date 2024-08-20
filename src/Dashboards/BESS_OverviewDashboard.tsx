@@ -17,8 +17,15 @@ import StackedColumnChart from '../components/widgets/charts/StackedColumnChart'
 import { FaChartColumn } from 'react-icons/fa6'
 import ColumnChart from '../components/widgets/charts/ColumnChart'
 import LineChart from '../components/widgets/charts/LineChart'
+import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 
 const BESS_OverviewDashboard = () => {
+
+    var search = {
+        devName : "inverter-1",
+        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt"
+    }
+    const batteryStatus = UseBatteryStatus(search) || [];
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -76,14 +83,14 @@ const BESS_OverviewDashboard = () => {
             >
                 <VStack spacing={0}>
                     <GridItem>
-                        <StateOfBattery />
+                        <StateOfBattery data={batteryStatus}/>
                     </GridItem>
                     <GridItem mt={1} ml={-1}>
                         <BatteryStatus
-                            ACD = {"4.97"}
-                            SOH = {"99"}
-                            Min = {"-1000"}
-                            Max = {"1000"}
+                            ACD = {batteryStatus[0] || 0}
+                            SOH = {batteryStatus[1] || 0}
+                            Min = {batteryStatus[2] || 0}
+                            Max = {batteryStatus[3] || 0}
                         />
                     </GridItem>
                 </VStack>
@@ -104,8 +111,10 @@ const BESS_OverviewDashboard = () => {
                             width={["full", "650px"]}
                             height='330px'
                             icon={FaChartColumn}
+                            timeWindow = {true}
+                            
                         >
-                            <ColumnChart />
+                            <LineChart />
                         </ChartLayout>
                     </GridItem>
                     <GridItem mt={-3}>
