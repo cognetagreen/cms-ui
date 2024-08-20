@@ -5,7 +5,7 @@ interface APIData {
     dataFromAPI : string[][]; 
   }
 
-const UseGeneratorTable = (searchTag: Object, timeWindow: { startTs: number, endTs: number, aggregate: string }) => {
+const UseGeneratorTable = (searchTag: Object, timeWindow: { startTs: number, endTs: number, aggregate: string, interval: number }) => {
     const [data, setData] = useState<APIData[] | null>(null);
 
     const fetchTelemetryData = useCallback(async () => {

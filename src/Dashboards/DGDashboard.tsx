@@ -218,8 +218,7 @@ return (
                         title='Generators'
                         width={["full", "auto"]}
                         height='271px'
-                        // interval={[7, "hour"]}
-                        // onInit={handleFirstInit}
+                        timeWindow={true}
                         onTimeWindowChange = {handleTimeWindowChange}
                         onReset={handleReset}
                     >
