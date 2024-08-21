@@ -15,7 +15,6 @@ import BatteryStatus from '../assets/BESS/Overview/BatteryStatus'
 import ChartLayout from '../components/Layouts/ChartLayouts/ChartLayout'
 import StackedColumnChart from '../components/widgets/charts/StackedColumnChart'
 import { FaChartColumn } from 'react-icons/fa6'
-import ColumnChart from '../components/widgets/charts/ColumnChart'
 import LineChart from '../components/widgets/charts/LineChart'
 import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 import { useEffect, useState } from 'react'
@@ -30,103 +29,46 @@ const BESS_OverviewDashboard = () => {
     }
     const batteryStatus = UseBatteryStatus(search) || [];
 
-    // ********************* BESS DAILY *********************
-    const BESSOutputTimeHandle = useTimeHandle()
-    const InitTimeWindowBESSOutput = BESSOutputTimeHandle.initTimeSetter(5, "hour", "NONE", [5, "minute"]);
-    const [manualChangesBEESOutput, setManualChangesBEESOutput] = useState<boolean>(true);
-    const [timeWindowBESSOutput, setTimeWindowBESSOutput] = useState(InitTimeWindowBESSOutput);
-    const [BESSOutputData, setBESSOutputData] = useState<Object[]>([{}]);
-    const handleTimeWindowBESSOutputChange = (from: string, to: string, aggregate: string, interval: number) => {
-        function inMS(date: string) {
-            return new Date(date).getTime();
-        }
-        const startTs = inMS(from);
-        const endTs = inMS(to);
-        setManualChangesBEESOutput(false);
-        setTimeWindowBESSOutput({ startTs, endTs, aggregate, interval });    
-    };
-    var searchTag = { 
+    // ********************* BESS Output *********************
+    const {
+        timeWindow: timeWindowBESSOutput,
+        handleTimeWindowChange: handleTimeWindowBESSOutputChange,
+        handleReset: BESSOutputHandleReset
+    } = useTimeHandle(5, "hour", "NONE", [5, "minute"]);
+
+    
+    var searchTagBESSOutput = { 
         devName : "Inverter-1",
         keys: "B1_Inverter_Inverter_1_DC_String2_Volt",
         type : "spline",
         name : ["Energy Total"]
     };
-    const fetchedBESSOutputData =  UseBESSDaily(searchTag, timeWindowBESSOutput);
-    console.log(fetchedBESSOutputData)
-        useEffect(() => {
-            if (fetchedBESSOutputData) {
-                setBESSOutputData(fetchedBESSOutputData);
-                console.log("BESSOutputData : ", BESSOutputData);
-            }
-        }, [fetchedBESSOutputData]);
-        // Automatically update the timeWindowBESSOutput every 5 minutes
+    const BESSOutputData = UseBESSDaily(searchTagBESSOutput, timeWindowBESSOutput);
     useEffect(() => {
-        if (manualChangesBEESOutput) {
-            const intervalId = setInterval(() => {
-                const updatedTimeWindowBESSOutput = BESSOutputTimeHandle.initTimeSetter(5, "hour", "NONE", [5, "minute"]);
-                setTimeWindowBESSOutput(updatedTimeWindowBESSOutput);
-            }, 300000); // 300000 ms = 5 minutes
+        if (BESSOutputData) {
+            console.log("BESSOutputData:", BESSOutputData);
+        }
+    }, [BESSOutputData]);
+
+    // ************************BESS Daily********************
+    const {
+        timeWindow: timeWindowBESSDaily,
+        handleTimeWindowChange: handleTimeWindowBESSDailyChange,
+        handleReset: BESSDailyHandleReset
+    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
     
-            // Cleanup interval on component unmount
-            return () => clearInterval(intervalId);
-        }
-    }, [BESSOutputTimeHandle]);
-
-    const BESSOutputHandleReset = (Reset : boolean) => {
-        setManualChangesBEESOutput(Reset);
-        const updatedTimeWindowBESSOutput = BESSOutputTimeHandle.initTimeSetter(5, "hour", "NONE", [5, "minute"]);
-            setTimeWindowBESSOutput(updatedTimeWindowBESSOutput);
-    }
-
-
-    //********************Stacked Column Chart**********************
-
-    const BESSDailyTimeHandle = useTimeHandle()
-    const InitTimeWindowBESSDaily = BESSDailyTimeHandle.initTimeSetter(5, "hour", "AVG", [1, "hour"]);
-    const [manualChangesBEESDaily, setManualChangesBEESDaily] = useState<boolean>(true);
-    const [timeWindowBESSDaily, setTimeWindowBESSDaily] = useState(InitTimeWindowBESSDaily);
-    const [BESSDailyData, setBESSDailyData] = useState<Object[]>([{}]);
-    const handleTimeWindowBESSDailyChange = (from: string, to: string, aggregate: string, interval: number) => {
-        function inMS(date: string) {
-            return new Date(date).getTime();
-        }
-        const startTs = inMS(from);
-        const endTs = inMS(to);
-        setManualChangesBEESDaily(false);
-        setTimeWindowBESSDaily({ startTs, endTs, aggregate, interval });    
-    };
-    var searchTag = { 
+    var searchTagBESSDaily = { 
         devName : "Inverter-1",
         keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
         type : "column",
         name : ["String2 Volt", "String3 Volt"]
     };
-    const fetchedBESSDailyData =  UseBESSDaily(searchTag, timeWindowBESSDaily);
-    console.log(fetchedBESSDailyData)
-        useEffect(() => {
-            if (fetchedBESSDailyData) {
-                setBESSDailyData(fetchedBESSDailyData);
-                console.log("BESSDailyData : ", BESSDailyData);
-            }
-        }, [fetchedBESSDailyData]);
-        // Automatically update the timeWindowBESSDaily every 5 minutes
+    const BESSDailyData = UseBESSDaily(searchTagBESSDaily, timeWindowBESSDaily);
     useEffect(() => {
-        if (manualChangesBEESDaily) {
-            const intervalId = setInterval(() => {
-                const updatedTimeWindowBESSDaily = BESSDailyTimeHandle.initTimeSetter(5, "hour", "AVG", [1, "hour"]);
-                setTimeWindowBESSDaily(updatedTimeWindowBESSDaily);
-            }, 300000); // 300000 ms = 5 minutes
-    
-            // Cleanup interval on component unmount
-            return () => clearInterval(intervalId);
+        if (BESSDailyData) {
+            console.log("BESSDailyData:", BESSDailyData);
         }
-    }, [BESSDailyTimeHandle]);
-
-    const BESSDailyHandleReset = (Reset : boolean) => {
-        setManualChangesBEESDaily(Reset);
-        const updatedTimeWindowBESSDaily = BESSDailyTimeHandle.initTimeSetter(5, "hour", "AVG", [1, "hour"]);
-            setTimeWindowBESSDaily(updatedTimeWindowBESSDaily);
-    }
+    }, [BESSDailyData]);
 
 
   return (
@@ -207,7 +149,7 @@ const BESS_OverviewDashboard = () => {
                             onTimeWindowChange={handleTimeWindowBESSDailyChange}
                             onReset={BESSDailyHandleReset}
                         >
-                            <StackedColumnChart height={260} apiData={BESSDailyData} />
+                            <StackedColumnChart height={260} apiData={BESSDailyData || [{}]} />
                         </ChartLayout>
                     </GridItem>
                     <GridItem mt={-3}>
@@ -220,7 +162,7 @@ const BESS_OverviewDashboard = () => {
                             onTimeWindowChange={handleTimeWindowBESSOutputChange}
                             onReset={BESSOutputHandleReset}
                         >
-                            <LineChart height={280} apiData = {BESSOutputData} />
+                            <LineChart height={280} apiData = {BESSOutputData || [{}]} />
                         </ChartLayout>
                     </GridItem>
                     <GridItem mt={-3}>

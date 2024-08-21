@@ -35,45 +35,16 @@ interface APIData {
 
 
 const DGDashboard = () => {
-    const TimeHandle = useTimeHandle()
-    const InitTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE", [5, "minute"]);
-    const [manualChanges, setManualChanges] = useState<boolean>(true);
-    const [timeWindow, setTimeWindow] = useState(InitTimeWindow);
-    const [GeneratorTableData, setGeneratorTableData] = useState<APIData[]>([{ column: [], dataFromAPI: [] }]);
-    const handleTimeWindowChange = (from: string, to: string, aggregate: string, interval: number) => {
-        function inMS(date: string) {
-            return new Date(date).getTime();
-        }
-        const startTs = inMS(from);
-        const endTs = inMS(to);
-        setManualChanges(false);
-        setTimeWindow({ startTs, endTs, aggregate, interval });    
-    };
-    const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
-    const fetchedGeneratorTableData =  UseGeneratorTable(searchTag, timeWindow);
-        useEffect(() => {
-            if (fetchedGeneratorTableData) {
-                setGeneratorTableData(fetchedGeneratorTableData);
-            }
-        }, [fetchedGeneratorTableData]);
-        // Automatically update the timeWindow every 5 minutes
-    useEffect(() => {
-        if (manualChanges) {
-            const intervalId = setInterval(() => {
-                const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE", [5, "minute"]);
-                setTimeWindow(updatedTimeWindow);
-            }, 300000); // 300000 ms = 5 minutes
-    
-            // Cleanup interval on component unmount
-            return () => clearInterval(intervalId);
-        }
-    }, [TimeHandle]);
 
-    const handleReset = (Reset : boolean) => {
-        setManualChanges(Reset);
-        const updatedTimeWindow = TimeHandle.initTimeSetter(5, "minute", "NONE", [5, "minute"]);
-            setTimeWindow(updatedTimeWindow);
-    }
+    const {
+        timeWindow : timeWindowGeneratorTable,
+        handleTimeWindowChange : handleTimeWindowGeneratorTableChange,
+        handleReset : handleGeneratorTableReset
+    } = useTimeHandle(5, "minute", "NONE", [5, "minute"]);
+
+    const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
+    
+    const GeneratorTableData = UseGeneratorTable(searchTag, timeWindowGeneratorTable);
 
     const runtimeWidget = [1,2,3,4,5,6];
 
@@ -219,8 +190,8 @@ return (
                         width={["full", "auto"]}
                         height='271px'
                         timeWindow={true}
-                        onTimeWindowChange = {handleTimeWindowChange}
-                        onReset={handleReset}
+                        onTimeWindowChange = {handleTimeWindowGeneratorTableChange}
+                        onReset={handleGeneratorTableReset}
                     >
                         <PlantTable
                             paginationLimitProps={4}
