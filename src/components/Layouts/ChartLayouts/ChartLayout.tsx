@@ -21,12 +21,13 @@ interface ChartLayoutProps {
   width: string[];
   height: string;
   px? : string;
+  overflow? : string;
   timeWindow? : boolean;
   onTimeWindowChange?: (from: string, to: string, aggregate: string, interval : number) => void;
   onReset? : (Reset : boolean) => void;
 }
 
-const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, width, height, px, timeWindow, onTimeWindowChange, onReset }) => {
+const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, width, height, px, overflow, timeWindow, onTimeWindowChange, onReset }) => {
   const iconColor = useColorModeValue('#004F86', 'white');
   const { isOpen, onOpen, onClose } = useDisclosure();
   
@@ -63,7 +64,7 @@ const ChartLayout: React.FC<ChartLayoutProps> = ({ children, title, bg, icon, wi
         />}
         <TimeWindow isOpen={isOpen} onClose={onClose} onReset={onReset || (()=>{})}  onSave={onTimeWindowChange || (()=>{})} />
       </Flex>
-      <Box as='main' pb={6} height={"full"} width={"full"} _dark={{color : "white"}}>
+      <Box as='main' pb={6} height={"full"} width={"full"} _dark={{color : "white"}} overflow={overflow}>
         {children}
       </Box>
     </Box>

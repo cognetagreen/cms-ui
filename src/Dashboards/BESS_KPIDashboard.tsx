@@ -13,8 +13,52 @@ import ChartLayout from '../components/Layouts/ChartLayouts/ChartLayout'
 import LineChart from '../components/widgets/charts/LineChart'
 import BatteryDigitalProgressBar from '../assets/BESS/KPI/BatteryDigitalProgressBar'
 import BarLineChart from '../components/widgets/charts/BarLineChart'
+import { useTimeHandle } from '../Services/TimeWindowSetting'
+import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
+import { useEffect } from 'react'
 
 const BESS_KPIDashboard = () => {
+    
+
+    // ******************BESS Cumulative *******************
+    const {
+        timeWindow: timeWindowCumulative,
+        handleTimeWindowChange: handleTimeWindowCumulativeChange,
+        handleReset: CumulativeHandleReset
+    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+
+    var searchTagCumulative = { 
+        devName : "Inverter-1",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        type : ["spline"],
+        name : ["MIN", "MAX"]
+    };
+    const CumulativeData = UseBESSDaily(searchTagCumulative, timeWindowCumulative);
+    useEffect(() => {
+        if (CumulativeData) {
+            console.log("CumulativeData:", CumulativeData);
+        }
+    }, [CumulativeData]);
+
+    // ************************ DailDischargey********************
+    const {
+        timeWindow: timeWindowDailyDischarge,
+        handleTimeWindowChange: handleTimeWindowDailyDischargeChange,
+        handleReset: DailyDischargeHandleReset
+    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    
+    var searchTagDailyDischarge = { 
+        devName : "Inverter-1",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        type : ["bar", "spline"],
+        name : ["String2 Volt", "String3 Volt"]
+    };
+    const DailyDischargeData = UseBESSDaily(searchTagDailyDischarge, timeWindowDailyDischarge);
+    useEffect(() => {
+        if (DailyDischargeData) {
+            console.log("DailyDischargeData:", DailyDischargeData);
+        }
+    }, [DailyDischargeData]);
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -132,7 +176,7 @@ const BESS_KPIDashboard = () => {
                     width={["full", "auto"]}
                     height='290px'
                 >
-                    <LineChart />
+                    <LineChart height={260} apiData={CumulativeData || [{}]} />
                 </ChartLayout>
             </GridItem>
             <GridItem colSpan={1} rowSpan={1}>
@@ -140,8 +184,11 @@ const BESS_KPIDashboard = () => {
                     title='Daily Discharge Energy'
                     width={["full", "auto"]}
                     height='290px'
+                    timeWindow={true}
+                    onTimeWindowChange={handleTimeWindowDailyDischargeChange}
+                    onReset={DailyDischargeHandleReset}
                 >
-                    <BarLineChart />
+                    <BarLineChart height={250} apiData={DailyDischargeData || [{}]}/>
                 </ChartLayout>
             </GridItem>
         </Grid>

@@ -20,6 +20,9 @@ import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 import { useEffect, useState } from 'react'
 import { useTimeHandle } from '../Services/TimeWindowSetting'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
+import UseSomeTitle from '../Services/Hooks/Battery/UseSomeTitle'
+
+// *********************** Battery Status **********************
 
 const BESS_OverviewDashboard = () => {
 
@@ -40,7 +43,7 @@ const BESS_OverviewDashboard = () => {
     var searchTagBESSOutput = { 
         devName : "Inverter-1",
         keys: "B1_Inverter_Inverter_1_DC_String2_Volt",
-        type : "spline",
+        type : ["spline"],
         name : ["Energy Total"]
     };
     const BESSOutputData = UseBESSDaily(searchTagBESSOutput, timeWindowBESSOutput);
@@ -60,7 +63,7 @@ const BESS_OverviewDashboard = () => {
     var searchTagBESSDaily = { 
         devName : "Inverter-1",
         keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
-        type : "column",
+        type : ["column"],
         name : ["String2 Volt", "String3 Volt"]
     };
     const BESSDailyData = UseBESSDaily(searchTagBESSDaily, timeWindowBESSDaily);
@@ -70,6 +73,40 @@ const BESS_OverviewDashboard = () => {
         }
     }, [BESSDailyData]);
 
+    // ******************BESS MIN MAX *******************
+    const {
+        timeWindow: timeWindowMinMax,
+        handleTimeWindowChange: handleTimeWindowMinMaxChange,
+        handleReset: MinMaxHandleReset
+    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+
+    var searchTagMinMax = { 
+        devName : "Inverter-1",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        type : ["spline"],
+        name : ["MIN", "MAX"]
+    };
+    const MinMaxData = UseBESSDaily(searchTagMinMax, timeWindowMinMax);
+    useEffect(() => {
+        if (MinMaxData) {
+            console.log("MinMaxData:", MinMaxData);
+        }
+    }, [MinMaxData]);
+
+
+    // ******************* Some Title ******************
+    var searchTagSomeTitle = {
+        devName : "Inverter-",
+        sparkBarKeys : "B1_Inverter_Inverter_0_DC_String2_Volt,B1_Inverter_Inverter_0_DC_String3_Volt",
+        keys : "B1_Inverter_Inverter_0_DC_String2_Volt,B1_Inverter_Inverter_0_DC_String3_Volt"
+    }
+    const [someTitleData, setSomeTitleData] =  useState([{bar : [85, 75, 65], temp : 20, volt : 7}, {bar : [35, 25, 65], temp : 20, volt : 7}])
+    const fetchSomeTitleData = UseSomeTitle(searchTagSomeTitle);
+    useEffect(()=> {
+        if(fetchSomeTitleData) {
+            setSomeTitleData(fetchSomeTitleData);
+        }
+    }, [fetchSomeTitleData])
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -171,14 +208,17 @@ const BESS_OverviewDashboard = () => {
                             width={["full", "650px"]}
                             height='280px'
                             icon={FaChartLine}
+                            timeWindow={true}
+                            onTimeWindowChange={handleTimeWindowMinMaxChange}
+                            onReset={MinMaxHandleReset}
                         >
-                            <LineChart />
+                            <LineChart height={240} apiData={MinMaxData || [{}]}/>
                         </ChartLayout>
                     </GridItem>
                 </VStack>
                 <VStack w={"auto"} spacing={0}>
                     <GridItem>
-                        <SomeTitle />
+                        <SomeTitle apiData={someTitleData || [{bar : [85, 75, 65], temp : 20, volt : 7}, {bar : [35, 25, 65], temp : 20, volt : 7}]} />
                     </GridItem>
                     <GridItem>
                         <BatteryBank />

@@ -109,13 +109,23 @@ export const StateOfBattery : React.FC<StateOfBatteryProps> = ( {data} ) => {
 };
 
 // Some Title Will Change in Future
-const someTitleContentCount = [1,2,3,4,5,6,7,8,9]
-export const SomeTitle = ( {} ) => {
+interface data {
+    bar : number[];
+    temp : number;
+    volt : number
+}
+
+interface someTitleProps { 
+    apiData? : data[];
+}
+export const SomeTitle : React.FC <someTitleProps> = ( {apiData = [{bar : [0,0,0], temp : 0, volt : 0}]} ) => {
+    
     return (
         <ChartLayout
             title="Some Title"
             width={["full", "400px"]}
-            height = "auto"
+            height = "626"
+            overflow="auto"
         >
             <Box mt={5}>
                 <hr style={{color : "#D7D7D7"}} />
@@ -123,7 +133,7 @@ export const SomeTitle = ( {} ) => {
                     flexDirection={"column"}
                     justifyContent={"space-around"}
                 >
-                    {someTitleContentCount.map((_, i) => (
+                    {apiData.map((_, i) => (
                     <HStack 
                         key={i}
                         border={"1px solid #E4E4E4"} 
@@ -138,14 +148,14 @@ export const SomeTitle = ( {} ) => {
                             fontWeight={600}
                             color={"#4B4B4B"}
                         >S0{i+1}.M01</Text>
-                        <SparkBarChart />
+                        <SparkBarChart apiData={apiData[i].bar || [22,2,22]}/>
                         <HStack spacing={1} mr={3}>
                             <Icon as={CiTempHigh} />
                             <Text
                                 fontSize={12}
                                 fontWeight={600}
                                 color={"#657079"}
-                                >28.7°C</Text>
+                                >{apiData[i].temp || 0}°C</Text>
                         </HStack>
                         <HStack spacing={1}>
                             <Icon as={BsFillLightningChargeFill} boxSize={"10px"} />
@@ -153,7 +163,7 @@ export const SomeTitle = ( {} ) => {
                                 fontSize={12}
                                 fontWeight={600}
                                 color={"#657079"}
-                                >3.56 V</Text>
+                                >{apiData[i].volt || 0} V</Text>
                         </HStack>
                     </HStack>
                     ))}

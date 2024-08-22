@@ -1,38 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const AreaChart = () => {
-    const options = {
+interface AreaChartProps {
+    apiData? : Object[];
+    height? : Number;
+}
+
+const AreaChart : React.FC <AreaChartProps> = ({apiData, height=290}) => {
+    const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'area',
             backgroundColor : "transparent",
-            height : "290px"
+            height : height,
+            zoomType : "x"
         },
         title: {
             text: ''
         },
         xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May']
+            type : 'datetime'
         },
         yAxis: {
             title: {
                 text: 'Values'
             }
         },
-        series: [{
-            name: 'Data1',
-            data: [10, 20, 15, 25, 30]
-        }, {
-            name : "data2",
-            data: [30, 40, 60, 25, 30]
-        }]
-    };
+        series: [] as Object[]
+    });
+
+    useEffect(() => {
+        if (apiData) {
+            setChartOptions({
+                ...chartOptions,
+                series: apiData
+            });
+        }
+    }, [apiData]);
 
     return (
         <HighchartsReact
             highcharts={Highcharts}
-            options={options}
+            options={chartOptions}
         />
     );
 };

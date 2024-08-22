@@ -4,13 +4,14 @@ import HighchartsReact from 'highcharts-react-official';
 
 interface StakedColumnProps {
     apiData? : Object[];
-    height? : Number
+    height? : Number;
 }
 
 const StackedColumnChart: React.FC<StakedColumnProps> = ({apiData, height=210}) => {
 
         const [chartOptions, setChartOptions] = useState({
             chart: {
+                type : "column",
                 backgroundColor : "transparent",
                 height : height
             },

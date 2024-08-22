@@ -16,8 +16,80 @@ import ColumnChart from '../components/widgets/charts/ColumnChart'
 import PlantViewTableLayout from '../components/Layouts/TableLayouts/PlantViewTableLayout'
 import PlantTable from '../components/widgets/tables/PlantTable'
 import CandlestickChart from '../components/widgets/charts/CandlestickChart'
+import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
+import { useTimeHandle } from '../Services/TimeWindowSetting'
+import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
+import { useEffect } from 'react'
 
 const BESS_HealthDashboard = () => {
+
+    //*****************************************CURRENT STATUS******************************* */
+
+    var search = {
+        devName : "inverter-1",
+        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt"
+    }
+    const batteryStatus = UseBatteryStatus(search) || [];
+
+    // ************************Degradation********************
+    const {
+        timeWindow: timeWindowDegradation,
+        handleTimeWindowChange: handleTimeWindowDegradationChange,
+        handleReset: DegradationHandleReset
+    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    
+    var searchTagDegradation = { 
+        devName : "Inverter-1",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        type : ["area"],
+        name : ["String2 Volt", "String3 Volt"]
+    };
+    const DegradationData = UseBESSDaily(searchTagDegradation, timeWindowDegradation);
+    useEffect(() => {
+        if (DegradationData) {
+            console.log("DegradationData:", DegradationData);
+        }
+    }, [DegradationData]);
+
+    // ************************Delta V Distribution********************
+    const {
+        timeWindow: timeWindowVDistribution,
+        handleTimeWindowChange: handleTimeWindowVDistributionChange,
+        handleReset: VDistributionHandleReset
+    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    
+    var searchTagVDistribution = { 
+        devName : "Inverter-1",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        type : ["column"],
+        name : ["String2 Volt", "String3 Volt"]
+    };
+    const VDistributionData = UseBESSDaily(searchTagVDistribution, timeWindowVDistribution);
+    useEffect(() => {
+        if (VDistributionData) {
+            console.log("VDistributionData:", VDistributionData);
+        }
+    }, [VDistributionData]);
+
+    // ************************Cell V Delta********************
+    const {
+        timeWindow: timeWindowCellV,
+        handleTimeWindowChange: handleTimeWindowCellVChange,
+        handleReset: CellVHandleReset
+    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    
+    var searchTagCellV = { 
+        devName : "Inverter-1",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        type : ["column"],
+        name : ["String2 Volt", "String3 Volt"]
+    };
+    const CellVData = UseBESSDaily(searchTagCellV, timeWindowCellV);
+    useEffect(() => {
+        if (CellVData) {
+            console.log("CellVData:", CellVData);
+        }
+    }, [CellVData]);
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -51,11 +123,11 @@ const BESS_HealthDashboard = () => {
                     chart={true}
                     title = "Current Status"
                     h1='Cycle'
-                    v1='20'
+                    v1={batteryStatus[0]}
                     h2='Usable Energy'
-                    v2='139.7MWh'
+                    v2={`${batteryStatus[1]}MWh`}
                     h3='SOH'
-                    v3='95.5%'
+                    v3={`${batteryStatus[2]}%`}
                 />
             </GridItem>
             <GridItem>
@@ -63,11 +135,11 @@ const BESS_HealthDashboard = () => {
                     chart={false}
                     title = "Statistics"
                     h1='Cumulated Discharged Energy Throughout'
-                    v1='53.5%'
+                    v1={`${batteryStatus[0]}%`}
                     h2='Cumulated Charged Energy Throughout'
-                    v2='153.8%'
+                    v2={`${batteryStatus[1]}%`}
                     h3='Estimated Remaining Usable Energy Throughout'
-                    v3='9123.5%'
+                    v3={`${batteryStatus[2]}%`}
                 />
             </GridItem>
         </Grid>
@@ -82,17 +154,23 @@ const BESS_HealthDashboard = () => {
                     title='Degradation Trend'
                     width={["full", "auto"]}
                     height='300px'
+                    timeWindow={true}
+                    onTimeWindowChange={handleTimeWindowDegradationChange}
+                    onReset={DegradationHandleReset}
                 >
-                    <AreaChart />
+                    <AreaChart height={260} apiData={DegradationData || [{}]} />
                 </ChartLayout>
             </GridItem>
             <GridItem rowSpan={1} colSpan={1}>
                 <ChartLayout
-                    title='Delta V Distribution'
+                    title='Cell Voltage Delta'
                     width={["full", "auto"]}
                     height='300px'
+                    timeWindow={true}
+                    onTimeWindowChange={handleTimeWindowVDistributionChange}
+                    onReset={VDistributionHandleReset}
                 >
-                    <ColumnChart />
+                    <ColumnChart  apiData={VDistributionData || [{}]}/>
                 </ChartLayout>
             </GridItem>
         </Grid>
@@ -105,11 +183,14 @@ const BESS_HealthDashboard = () => {
         >
             <GridItem rowSpan={1} colSpan={1}>
                 <ChartLayout
-                    title='Cell Voltage Delta'
+                    title='Delta V Distribution'
                     width={["full", "auto"]}
                     height='300px'
+                    timeWindow={true}
+                    onTimeWindowChange={handleTimeWindowCellVChange}
+                    onReset={CellVHandleReset}
                 >
-                    <ColumnChart />
+                    <ColumnChart apiData={CellVData || [{}]}/>
                 </ChartLayout>
             </GridItem>
             <GridItem rowSpan={1} colSpan={1}>
