@@ -16,6 +16,7 @@ import BarLineChart from '../components/widgets/charts/BarLineChart'
 import { useTimeHandle } from '../Services/TimeWindowSetting'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
 import { useEffect } from 'react'
+import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 
 const BESS_KPIDashboard = () => {
     
@@ -59,6 +60,30 @@ const BESS_KPIDashboard = () => {
             console.log("DailyDischargeData:", DailyDischargeData);
         }
     }, [DailyDischargeData]);
+
+    // **************************** CARDS ******************
+
+    var search = {
+        devName : "inverter-1",
+        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt",
+    }
+    const batteryStatus = UseBatteryStatus(search) || [];
+
+    var search1 = {
+        devName : "inverter-1",
+        keys : "B1_Inverter_Inverter_1_DC_String1_Volt",
+        special : "7daysSOCavg"
+    }
+    const batteryStatusSoc = UseBatteryStatus(search1) || [];
+    console.log(1, batteryStatusSoc)
+
+    var search2 = {
+        devName : "inverter-1",
+        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,",
+        special : "temp30"
+    }
+    const batteryStatus2 = UseBatteryStatus(search2) || [];
+    console.log(2, batteryStatus2)
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -117,49 +142,49 @@ const BESS_KPIDashboard = () => {
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Daily Depth of Discharge'
-                    value='61%'
+                    value={`${100 - batteryStatus[0]}%`}
                 />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Daily DC Discharge Energy'
-                    value='61%'
+                    value={`${batteryStatus[1]}%`}
                 />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Reliability'
-                    value='61%'
+                    value={`${((batteryStatus[2] - (2*5)*100)/12).toFixed(2)}%`}
                 />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Availability'
-                    value='61%'
+                    value={`${(batteryStatus[2] * 100) / 12}%`}
                 />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Average SOC'
-                    value='61%'
+                    value={`${batteryStatusSoc[0]} aw%`}
                 />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Resting SOC'
-                    value='61%'
+                    value={`${batteryStatus[2]}aw%`}
                 />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Average C-Rate'
-                    value='61%'
+                    value={`${batteryStatus[2] / 12}aw%`}
                 />
             </GridItem>
             <GridItem colSpan={1} rowSpan={1} height={"auto"} width={"auto"}>
                 <BatteryDigitalProgressBar
                     title='Temperature within Warranty Range'
-                    value='61%'
+                    value={`${batteryStatus2}aw%`}
                 />
             </GridItem>
             

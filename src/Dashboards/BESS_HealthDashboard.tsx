@@ -20,6 +20,7 @@ import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 import { useTimeHandle } from '../Services/TimeWindowSetting'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
 import { useEffect } from 'react'
+import UseCellVDelta from '../Services/Hooks/Battery/UseCellVDelta'
 
 const BESS_HealthDashboard = () => {
 
@@ -56,13 +57,13 @@ const BESS_HealthDashboard = () => {
         timeWindow: timeWindowVDistribution,
         handleTimeWindowChange: handleTimeWindowVDistributionChange,
         handleReset: VDistributionHandleReset
-    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    } = useTimeHandle(7, "day", "AVG", [1, "day"]);
     
     var searchTagVDistribution = { 
         devName : "Inverter-1",
-        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt",
         type : ["column"],
-        name : ["String2 Volt", "String3 Volt"]
+        name : ["String2 Volt"]
     };
     const VDistributionData = UseBESSDaily(searchTagVDistribution, timeWindowVDistribution);
     useEffect(() => {
@@ -71,25 +72,40 @@ const BESS_HealthDashboard = () => {
         }
     }, [VDistributionData]);
 
-    // ************************Cell V Delta********************
-    const {
-        timeWindow: timeWindowCellV,
-        handleTimeWindowChange: handleTimeWindowCellVChange,
-        handleReset: CellVHandleReset
-    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    // ************************Cell V Delta*********************
     
     var searchTagCellV = { 
         devName : "Inverter-1",
-        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt",
         type : ["column"],
-        name : ["String2 Volt", "String3 Volt"]
+        name : ["String2 Volt"]
     };
-    const CellVData = UseBESSDaily(searchTagCellV, timeWindowCellV);
+    const CellVData = UseCellVDelta(searchTagCellV);
     useEffect(() => {
         if (CellVData) {
             console.log("CellVData:", CellVData);
         }
     }, [CellVData]);
+
+    // ************************Cell V Delta********************
+    const {
+        timeWindow: timeWindowTrend,
+        handleTimeWindowChange: handleTimeWindowTrendChange,
+        handleReset: TrendHandleReset
+    } = useTimeHandle(12, "hour", "AVG", [30, "minute"]);
+    
+    var searchTagTrend = { 
+        devName : "Inverter-1",
+        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+        type : ["candlestick"],
+        name : ["String2 Volt", "String3 Volt"]
+    };
+    const TrendData = UseBESSDaily(searchTagTrend, timeWindowTrend);
+    useEffect(() => {
+        if (TrendData) {
+            console.log("TrendData:", TrendData);
+        }
+    }, [TrendData]);
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -163,14 +179,11 @@ const BESS_HealthDashboard = () => {
             </GridItem>
             <GridItem rowSpan={1} colSpan={1}>
                 <ChartLayout
-                    title='Cell Voltage Delta'
+                    title='Delta V Distribution'
                     width={["full", "auto"]}
                     height='300px'
-                    timeWindow={true}
-                    onTimeWindowChange={handleTimeWindowVDistributionChange}
-                    onReset={VDistributionHandleReset}
                 >
-                    <ColumnChart  apiData={VDistributionData || [{}]}/>
+                    <ColumnChart category={["0.01","0.02","0.03","0.04","0.05","0.06","0.07","0.08","0.09"]} apiData={CellVData || [{}]}/>
                 </ChartLayout>
             </GridItem>
         </Grid>
@@ -183,14 +196,19 @@ const BESS_HealthDashboard = () => {
         >
             <GridItem rowSpan={1} colSpan={1}>
                 <ChartLayout
-                    title='Delta V Distribution'
+                    title='Cell Voltage Delta'
                     width={["full", "auto"]}
                     height='300px'
                     timeWindow={true}
-                    onTimeWindowChange={handleTimeWindowCellVChange}
-                    onReset={CellVHandleReset}
+                    onTimeWindowChange={handleTimeWindowVDistributionChange}
+                    onReset={VDistributionHandleReset}
                 >
-                    <ColumnChart apiData={CellVData || [{}]}/>
+                    <ColumnChart height={210}  apiData={VDistributionData?.map((elem:any) => ({
+                        name : elem.name,
+                        type : elem.type,
+                        data : elem.data.map((elem : any) => [elem[0], parseFloat(((220-parseFloat(elem[1]))/220).toFixed(2))])
+
+                    })) || [{}]}/>
                 </ChartLayout>
             </GridItem>
             <GridItem rowSpan={1} colSpan={1}>
@@ -198,8 +216,21 @@ const BESS_HealthDashboard = () => {
                     title='Degradation Trend'
                     width={["full", "auto"]}
                     height='300px'
+                    timeWindow={true}
+                    onTimeWindowChange={handleTimeWindowTrendChange}
+                    onReset={TrendHandleReset}
                 >
-                    <CandlestickChart />
+                    <CandlestickChart 
+                apiData={TrendData || [{
+                    name: "zakir",
+                    type: "candlestick",
+                    data: [
+                        [1625097600000, 145.0, 150.0, 144.0, 149.0],
+                        [1625184000000, 149.0, 152.0, 148.0, 151.0],
+                        [1625270400000, 151.0, 153.0, 150.0, 152.0],
+                    ]
+                }]} 
+            />
                 </ChartLayout>
             </GridItem>
             <GridItem colSpan={2} rowSpan={1}>    

@@ -8,23 +8,26 @@ const day = 24 * hour;
 const week = 7 * day;
 const month = 30 * day;
 const quarter = 3 * month;
+const cdsf = new Date().getTime() - new Date().setHours(0, 0, 0, 0);
 
 const timeOption = (count: number, interval: string) => {
     switch (interval) {
         case "seconds":
-            return count * second;
+            return count * second;      // This is Last Day
         case "minute":
-            return count * minute;
+            return count * minute;      // This is Last Day
         case "hour":
-            return count * hour;
+            return count * hour;        // This is Last Day
         case "day":
-            return count * day;
+            return count * day;         // This is Last Day
         case "week":
-            return count * week;
+            return count * week;        // This is Last Day
         case "month":
-            return count * month;
+            return count * month;       // This is Last Day
         case "quarter":
-            return count * quarter;
+            return count * quarter;     // This is Last Day
+            case "cdsf":
+                return cdsf;
         default:
             return 5 * minute;
     }

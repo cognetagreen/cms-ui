@@ -14,10 +14,11 @@ HighchartsFullScreen(Highcharts);
 interface ColumnChartProps {
   apiData? : Object[];
   height? : Number;
+  category? : string[];
 }
 
-const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270}) => {
-
+const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270, category}) => {
+console.log(category)
   const [chartOptions, setChartOptions] = useState({
     chart: {
       type: 'column',
@@ -39,7 +40,7 @@ const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270}) => {
     plotOptions: {
       column: {
         dataLabels: {
-          enabled: false
+          enabled: true
         },
         pointWidth : 40,
         borderWidth : 20,
@@ -47,15 +48,19 @@ const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270}) => {
       }
     },
     legend: {
-      enabled: true,
+      enabled: false,
       align: 'left',
       verticalAlign: 'bottom'
     },
+    tooltip : {
+      enabled : true
+    },
     xAxis : {
       labels : {
-        enabled : false
+        enabled : true
       },
-      gridLineWidth: 0,
+      type : 'datetime',
+      gridLineWidth: 1,
     },
     yAxis : {
       title : {
@@ -82,14 +87,25 @@ const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270}) => {
     }
   });
 
+  
   useEffect(() => {
     if (apiData) {
-        setChartOptions({
-            ...chartOptions,
-            series: apiData
-        });
+      setChartOptions((prevOptions) => ({
+        ...prevOptions,
+        series: apiData
+      }));
+
+      if (category) {
+        setChartOptions((prevOptions) => ({
+          ...prevOptions,
+          xAxis : {
+          ...prevOptions.xAxis,
+            categories: category
+          }
+        }));
+      }
     }
-  }, [apiData]);
+  }, [apiData, category]);
 
     return (
     <>

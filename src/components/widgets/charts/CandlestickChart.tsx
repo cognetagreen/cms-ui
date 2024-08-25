@@ -1,9 +1,21 @@
-import React from 'react';
-import Highcharts from 'highcharts/highstock';
+import React, { useEffect, useState } from 'react';
+import Highcharts, { Options, Series } from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 
-const CandlestickChart: React.FC = () => {
-    const options = {
+// interface data {
+//     name : string;
+//     type? : string;
+//     data : number[][];
+// }
+
+interface CandlestickChartProps {
+    apiData? : any[];
+}
+
+const CandlestickChart: React.FC <CandlestickChartProps> = ({apiData}) => {
+
+    console.log(apiData, "candlestick")
+const [chartOption, setChartOption] = useState<Object>({
         chart : {
             height : 270
         },
@@ -39,14 +51,43 @@ const CandlestickChart: React.FC = () => {
                 color: '#333333',
             },
         }]
-    };
+    });
 
+    useEffect(() => {
+        if (apiData && apiData.length > 0) {
+            const transformedSeries = apiData.map(series => {
+                const candlestickData = series.data.map((point : any, index : any) => {
+                    // Assuming the value is the closing price and using the previous and next values for open, high, and low
+                    const open = index > 0 ? series.data[index - 1][1] : point[1];
+                    const high = Math.max(open, point[1]);
+                    const low = Math.min(open, point[1]);
+                    const close = point[1];
+
+                    return [point[0], open, high, low, close];
+                });
+
+                return {
+                    name: series.name,
+                    type: series.type || 'candlestick',
+                    data: candlestickData,
+                    marker: {
+                        enabled: false
+                    }
+                };
+            });
+
+            setChartOption(prevOptions => ({
+                ...prevOptions,
+                series: transformedSeries
+            }));
+        }
+    }, [apiData]);
     return (
         <div>
             <HighchartsReact
                 highcharts={Highcharts}
                 constructorType={'stockChart'}
-                options={options}
+                options={chartOption}
             />
         </div>
     );

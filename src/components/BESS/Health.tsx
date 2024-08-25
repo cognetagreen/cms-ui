@@ -1,6 +1,6 @@
 import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import SparkBarChart from "../widgets/charts/SparkBarChart";
-// import SolidGaugeChart from "../widgets/charts/SolidGuageChart";
+import SolidGaugeChart from "../widgets/charts/SolidGuageChart";
 
 interface HealthStatusProps {
     chart : boolean;
@@ -48,7 +48,7 @@ export const HealthStatus : React.FC<HealthStatusProps> = ({chart, title, h1, h2
                         <Text fontSize={11} color={"#fff"}>{h3}</Text>
                         <Text fontSize={24} color={"#03BB7D"}>{v3}</Text>
                     </VStack>
-                    {chart && <SparkBarChart />}
+                    {chart && <SolidGaugeChart />}
                 </Flex>
             </Box>
         </VStack>

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const AreaSplineChart = () => {
-    const options: Highcharts.Options = {
+interface AreaSplineChartProps {
+    apiData? : Object[];
+}
+
+const AreaSplineChart : React.FC <AreaSplineChartProps> = ({apiData}) => {
+    const [chartOption, setChartOptions] = useState({
         chart: {
             type: 'areaspline',
             height : '300px',
@@ -13,29 +17,28 @@ const AreaSplineChart = () => {
             text: 'Monthly Sales Data'
         },
         xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            type : "datetime"
         },
         yAxis: {
             title: {
                 text: 'Sales'
             }
         },
-        series: [{
-            type : "areaspline",
-            name: 'Sales 2021',
-            data: [100, 150, 200, 180, 250, 300, 280, 320, 350, 400, 380, 420]
-        }, {
-            type : "areaspline",
-            name: 'Sales 2020',
-            data: [80, 120, 160, 150, 200, 250, 240, 280, 300, 350, 330, 370]
-        }],
+        series: [] as Object[],
         legend : {
             align : "left"
         }
-    };
+    });
+
+    useEffect(() => {
+        setChartOptions((prevOptions) => ({
+            ...prevOptions,
+            series : apiData || [{}]
+        }))
+    }, [apiData])
 
     return (
-        <HighchartsReact highcharts={Highcharts} options={options} />
+        <HighchartsReact highcharts={Highcharts} options={chartOption} />
     );
 };
 

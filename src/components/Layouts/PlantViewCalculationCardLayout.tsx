@@ -17,22 +17,23 @@ import {
 
 interface PlantViewCalculatedCardContentProps {
   valueIndex : number;
+  data : string[][];
 }
 
-const PlantViewCalculatedCardContent:React.FC<PlantViewCalculatedCardContentProps> = ({valueIndex}) => {
-    const data = [
-        ["Grid kW:", "CUF %:", "Grid Hz:", "Consumption kWh:", "Feed kWh:"],
-        [299.79, 36, 131, 49, 9999999.99],
-        [399.79, 18, 231, 59, 10999999.99],
-        [499.79, 16, 331, 69, 20999999.99]
-    ]
+const PlantViewCalculatedCardContent:React.FC<PlantViewCalculatedCardContentProps> = ({valueIndex, data}) => {
+    const dataLabels = ["Grid kW:", "CUF %:", "Grid Hz:", "Consumption kWh:", "Feed kWh:"];
+    // const data = [
+    //     [299.79, 36, 131, 49, 9999999.99],  //Daily
+    //     [399.79, 18, 231, 59, 10999999.99], //Monthly
+    //     [499.79, 16, 331, 69, 20999999.99]  //Yearly
+    // ]
     return (
         <Box>
                 <Flex mx={-5} flexDirection={"row"} w={430} flexWrap={"wrap"}>
-                  {data[0].map((label, index) => (
+                  {data[0].map((_, index) => (
                     <VStack key={index} mr={"120px"} ml={5} spacing={"0px"} mb={2} alignItems={"start"} textAlign={"left"}>
-                      <Text color={"#3D3D3D"} fontWeight={500} fontSize={12}>{label}</Text>
-                      <Text color={"#000000"} fontWeight={700} fontSize={12}>{data[valueIndex][index]}</Text>
+                      <Text color={"#3D3D3D"} fontWeight={500} fontSize={12}>{dataLabels[index]}</Text>
+                      <Text color={"#000000"} fontWeight={700} fontSize={12}>{parseFloat(data[valueIndex][index]).toFixed(2) || 0}</Text>
                     </VStack>
                   ))}
                 </Flex>
@@ -48,9 +49,10 @@ interface PlantViewCalculationCardLayoutProps {
   width: string[];
   height: string;
   px? : string;
+  data : string[][];
 }
 
-const PlantViewCalculationCardLayout: React.FC<PlantViewCalculationCardLayoutProps> = ({ title, bg, width, height, px }) => {
+const PlantViewCalculationCardLayout: React.FC<PlantViewCalculationCardLayoutProps> = ({ title, bg, width, height, px, data }) => {
   return (
     <Box
       w={width}
@@ -86,13 +88,13 @@ const PlantViewCalculationCardLayout: React.FC<PlantViewCalculationCardLayoutPro
         <hr style={{border: "1px solid #000", width:"400px"}} />
         <TabPanels>
           <TabPanel>
-            <PlantViewCalculatedCardContent valueIndex={1} />
+            <PlantViewCalculatedCardContent data={data} valueIndex={0} />
           </TabPanel>
           <TabPanel>
-            <PlantViewCalculatedCardContent valueIndex={2} />
+            <PlantViewCalculatedCardContent data={data} valueIndex={1} />
           </TabPanel>
           <TabPanel>
-            <PlantViewCalculatedCardContent valueIndex={3} />
+            <PlantViewCalculatedCardContent data={data} valueIndex={2} />
           </TabPanel>
         </TabPanels>
       </Tabs>

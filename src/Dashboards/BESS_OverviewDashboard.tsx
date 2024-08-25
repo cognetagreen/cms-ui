@@ -78,12 +78,12 @@ const BESS_OverviewDashboard = () => {
         timeWindow: timeWindowMinMax,
         handleTimeWindowChange: handleTimeWindowMinMaxChange,
         handleReset: MinMaxHandleReset
-    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    } = useTimeHandle(7, "day", "NONE", [10, "minute"]);
 
     var searchTagMinMax = { 
         devName : "Inverter-1",
         keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
-        type : ["spline"],
+        type : ["spline", "spline"],
         name : ["MIN", "MAX"]
     };
     const MinMaxData = UseBESSDaily(searchTagMinMax, timeWindowMinMax);
