@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Highcharts from 'highcharts';
+import Highcharts, { Series } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 interface LineChartProps {
@@ -27,7 +27,7 @@ const LineChart : React.FC<LineChartProps> = ({apiData, height=210}) => {
                     // Adjusting for timezone offset
                     const utcOffset = date.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
                     const localDate = new Date(date.getTime() - utcOffset);
-                    return localDate.toISOString().slice(10, 19).replace('T', ' '); // Format as 'YYYY-MM-DD HH:mm:ss'
+                    return localDate.toISOString().slice(10, 16).replace('T', ' '); // Format as 'YYYY-MM-DD HH:mm:ss'
                 }
             }
         },

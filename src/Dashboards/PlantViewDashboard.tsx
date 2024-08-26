@@ -88,7 +88,7 @@ import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
         resolution : ["Daily", "Monthly", "Yearly"],
         agg : ["AVG", "SUM"]
     }
-    const plantCardDailyData = UseBatteryStatus(searchSolarCard)
+    // const plantCardDailyData = UseBatteryStatus(searchSolarCard)
     // console.log("455454545454545", plantCardDailyData)
     const PlantCardData = UsePlantCard(searchSolarCard) || [[]];
     // console.log(PlantCardData)

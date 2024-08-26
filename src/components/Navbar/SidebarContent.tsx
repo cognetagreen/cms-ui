@@ -177,6 +177,8 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           color={"#FFFFFFFF"}
           fontSize={"md"}
           fontWeight={600}
+          as={Link}
+          to={'/inverter'}
         >
           &nbsp; Integrations
           <Icon

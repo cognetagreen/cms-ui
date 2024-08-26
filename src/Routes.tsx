@@ -10,6 +10,7 @@ import DGDashboard from './Dashboards/DGDashboard'
 import BESS_OverviewDashboard from './Dashboards/BESS_OverviewDashboard'
 import BESS_KPIDashboard from './Dashboards/BESS_KPIDashboard'
 import BESS_HealthDashboard from './Dashboards/BESS_HealthDashboard'
+import InverterDashboard from './Dashboards/InverterDashboard'
 
 const Routes : RouteObject[] = [
     {
@@ -65,6 +66,16 @@ const Routes : RouteObject[] = [
             <AuthGuard>
                 <Layout>
                     <DGDashboard />
+                </Layout>
+            </AuthGuard>
+        )
+    },
+    {
+        path : '/inverter',
+        element : (
+            <AuthGuard>
+                <Layout>
+                    <InverterDashboard />
                 </Layout>
             </AuthGuard>
         )

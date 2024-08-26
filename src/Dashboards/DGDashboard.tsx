@@ -101,7 +101,7 @@ const DGDashboard = () => {
         devName : "DG", // cal
         keys : "B1_DG_DG_0_AC_Active_Power_Watt",
         type : "spline",
-        name : " "
+        name : "DG-"
     };
     const DGPowerData = UseManyDeviceSameKeyChart(searchTagDGPower, timeWindowDGPower);
     useEffect(() => {
@@ -122,7 +122,7 @@ const DGDashboard = () => {
         devName : "DG", // cal
         keys : "B1_DG_DG_0_AMP_L1",
         type : "spline",
-        name : "_Ampere"
+        name : "DG-Ampere-"
     };
     const DGAmpereData = UseManyDeviceSameKeyChart(searchTagDGAmpere, timeWindowDGAmpere);
     useEffect(() => {
@@ -143,7 +143,7 @@ const DGDashboard = () => {
         devName : "DG", // cal
         keys : "B1_DG_DG_0_Energy_Total_kwh",
         type : "column",
-        name : " Fuel Consumtion (kWh)"
+        name : " Fuel Consumtion (kWh) "
     };
     const FuelConsumtionData = UseManyDeviceSameKeyChart(searchTagFuelConsumtion, timeWindowFuelConsumtion);
     useEffect(() => {

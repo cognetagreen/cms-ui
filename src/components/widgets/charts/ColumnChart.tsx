@@ -24,13 +24,13 @@ console.log(category)
       type: 'column',
       backgroundColor: "transparent",
       height: height,
-      options3d: {
-        enabled : true,
-        alpha: 20, // Adjust this to control the tilt
-        beta: 0,  // Adjust this to control the rotation
-        depth: 0, // Adjust this to control the depth of the bars
-        // viewDistance: 25
-      },
+      // options3d: {
+      //   enabled : true,
+      //   alpha: 20, // Adjust this to control the tilt
+      //   beta: 0,  // Adjust this to control the rotation
+      //   depth: 0, // Adjust this to control the depth of the bars
+      //   // viewDistance: 25
+      // },
 
     },
     title: {
@@ -42,8 +42,8 @@ console.log(category)
         dataLabels: {
           enabled: true
         },
-        pointWidth : 40,
-        borderWidth : 20,
+        pointWidth : 10,
+        borderWidth : 1,
         borderRadius : 50
       }
     },
@@ -60,7 +60,7 @@ console.log(category)
         enabled : true
       },
       type : 'datetime',
-      gridLineWidth: 1,
+      gridLineWidth: 0,
     },
     yAxis : {
       title : {
