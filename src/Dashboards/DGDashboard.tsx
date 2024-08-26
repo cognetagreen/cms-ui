@@ -26,6 +26,9 @@ import GeneratorPowerDG from '../assets/GeneratorPowerDG'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import UseGeneratorTable from '../Services/Hooks/UseGeneratorTable'
 import { useTimeHandle } from '../Services/TimeWindowSetting'
+import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
+import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
+import UseManyDeviceSameKeyChart from '../Services/Hooks/UseManyDeviceSameKeyChart'
 
 
 interface APIData {
@@ -36,6 +39,16 @@ interface APIData {
 
 const DGDashboard = () => {
 
+
+    // ************************* GENERATOR POWER *********************
+
+    var search = {
+        devName : "DG", // cal
+        keys : "B1_DG_DG_1_AC_Active_Power_Watt" //GeneratroPower
+    }
+    const GeneratorPower = UseBatteryStatus(search);
+
+
     const {
         timeWindow : timeWindowGeneratorTable,
         handleTimeWindowChange : handleTimeWindowGeneratorTableChange,
@@ -44,8 +57,30 @@ const DGDashboard = () => {
 
     const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
     
-    const GeneratorTableData = UseGeneratorTable(searchTag, timeWindowGeneratorTable);
+    const GeneratorTableData = UseGeneratorTable(searchTag, timeWindowGeneratorTable); 
 
+    // ********************* Generator Daily Energy *********************
+    const {
+        timeWindow: timeWindowGeneratorDailyEnergy,
+        handleTimeWindowChange: handleTimeWindowGeneratorDailyEnergyChange,
+        handleReset: GeneratorDailyEnergyHandleReset
+    } = useTimeHandle(1, "cdsf", "NONE", [5, "minute"]);
+
+    
+    var searchTagGeneratorDailyEnergy = { 
+        devName : "DG-1", // cal
+        keys : "B1_DG_DG_1_AC_Active_Power_Watt",
+        type : ["spline"],
+        name : ["Generator Daily Energy"]
+    };
+    const GeneratorDailyEnergyData = UseBESSDaily(searchTagGeneratorDailyEnergy, timeWindowGeneratorDailyEnergy);
+    useEffect(() => {
+        if (GeneratorDailyEnergyData) {
+            console.log("GeneratorDailyEnergyData:", GeneratorDailyEnergyData);
+        }
+    }, [GeneratorDailyEnergyData]);
+
+    // ************************* Load Power ******************
     const runtimeWidget = [1,2,3,4,5,6];
 
     const searchObj = {
@@ -53,6 +88,70 @@ const DGDashboard = () => {
     };
 
     const pieData = UseAssetSummary(searchObj) || [];
+
+    // ********************* DG Power *********************
+    const {
+        timeWindow: timeWindowDGPower,
+        handleTimeWindowChange: handleTimeWindowDGPowerChange,
+        handleReset: DGPowerHandleReset
+    } = useTimeHandle(10, "hour", "NONE", [5, "minute"]);
+
+    
+    var searchTagDGPower = { 
+        devName : "DG", // cal
+        keys : "B1_DG_DG_0_AC_Active_Power_Watt",
+        type : "spline",
+        name : " "
+    };
+    const DGPowerData = UseManyDeviceSameKeyChart(searchTagDGPower, timeWindowDGPower);
+    useEffect(() => {
+        if (DGPowerData) {
+            console.log("DGPowerData:", DGPowerData);
+        }
+    }, [DGPowerData]);
+
+    // ********************* DG Ampere *********************
+    const {
+        timeWindow: timeWindowDGAmpere,
+        handleTimeWindowChange: handleTimeWindowDGAmpereChange,
+        handleReset: DGAmpereHandleReset
+    } = useTimeHandle(10, "hour", "NONE", [5, "minute"]);
+
+    
+    var searchTagDGAmpere = { 
+        devName : "DG", // cal
+        keys : "B1_DG_DG_0_AMP_L1",
+        type : "spline",
+        name : "_Ampere"
+    };
+    const DGAmpereData = UseManyDeviceSameKeyChart(searchTagDGAmpere, timeWindowDGAmpere);
+    useEffect(() => {
+        if (DGAmpereData) {
+            console.log("DGAmpereData:", DGAmpereData);
+        }
+    }, [DGAmpereData]);
+
+    // ********************* Fuel Consumption *********************
+    const {
+        timeWindow: timeWindowFuelConsumtion,
+        handleTimeWindowChange: handleTimeWindowFuelConsumtionChange,
+        handleReset: FuelConsumtionHandleReset
+    } = useTimeHandle(1, "cdsf", "MIN", [1, "day"]);
+
+    
+    var searchTagFuelConsumtion = { 
+        devName : "DG", // cal
+        keys : "B1_DG_DG_0_Energy_Total_kwh",
+        type : "column",
+        name : " Fuel Consumtion (kWh)"
+    };
+    const FuelConsumtionData = UseManyDeviceSameKeyChart(searchTagFuelConsumtion, timeWindowFuelConsumtion);
+    useEffect(() => {
+        if (FuelConsumtionData) {
+            console.log("FuelConsumtionData:", FuelConsumtionData);
+        }
+    }, [FuelConsumtionData]);
+
 
 return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
@@ -113,7 +212,7 @@ return (
             >
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
                     <GeneratorPowerDG
-                        value='300'
+                        value={GeneratorPower || '0'}
                     />
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
@@ -121,8 +220,11 @@ return (
                         title='Generator Daily Energy'
                         width={["full", "auto"]}
                         height='auto'
+                        timeWindow={true}
+                        onTimeWindowChange={handleTimeWindowGeneratorDailyEnergyChange}
+                        onReset={GeneratorDailyEnergyHandleReset}
                     >
-                        <LineChart />
+                        <LineChart height={188} apiData={GeneratorDailyEnergyData || [{}]} />
                     </ChartLayout>
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
@@ -148,30 +250,39 @@ return (
             >
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
                     <ChartLayout
-                        title='Generator'
+                        title='DG Power'
                         width={["full", "auto"]}
-                        height='auto'
+                        height='277'
+                        timeWindow={true}
+                        onTimeWindowChange={handleTimeWindowDGPowerChange}
+                        onReset={DGPowerHandleReset}
                     >
-                        <LineChart />
+                        <LineChart height={240} apiData={DGPowerData || [{}]} />
                     </ChartLayout>
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
                     <ChartLayout
                         title='Generator Daily Energy'
                         width={["full", "auto"]}
-                        height='auto'
+                        height='277'
+                        timeWindow={true}
+                        onTimeWindowChange={handleTimeWindowDGAmpereChange}
+                        onReset={DGAmpereHandleReset}
                     >
-                        <LineChart />
+                        <LineChart height={241} apiData={DGAmpereData || [{}]} />
                     </ChartLayout>
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
                     <ChartLayout
-                        title='% Load Power'
+                        title='Fuel Consumption'
                         width={["full", "auto"]}
                         height='277px'
                         icon={FaChartColumn}
+                        timeWindow ={true}
+                        onTimeWindowChange={handleTimeWindowFuelConsumtionChange}
+                        onReset={FuelConsumtionHandleReset}
                     >
-                        <ColumnChart />
+                        <ColumnChart height={240} apiData={FuelConsumtionData || [{}]} />
                     </ChartLayout>
                 </GridItem>
             </Grid>

@@ -48,7 +48,7 @@ console.log(category)
       }
     },
     legend: {
-      enabled: false,
+      enabled: true,
       align: 'left',
       verticalAlign: 'bottom'
     },

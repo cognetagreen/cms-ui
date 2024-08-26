@@ -1,6 +1,6 @@
 import * as React from "react";
 interface GeneratorPowerDGProps {
-    value : string;
+    value : string | number;
 }
 
 const GeneratorPowerDG : React.FC<GeneratorPowerDGProps> = ({value}) => (
