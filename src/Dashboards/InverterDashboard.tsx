@@ -30,6 +30,7 @@ import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
 import UseManyDeviceSameKeyChart from '../Services/Hooks/UseManyDeviceSameKeyChart'
 import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable'
+import { html } from 'gridjs'
 
 
 interface APIData {
@@ -44,10 +45,12 @@ const InverterDashboard = () => {
     // ************************* GENERATOR POWER *********************
 
     var search = {
-        devName : "DG", // cal
-        keys : "B1_DG_DG_1_AC_Active_Power_Watt" //GeneratroPower
+        devName : "Summation", // sum
+        keys : "INV_Total_Power" //GeneratroPower
     }
-    const GeneratorPower = UseBatteryStatus(search);
+    const GeneratorPower = UseBatteryStatus(search) || [0];
+
+
 
 
     
@@ -60,14 +63,20 @@ const InverterDashboard = () => {
     
     
     var searchTagInverterDailyEnergy = { 
-        devName : "DG-1", // cal
-        keys : "B1_DG_DG_1_AC_Active_Power_Watt",
+        devName : "Summation",                  //"Inverter-1", // cal
+        keys : "INV_DailyEnergy_Total",         //"B1_Inverter_Inverter_1_Energy_Daily_kWh",
         type : ["spline"],
         name : ["Inverter Daily Energy"]
     };
-    const InverterDailyEnergyData = UseBESSDaily(searchTagInverterDailyEnergy, timeWindowInverterDailyEnergy);
+    const InverterDailyEnergyData : any = UseBESSDaily(searchTagInverterDailyEnergy, timeWindowInverterDailyEnergy);
+    // Use useState to manage the title state
+    const [InverterDETitle, setInverterDETitle] = useState<number>(0);
     useEffect(() => {
         if (InverterDailyEnergyData) {
+            var len = InverterDailyEnergyData[0].data.length;
+            var tempData = InverterDailyEnergyData[0].data;
+            setInverterDETitle(tempData[len-1][1]);
+            console.log("InverterDETitle : ", InverterDETitle);
             console.log("InverterDailyEnergyData:", InverterDailyEnergyData);
         }
     }, [InverterDailyEnergyData]);
@@ -106,7 +115,7 @@ const InverterDashboard = () => {
         timeWindow: timeWindowDailyEnergykWh,
         handleTimeWindowChange: handleTimeWindowDailyEnergykWhChange,
         handleReset: DailyEnergykWhHandleReset
-    } = useTimeHandle(1, "cdsf", "AVG", [1, "day"]);
+    } = useTimeHandle(1, "hour", "AVG", [1, "hour"]);
     
     
     var searchTagDailyEnergykWh = { 
@@ -146,9 +155,12 @@ const InverterDashboard = () => {
     // ******************** Inverter Table ***********************
     
     var searchInverterTable = {
-        Inverter : "B1_Inverter_Inverter_0_Inverter_Communication,B1_Inverter_Inverter_0_DC_String1_Watt,B1_Inverter_Inverter_0_DC_String1_Volt,B1_Inverter_Inverter_0_Active_Power_referance,B1_Inverter_Inverter_0_Volt_L1_L2"
+        Inverter : "B1_Inverter_Inverter_0_Inverter_Communication,B1_Inverter_Inverter_0_AC_Active_Power_Watt,B1_Inverter_Inverter_0_AC_Reactive_Power_var,B1_Inverter_Inverter_0_AC_Apparent_Power_VA,B1_Inverter_Inverter_0_Active_Power_referance,B1_Inverter_Inverter_0_Energy_Daily_kWh,B1_Inverter_Inverter_0_Energy_Total_kWh,B1_Inverter_Inverter_0_Frequency_Hz,B1_Inverter_Inverter_0_Volt_L1_L2,B1_Inverter_Inverter_0_Volt_L2_L3,B1_Inverter_Inverter_0_Volt_L3_L1,B1_Inverter_Inverter_0_Fault_Code"
     }
-    var InverterColumn = ["Name", "State", "Power kW", "Tag2", "Tag3", "Tag4"]
+    var InverterColumn = ["Name", {
+        name : "State",
+        formatter: (cell: any) => parseFloat(cell) > 0 ? html(`<div style="width:100%; display: flex; justify-content: center; align-items: center;"><div style="background:green; height:15px; width:15px; border-radius:50%;"></div></div>`) : html(`<div style="width:100%; display: flex; justify-content: center; align-items: center;"><div style="background:red; height:15px; width:15px; border-radius:50%;"></div></div>`)
+        }, "Power kW", "Power kVAR", "Power KVA", "kW % Ref", "Daily Energy", "Total Energy", "Frequency Hz", "L1-L2 Volts", "L2-L3 Volts", "L3-L1 Volts", "Fault State"]
 
     const InverterTableData = UsePlanViewTable(searchInverterTable) as any;
     console.log("InverterTableData", InverterTableData);
@@ -212,19 +224,34 @@ return (
             >
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
                     <GeneratorPowerDG
-                        value={GeneratorPower || '0'}
+                        value={(GeneratorPower[0]) || 0}
                     />
                 </GridItem>
-                <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
+                {/********* Inverter Daily Energy ***********/}
+                <GridItem h={276} w={"auto"} colSpan={1} rowSpan={1}>
                     <ChartLayout
                         title='Inverter Daily Energy'
                         width={["full", "auto"]}
-                        height='auto'
-                        timeWindow={true}
+                        height='276'
+                        // timeWindow={true}
                         onTimeWindowChange={handleTimeWindowInverterDailyEnergyChange}
                         onReset={InverterDailyEnergyHandleReset}
                     >
-                        <LineChart height={188} apiData={InverterDailyEnergyData || [{}]} />
+                        <LineChart
+                        height={188}
+                          props={
+                                {title : 
+                                    {text : (InverterDETitle).toFixed(2)+"kWh"
+                                        ,style : {color : "#21A01E"}
+                                    },
+                                    xAxis : 
+                                    {visible : false},
+                                    legend : {enabled : false}, 
+                                    exporting : {enabled : false}
+                                }
+                            }
+                          apiData={InverterDailyEnergyData || [{}]}
+                        />
                     </ChartLayout>
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
@@ -250,14 +277,27 @@ return (
             >
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
                     <ChartLayout
-                        title='DG Power'
+                        title='Inverter Power'
                         width={["full", "auto"]}
                         height='303'
                         timeWindow={true}
                         onTimeWindowChange={handleTimeWindowInverterPowerChange}
                         onReset={InverterPowerHandleReset}
                     >
-                        <LineChart height={240} apiData={InverterPowerData || [{}]} />
+                        <LineChart height={240} apiData={InverterPowerData || [{}]}
+                            props={{
+                                yAxis : {
+                                    title : {
+                                        text : "kW",
+                                        style : {
+                                            letterSpacing : "1px",
+                                            fontWeight : "500",
+                                            color : "#606060",
+                                        }
+                                    }
+                                },
+                            }}
+                        />
                     </ChartLayout>
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
@@ -270,7 +310,20 @@ return (
                         onTimeWindowChange={handleTimeWindowDailyEnergykWhChange}
                         onReset={DailyEnergykWhHandleReset}
                     >
-                        <ColumnChart height={240} apiData={DailyEnergykWhData || [{}]} />
+                        <ColumnChart height={240} apiData={DailyEnergykWhData || [{}]}
+                            props={{
+                                yAxis : {
+                                    title : {
+                                        text : "kWh",
+                                        style : {
+                                            letterSpacing : "1px",
+                                            fontWeight : "500",
+                                            color : "#606060",
+                                        }
+                                    }
+                                },
+                            }}
+                        />
                     </ChartLayout>
                 </GridItem>
             </Grid>
@@ -297,14 +350,27 @@ return (
                 </GridItem>
                 <GridItem h={303} w={"auto"} colSpan={1} rowSpan={1}>
                     <ChartLayout
-                        title='DG Power'
+                        title='Inverter Control'
                         width={["full", "auto"]}
                         height='303'
                         timeWindow={true}
                         onTimeWindowChange={handleTimeWindowInverterControlChange}
                         onReset={InverterControlHandleReset}
                     >
-                        <LineChart height={240} apiData={InverterControlData || [{}]} />
+                        <LineChart height={240} apiData={InverterControlData || [{}]}
+                            props={{
+                                yAxis : {
+                                    title : {
+                                        text : "% kW Ref",
+                                        style : {
+                                            letterSpacing : "1px",
+                                            fontWeight : "500",
+                                            color : "#606060",
+                                        }
+                                    }
+                                },
+                            }}
+                        />
                     </ChartLayout>
                 </GridItem>
             </Grid>

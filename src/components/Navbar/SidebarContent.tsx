@@ -13,7 +13,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { CiSliderVertical } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import NavItem from "./NavItem";
-import { Home, AlertTicket, Analysis, Site, Tools } from "../../assets/Navbar/SideNavBar";
+import { Home, AlertTicket, Analysis, Site, Tools, Alarm } from "../../assets/Navbar/SideNavBar";
 
 interface SidebarContentProps {
   isSidebarExpanded: boolean;
@@ -167,8 +167,19 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           fontWeight={600}
           as={Link}
           to={'/bess/overview'}
-        >
+          >
           &nbsp; Checklists
+        </NavItem>
+        <NavItem
+          icon={Alarm}
+          showLabel={showLabels}
+          color={"#FFFFFFFF"}
+          fontSize={"md"}
+          fontWeight={600}
+          as={Link}
+          to={'/alarm'}
+        >
+          &nbsp; Alarm
         </NavItem>
         <NavItem
           icon={Tools}

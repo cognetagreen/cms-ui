@@ -29,6 +29,7 @@ import { useTimeHandle } from '../Services/TimeWindowSetting'
 import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
 import UseManyDeviceSameKeyChart from '../Services/Hooks/UseManyDeviceSameKeyChart'
+import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable'
 
 
 interface APIData {
@@ -43,21 +44,32 @@ const DGDashboard = () => {
     // ************************* GENERATOR POWER *********************
 
     var search = {
-        devName : "DG", // cal
-        keys : "B1_DG_DG_1_AC_Active_Power_Watt" //GeneratroPower
+        devName : "cal",
+        keys : "Generator_Power"
     }
-    const GeneratorPower = UseBatteryStatus(search);
+    const GeneratorPower = UseBatteryStatus(search) || [0];
 
+    // **********************Generator Table Previous (Date & Time First Row) *********************
 
-    const {
-        timeWindow : timeWindowGeneratorTable,
-        handleTimeWindowChange : handleTimeWindowGeneratorTableChange,
-        handleReset : handleGeneratorTableReset
-    } = useTimeHandle(5, "minute", "NONE", [5, "minute"]);
+    // const {
+    //     timeWindow : timeWindowGeneratorTable,
+    //     handleTimeWindowChange : handleTimeWindowGeneratorTableChange,
+    //     handleReset : handleGeneratorTableReset
+    // } = useTimeHandle(5, "minute", "NONE", [5, "minute"]);
 
-    const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
+    // const searchTag = { DG: "B1_DG_DG_0_AC_Active_Power_Watt" };
     
-    const GeneratorTableData = UseGeneratorTable(searchTag, timeWindowGeneratorTable); 
+    // const GeneratorTableData = UseGeneratorTable(searchTag, timeWindowGeneratorTable); 
+
+    // ******************** Generator Table ***********************
+    
+    var searchGeneratorTable = {
+        DG : "B1_DG_DG_0_Energy_Daily_kwh,B1_DG_DG_0_Energy_Total_kwh,B1_DG_DG_0_AC_Reactive_Power_var,B1_DG_DG_0_AMP_L1,B1_DG_DG_0_AMP_L2,B1_DG_DG_0_AMP_L2,B1_DG_DG_0_AMP_L3,B1_DG_DG_0_Frequency_Hz_L1,B1_DG_DG_0_VOLT_L1_L2,B1_DG_DG_0_VOLT_L2_L3,B1_DG_DG_0_VOLT_L3_L1,B1_DG_DG_0_Fuel_Rate,B1_DG_DG_0_Engine_Speed_RPM"
+    }
+    var GeneratorColumn = ["Name","Power kW","Daily Export kWh","Power kVAR","L1 Amps","L2 Amps","L3 Amps","Frequency Hz","L1-L2 Volts","L2-L3 Volts","L3-L1 Volts","Fuel Rate","Engine Speed"]
+    const GeneratorTableData = UsePlanViewTable(searchGeneratorTable) as any;
+    console.log("GeneratorTableData", GeneratorTableData);
+
 
     // ********************* Generator Daily Energy *********************
     const {
@@ -68,8 +80,8 @@ const DGDashboard = () => {
 
     
     var searchTagGeneratorDailyEnergy = { 
-        devName : "DG-1", // cal
-        keys : "B1_DG_DG_1_AC_Active_Power_Watt",
+        devName : "cal", // cal
+        keys : "Generator_Daily_energy_sum",
         type : ["spline"],
         name : ["Generator Daily Energy"]
     };
@@ -84,7 +96,7 @@ const DGDashboard = () => {
     const runtimeWidget = [1,2,3,4,5,6];
 
     const searchObj = {
-        inverter: "B1_Inverter_Inverter_0_AC_Active_Power_Watt"
+        inverter: "B1_Inverter_Inverter_0_AC_Active_Power_Watt" // Because % in name, i'm not taking real one
     };
 
     const pieData = UseAssetSummary(searchObj) || [];
@@ -120,7 +132,7 @@ const DGDashboard = () => {
     
     var searchTagDGAmpere = { 
         devName : "DG", // cal
-        keys : "B1_DG_DG_0_AMP_L1",
+        keys : "B1_DG_DG_0_AMP_L1", // This widget tag will be present in Cal
         type : "spline",
         name : "DG-Ampere-"
     };
@@ -140,8 +152,8 @@ const DGDashboard = () => {
 
     
     var searchTagFuelConsumtion = { 
-        devName : "DG", // cal
-        keys : "B1_DG_DG_0_Energy_Total_kwh",
+        devName : "DG", 
+        keys : "B1_DG_DG_0_Energy_Total_kwh",   //AGC_EXPORT_DAY Not Present In BP720-DG-1
         type : "column",
         name : " Fuel Consumtion (kWh) "
     };
@@ -212,7 +224,7 @@ return (
             >
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
                     <GeneratorPowerDG
-                        value={GeneratorPower || '0'}
+                        value={(GeneratorPower[0]) || 1400}
                     />
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
@@ -224,7 +236,16 @@ return (
                         onTimeWindowChange={handleTimeWindowGeneratorDailyEnergyChange}
                         onReset={GeneratorDailyEnergyHandleReset}
                     >
-                        <LineChart height={188} apiData={GeneratorDailyEnergyData || [{}]} />
+                        <LineChart height={188}
+                            props={{
+                                xAxis : 
+                                    {visible : false},
+                                    legend : {enabled : false}, 
+                                    exporting : {enabled : false}
+                            }}
+                            apiData={GeneratorDailyEnergyData || [{}]}
+                        
+                        />
                     </ChartLayout>
                 </GridItem>
                 <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
@@ -300,20 +321,21 @@ return (
                         title='Generators'
                         width={["full", "auto"]}
                         height='271px'
-                        timeWindow={true}
-                        onTimeWindowChange = {handleTimeWindowGeneratorTableChange}
-                        onReset={handleGeneratorTableReset}
+                        // timeWindow={true}
+                        // onTimeWindowChange = {handleTimeWindowGeneratorTableChange}
+                        // onReset={handleGeneratorTableReset}
                     >
                         <PlantTable
                             paginationLimitProps={4}
+                            column={GeneratorColumn}
                             apiData={GeneratorTableData || [{ column: [], dataFromAPI: [] }]}
                         />
                     </PlantViewTableLayout>
                 </GridItem>
-                <GridItem h={271} w={"auto"} colSpan={1} rowSpan={1}>
+                <GridItem h={271} w={"100%"} colSpan={1} rowSpan={1}>
                     <PlantViewTableLayout
                         title='DG Runtime'
-                        width={["full", "450px"]}
+                        width={["full", "477px"]}
                         height='270px'
                     >
                         <Box>

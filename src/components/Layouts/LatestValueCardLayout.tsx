@@ -30,10 +30,11 @@ import UseLatestCard from '../../Services/Hooks/UseLatestCard';
     value2Color : string;
     showArrow : boolean;
     sparkline: React.ReactNode;
+    unit? : string;
   }
   
   export default function LatestValueCardLayout(props: LatestValueLayoutProps) {
-    const { title, deviceLabel, telemetry, titleColor, src, w, h, border,value2,value2Color ,showArrow, sparkline, statColor } = props;
+    const { title, deviceLabel, telemetry, titleColor, src, w, h, border,value2,value2Color ,showArrow, sparkline, statColor, unit="" } = props;
     
     const latestValue = UseLatestCard(deviceLabel, telemetry , title) || [0];
     let stat = Number(latestValue[0]);
@@ -63,7 +64,7 @@ import UseLatestCard from '../../Services/Hooks/UseLatestCard';
               {title}
             </StatLabel>
             <StatNumber fontSize={'2xl'} color={statColor} fontWeight={'600'}>
-              {stat}
+              {stat + unit}
             </StatNumber>
             <Flex alignItems={'center'}>
               <Text ml={1} fontSize={12} color={value2Color}>{value2}</Text>

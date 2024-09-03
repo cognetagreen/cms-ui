@@ -1,9 +1,39 @@
 import * as React from "react";
 interface GeneratorPowerDGProps {
-    value : string | number;
+    value : number;
 }
 
-const GeneratorPowerDG : React.FC<GeneratorPowerDGProps> = ({value}) => (
+
+function scaleValue(value : number, srcRange : number[], dstRange: number[]) : any {
+  const [srcMin, srcMax] = srcRange;
+  const [dstMin, dstMax] = dstRange;
+
+  // Perform the scaling
+  const scaledValue = dstMin + ((value - srcMin) / (srcMax - srcMin)) * (dstMax - dstMin);
+
+  return scaledValue;
+}
+
+
+const GeneratorPowerDG : React.FC<GeneratorPowerDGProps> = ({value}) => {
+  
+var srcRange = [0, 1500];
+var dstRange = [110, -275];
+
+// Example usage
+// var value1 = 1400; // A value in the range 0 to 1500
+const scaledValue = scaleValue(value, srcRange, dstRange);
+
+var srcRange = [0, 1500];
+var dstRange = [75, 458];
+
+const scaledValueBar = scaleValue(value, srcRange, dstRange);
+
+var bar = `M ${scaledValueBar} 307.576 L ${scaledValueBar} 336.576 L 75.583 336.576 C 71.717 336.576 68.583 333.442 68.583 329.576 L 68.583 314.576 C 68.583 310.71 71.717 307.576 75.583 307.576 L 168.583 307.576 Z`
+
+
+
+return (
   <svg
     viewBox="30 110 450 300"
     xmlns="http://www.w3.org/2000/svg"
@@ -156,13 +186,14 @@ const GeneratorPowerDG : React.FC<GeneratorPowerDGProps> = ({value}) => (
       d="M 460.583 307.576 L 460.583 335.576 C 460.583 336.128 460.135 336.576 459.583 336.576 L 74.583 336.576 C 70.717 336.576 67.583 333.442 67.583 329.576 L 67.583 314.576 C 67.583 310.71 70.717 307.576 74.583 307.576 L 460.583 307.576 Z"
       fill="url(#paint0_linear_499_7086)"
     />
+    {/* 70.583 */}
     <path
-      d="M 168.583 307.576 L 168.583 336.576 L 75.583 336.576 C 71.717 336.576 68.583 333.442 68.583 329.576 L 68.583 314.576 C 68.583 310.71 71.717 307.576 75.583 307.576 L 168.583 307.576 Z"
+      d = {bar}
       fill="url(#paint1_linear_499_7086)"
     />
     <ellipse
       cx={101.429}
-      cy={14.706}
+      cy={scaledValue}   //{14.706}
       rx={14.706}
       ry={6.429}
       transform="matrix(0, 1, -1, 0, 183.71798979815824, 220.85296959955937)"
@@ -182,4 +213,5 @@ const GeneratorPowerDG : React.FC<GeneratorPowerDGProps> = ({value}) => (
     />
   </svg>
 );
+}
 export default GeneratorPowerDG;

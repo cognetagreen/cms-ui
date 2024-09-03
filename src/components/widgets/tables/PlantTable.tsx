@@ -13,7 +13,8 @@ interface APIData {
 interface PlantTableProps {
   paginationLimitProps : number;
   apiData? : APIData[];
-  column? : string[];
+  column? : string[] | any[];  // column={[{name : "Name", formatter: (cell : any, row: any) => html(`<b style="padding: 4px; border-left:3px solid ${parseFloat(row.cells[4].data) > 1 ? 'green' : 'red'};" >${cell}</b>`)}, 'Type', 'Capacities', 'Country', 'PV Power', 'Irr', 'Energy Today', 'PRV']}
+
 }
 
 
@@ -71,13 +72,13 @@ const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, 
       columns={column? column : apiData[0].column}
       data={apiData && apiData[0]?.dataFromAPI ? apiData[0].dataFromAPI : data }
       search={true}
-        sort={true}
-        pagination={{
-          limit: paginationLimit,
-          summary: false,
-        }}
-        autoWidth = {false} 
-        className={{
+      sort={true}
+      pagination={{
+        limit: paginationLimit,
+        summary: false,
+      }}
+      autoWidth={true}
+      className={{
           table: 'plant-table',
           thead: 'gridjs-thead',
           th: 'gridjs-th',
@@ -86,7 +87,7 @@ const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, 
           pagination: 'gridjs-pagination',
           error: 'gridjs-error'
         }}
-      />
+        />
       <Icon 
         as={MdFullscreen}
         boxSize={5} 

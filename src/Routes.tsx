@@ -11,6 +11,7 @@ import BESS_OverviewDashboard from './Dashboards/BESS_OverviewDashboard'
 import BESS_KPIDashboard from './Dashboards/BESS_KPIDashboard'
 import BESS_HealthDashboard from './Dashboards/BESS_HealthDashboard'
 import InverterDashboard from './Dashboards/InverterDashboard'
+import AlarmDashboard from './Dashboards/AlarmDashboard'
 
 const Routes : RouteObject[] = [
     {
@@ -109,7 +110,17 @@ const Routes : RouteObject[] = [
                 </Layout>
             </AuthGuard>
         )
-    }
+    },
+    {
+        path : '/alarm',
+        element : (
+            <AuthGuard>
+                <Layout>
+                    <AlarmDashboard />
+                </Layout>
+            </AuthGuard>
+        )
+    },
 ]
 
 export default Routes

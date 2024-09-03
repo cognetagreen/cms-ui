@@ -33,7 +33,7 @@ const GridDashboard = () => {
     // ************************* Digital Bar Chart ******************
 
     var search = {
-        devName : "Grid Meter", // cal
+        devName : "Grid", // cal
         keys : "AGC_VOLT_L1_L2,AGC_VOLT_L2_L3,AGC_VOLT_L3_L1,AGC_AMP_L1,AGC_AMP_L2,AGC_AMP_L3" //GeneratroPower
     }
     const DigitalBarData = UseBatteryStatus(search) || [0,0,0,0,0,0];
@@ -59,7 +59,7 @@ const GridDashboard = () => {
 
     
     var searchTagGridVolt = { 
-        devName : "Grid Meter", // cal
+        devName : "Grid", // cal
         keys : "AGC_VOLT_L1_L2,AGC_VOLT_L2_L3,AGC_VOLT_L3_L1,AGC_HZ_L1",
         type : ["spline","spline","spline","spline"],
         name : ["line-1 V","line-2 V","line-3 V","Hz"]
@@ -80,7 +80,7 @@ const GridDashboard = () => {
 
     
     var searchTagGridPower = { 
-        devName : "Grid Meter",
+        devName : "Grid",
         keys : "AGC_POWER,AGC_REACTIVE_POWER,AGC_POWER_L1,AGC_POWER_L2,AGC_POWER_L3,AGC_REACTIVE_POWER_L1,AGC_REACTIVE_POWER_L2,AGC_REACTIVE_POWER_L3",
         type : ["spline","spline","spline","spline","spline","spline","spline","spline"],
         name : ["Power kWh","Power kVAR","L1 kW","L2 kW","L3 kW","L1 kVAR","L2 kVAR","L3 kVAR"]
@@ -101,14 +101,14 @@ const GridDashboard = () => {
 
     
     var searchTagGridEnergy = [{ 
-        devName : "Grid Meter",
+        devName : "Grid",
         keys : "AGC_EXPORT_DAY,AGC_Import_Day",
         type : ["column","column"],
         name : ["Consumption kWh","Feed kWh"]
     },
     {
-        devName : "Grid Meter",
-        keys : "AGC_VOLT_L1_L2,AGC_VOLT_L3_L1",
+        devName : "Calculation",
+        keys : "Grid_%_Load_Power,INV_%_Load_Power", // Because of '%' it cause problem
         type : ["spline","spline"],
         name : ["Grid Penetration %","PV Penetration %"]   
     }];
@@ -128,7 +128,7 @@ const GridDashboard = () => {
 
     
     var searchTagGridCurrent = { 
-        devName : "Grid Meter", // cal
+        devName : "Grid", // cal
         keys : "AGC_AMP_L1,AGC_AMP_L2,AGC_AMP_L3",
         type : ["spline","spline","spline"],
         name : ["L1 Amps","L2 Amps","L3 Amps"]
@@ -166,7 +166,7 @@ const GridDashboard = () => {
         </BreadcrumbItem>
       </Breadcrumb>
 
-      <Grid
+            <Grid
                 h="68px"
                 templateRows="repeat(1, 1fr)"
                 templateColumns="repeat(6, 1fr)"
@@ -202,11 +202,12 @@ const GridDashboard = () => {
               <GridItem colSpan={1} rowSpan={2}>
                   <SimpleGrid minChildWidth='289px' spacing={{ base: 3, lg: 3 }}>
                       <LatestValueCardLayout
-                          title={'PV Power'}
-                          deviceLabel='Cal'
-                          telemetry='BP_Plant_Daily_Energy'
+                          title={'Grid Power'}
+                          deviceLabel='AGC_4'
+                          telemetry='AGC_POWER'
                           titleColor='#003F6B'
                           stat={'5,000kW'}
+                          unit={" kW"}
                           statColor={"#8842E0"}
                           w={[59, 49]}
                           h={[59, 49]}
@@ -220,10 +221,11 @@ const GridDashboard = () => {
                       />
                       <LatestValueCardLayout
                           title={'Daily Energy'}
-                          deviceLabel='Calculation'
-                          telemetry='BP_Plant_Daily_Energy'
+                          deviceLabel='AGC_4'
+                          telemetry='AGC_EXPORT_DAY'
                           titleColor='#003F6B'
                           stat={'1,000,000kW'}
+                          unit=' kWh'
                           statColor={"#8842E0"}
                           w={[59, 49]}
                           h={[59, 49]}
@@ -237,10 +239,11 @@ const GridDashboard = () => {
                       />
                       <LatestValueCardLayout
                           title={'Lifetime Energy'}
-                          deviceLabel='Cal'
-                          telemetry='BP_Plant_Daily_Energy'
+                          deviceLabel='AGC_4'
+                          telemetry='AGC_Import_Day'
                           titleColor='#003F6B'
                           stat={'7kW'}
+                          unit=' kWh'
                           statColor={"#8842E0"}
                           w={[59, 49]}
                           h={[59, 49]}
@@ -262,7 +265,7 @@ const GridDashboard = () => {
                           height={"172px"}
                           icon={GiThunderball}
                       >
-                          <DigitalHorizontalBar value={(DigitalBarData[0]).toFixed(2) ||"0.00"} />
+                          <DigitalHorizontalBar value={parseFloat((DigitalBarData[0]).toFixed(2)) ||0} />
                       </ChartLayout>
                       <ChartLayout 
                           title='Line 2 Voltage'
@@ -270,7 +273,7 @@ const GridDashboard = () => {
                           height={"172px"}
                           icon={GiThunderball}
                       >
-                          <DigitalHorizontalBar value={(DigitalBarData[1]).toFixed(2) ||"0.00"} />
+                          <DigitalHorizontalBar value={parseFloat((DigitalBarData[1]).toFixed(2)) ||0} />
                       </ChartLayout>
                       <ChartLayout 
                           title='Line 3 Voltage'
@@ -278,7 +281,7 @@ const GridDashboard = () => {
                           height={"172px"}
                           icon={GiThunderball}
                       >
-                          <DigitalHorizontalBar value={(DigitalBarData[2]).toFixed(2) ||"0.00"} />
+                          <DigitalHorizontalBar value={parseFloat((DigitalBarData[2]).toFixed(2)) ||0} />
                       </ChartLayout>
                   </SimpleGrid>
               </GridItem>
@@ -290,7 +293,7 @@ const GridDashboard = () => {
                           height={"172px"}
                           icon={GiThunderball}
                       >
-                          <DigitalHorizontalBar value={(DigitalBarData[3]).toFixed(2) ||"0.00"} />
+                          <DigitalHorizontalBar value={parseFloat((DigitalBarData[3]).toFixed(2)) ||0} />
                       </ChartLayout>
                       <ChartLayout 
                           title='Line 2 Amps'
@@ -298,7 +301,7 @@ const GridDashboard = () => {
                           height={"172px"}
                           icon={GiThunderball}
                       >
-                          <DigitalHorizontalBar value={(DigitalBarData[4]).toFixed(2) ||"0.00"} />
+                          <DigitalHorizontalBar value={parseFloat((DigitalBarData[4]).toFixed(2)) ||0} />
                       </ChartLayout>
                       <ChartLayout 
                           title='Line 3 Amps'
@@ -306,7 +309,7 @@ const GridDashboard = () => {
                           height={"172px"}
                           icon={GiThunderball}
                       >
-                          <DigitalHorizontalBar value={(DigitalBarData[5]).toFixed(2) ||"0.00"} />
+                          <DigitalHorizontalBar value={parseFloat((DigitalBarData[5]).toFixed(2)) ||0} />
                       </ChartLayout>
                   </SimpleGrid>
               </GridItem>

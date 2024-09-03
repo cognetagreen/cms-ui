@@ -1,10 +1,29 @@
 import * as React from "react";
 
 interface DigitalHorizontalBarProps {
-  value? : string | number | 0;
+  value? : number;
 }
 
-const DigitalHorizontalBar : React.FC <DigitalHorizontalBarProps> = ({value}) => (
+function scaleValue(value : number, srcRange : number[], dstRange: number[]) : any {
+  const [srcMin, srcMax] = srcRange;
+  const [dstMin, dstMax] = dstRange;
+
+  // Perform the scaling
+  const scaledValue = dstMin + ((value - srcMin) / (srcMax - srcMin)) * (dstMax - dstMin);
+  return scaledValue;
+}
+
+
+const DigitalHorizontalBar : React.FC <DigitalHorizontalBarProps> = ({value=0}) => {
+  
+  var srcRange = [0, 450];
+var dstRange = [0, 270];
+
+// Example usage
+// var value1 = 1400; // A value in the range 0 to 1500
+const scaledValue = scaleValue(value, srcRange, dstRange);
+  
+  return (
   <svg
     width={286}
     height={128}
@@ -34,8 +53,8 @@ const DigitalHorizontalBar : React.FC <DigitalHorizontalBarProps> = ({value}) =>
       fillOpacity={0.2}
     />
     <rect y={54} width={270} height={50} rx={4} fill="#F2F2F2" />
-    <rect y={47} width={192} height={64} rx={4} fill="url(#b)" />
-    <rect y={54} width={192} height={50} rx={4} fill="url(#c)" />
+    <rect y={47} width={scaledValue} height={64} rx={4} fill="url(#b)" />
+    <rect y={54} width={scaledValue} height={50} rx={4} fill="url(#c)" />
     <path
       stroke="#fff"
       d="M6.5 53v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6-51v51m6"
@@ -81,4 +100,5 @@ const DigitalHorizontalBar : React.FC <DigitalHorizontalBarProps> = ({value}) =>
     </defs>
   </svg>
 );
+};
 export default DigitalHorizontalBar;

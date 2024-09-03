@@ -85,8 +85,8 @@ export default function StatisticsCard() {
           h={[59, 29]}
           bg={"#FFECC1"}
           src={power}
-          telemetry={"INV_Total_Power"}
-          deviceLabel={"calculation"}
+          telemetry={"DB_Plant_Total_Power"}
+          deviceLabel={"Calculation"}
         />
         <StatsCard
           title={'Daily Energy'}
@@ -95,8 +95,8 @@ export default function StatisticsCard() {
           h={[59, 29]}
           bg={"#FAE4DE"}
           src={energy}
-          telemetry={"Node_SL_PV_Daily_Energy"}
-          deviceLabel={"DG"}
+          telemetry={"DB_Plant_Total_Energy"}
+          deviceLabel={"Calculation"}
         />
         <StatsCard
           title={'Lifetime Energy'}
@@ -115,8 +115,8 @@ export default function StatisticsCard() {
           h={[59, 29]}
           bg={"#ACE1FF"}
           src={rupee}
-          telemetry={"Node_SL_PV_Daily_Energy"}
-          deviceLabel={"DG"}
+          telemetry={"DB_Plant_Total_Energy"}
+          deviceLabel={"Calculation"}
         />
         <StatsCard
           title={'CO2 Saving'}
@@ -125,7 +125,7 @@ export default function StatisticsCard() {
           h={[59, 29]}
           bg={"#F3F3EB"}
           src={green}
-          telemetry = {"SL_Co2_Saving"}
+          telemetry = {"CO2_Saving"}
           deviceLabel= {"calculation"}
         />
       </SimpleGrid>

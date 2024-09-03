@@ -5,9 +5,10 @@ import HighchartsReact from 'highcharts-react-official';
 interface LineChartProps {
     apiData? : Object[];
     height? : Number
+    props? : any;
 }
 
-const LineChart : React.FC<LineChartProps> = ({apiData, height=210}) => {
+const LineChart : React.FC<LineChartProps> = ({apiData, height=210, props}) => {
 
     const [chartOptions, setChartOptions] = useState({
         chart: {
@@ -16,7 +17,7 @@ const LineChart : React.FC<LineChartProps> = ({apiData, height=210}) => {
             zoomType : "x"
         },
         title: {
-            text: ''
+            text: "",
         },
         xAxis: {
             type: 'datetime',
@@ -29,6 +30,11 @@ const LineChart : React.FC<LineChartProps> = ({apiData, height=210}) => {
                     const localDate = new Date(date.getTime() - utcOffset);
                     return localDate.toISOString().slice(10, 16).replace('T', ' '); // Format as 'YYYY-MM-DD HH:mm:ss'
                 }
+            }
+        },
+        yAxis : {
+            title : {
+                text : ""
             }
         },
         tooltip: {
@@ -51,10 +57,11 @@ const LineChart : React.FC<LineChartProps> = ({apiData, height=210}) => {
         if (apiData) {
             setChartOptions({
                 ...chartOptions,
-                series: apiData
+                series: apiData,
+                ...props
             });
         }
-    }, [apiData]);
+    }, [apiData, props]);
 
     return (
         <HighchartsReact highcharts={Highcharts} options={chartOptions} />

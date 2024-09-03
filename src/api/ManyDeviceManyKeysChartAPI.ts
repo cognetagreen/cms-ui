@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const ManyDeviceManyKeysChartAPI  = async (searchTag : Object[], timeWindow : {startTs:Number, endTs:Number, aggregate:string, interval: number}) => {
+const ManyDeviceManyKeysChartAPI  = async (searchTag : Object[], timeWindow : {startTs:Number, endTs:Number, aggregate:string, interval: number}, LastValue? : string) => {
     const BASE_URL = "http://localhost:7001/api";
 
     const token = localStorage.getItem("token");
@@ -15,11 +15,21 @@ const ManyDeviceManyKeysChartAPI  = async (searchTag : Object[], timeWindow : {s
             "searchTag" : searchTag,
             "timeWindow" : timeWindow,
         };
-        try {
-            const response = await axios.post(`${BASE_URL}/v1/GetManyDeviceManyKeysChartData`, body);
-            return response;
-        } catch (error) {
-            console.error(error)
+        if (LastValue) {
+            try {
+                const response = await axios.post(`${BASE_URL}/v1/GetManyDeviceManyKeysChartData/${LastValue}`, body);
+                return response;
+            } catch (error) {
+                console.error(error)
+            }
+        } else {
+            
+            try {
+                const response = await axios.post(`${BASE_URL}/v1/GetManyDeviceManyKeysChartData`, body);
+                return response;
+            } catch (error) {
+                console.error(error)
+            }
         }
     }
 }

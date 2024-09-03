@@ -157,30 +157,32 @@ const BESS_OverviewDashboard = () => {
                 </GridItem>
             </Grid>
             <Grid
+                w={"full"}
+                m={0}
                 mt={3}
                 templateRows={"repeat(1, 1fr)"}
                 templateColumns={"repeat(3, 1fr)"}
                 gap={1}
             >
-                <VStack spacing={0}>
-                    <GridItem>
-                        <StateOfBattery data={batteryStatus}/>
-                    </GridItem>
-                    <GridItem mt={1} ml={-1}>
-                        <BatteryStatus
-                            ACD = {batteryStatus[0] || 0}
-                            SOH = {batteryStatus[1] || 0}
-                            Min = {batteryStatus[2] || 0}
-                            Max = {batteryStatus[3] || 0}
-                        />
-                    </GridItem>
-                </VStack>
-                <VStack w={"auto"} spacing={0}>
-                    <GridItem>
+                <GridItem w={"auto"}>
+                    <VStack spacing={0}>
+                            <StateOfBattery data={batteryStatus}/>
+                        <GridItem mt={1} ml={-2} mr={-1}>
+                            <BatteryStatus
+                                ACD = {batteryStatus[0] || 0}
+                                SOH = {batteryStatus[1] || 0}
+                                Min = {batteryStatus[2] || 0}
+                                Max = {batteryStatus[3] || 0}
+                                />
+                        </GridItem>
+                    </VStack>
+                </GridItem>
+                    <GridItem w={"660px"}>
+                    <VStack w={"auto"} spacing={0}>
                         <ChartLayout
                             title='Daily BESS Discharge mWh'
-                            width={["full", "650px"]}
-                            height='330px'
+                            width={["full", "100%"]}
+                            height='350px'
                             icon={FaChartColumn}
                             timeWindow = {true}
                             onTimeWindowChange={handleTimeWindowBESSDailyChange}
@@ -188,42 +190,42 @@ const BESS_OverviewDashboard = () => {
                         >
                             <StackedColumnChart height={260} apiData={BESSDailyData || [{}]} />
                         </ChartLayout>
-                    </GridItem>
-                    <GridItem mt={-3}>
-                        <ChartLayout
-                            title='BESS Output'
-                            width={["full", "650px"]}
-                            height='330px'
-                            icon={FaChartColumn}
-                            timeWindow = {true}
-                            onTimeWindowChange={handleTimeWindowBESSOutputChange}
-                            onReset={BESSOutputHandleReset}
-                        >
-                            <LineChart height={280} apiData = {BESSOutputData || [{}]} />
-                        </ChartLayout>
-                    </GridItem>
-                    <GridItem mt={-3}>
-                        <ChartLayout
-                            title='Max and Min SoC'
-                            width={["full", "650px"]}
-                            height='280px'
-                            icon={FaChartLine}
-                            timeWindow={true}
-                            onTimeWindowChange={handleTimeWindowMinMaxChange}
-                            onReset={MinMaxHandleReset}
-                        >
-                            <LineChart height={240} apiData={MinMaxData || [{}]}/>
-                        </ChartLayout>
-                    </GridItem>
-                </VStack>
-                <VStack w={"auto"} spacing={0}>
-                    <GridItem>
-                        <SomeTitle apiData={someTitleData || [{bar : [85, 75, 65], temp : 20, volt : 7}, {bar : [35, 25, 65], temp : 20, volt : 7}]} />
-                    </GridItem>
-                    <GridItem>
-                        <BatteryBank />
-                    </GridItem>
-                </VStack>
+                        <Box mt={-3} w={"100%"}>
+                            <ChartLayout
+                                title='BESS Output'
+                                width={["full", "100%"]}
+                                height='350px'
+                                icon={FaChartColumn}
+                                timeWindow = {true}
+                                onTimeWindowChange={handleTimeWindowBESSOutputChange}
+                                onReset={BESSOutputHandleReset}
+                                >
+                                <LineChart height={280} apiData = {BESSOutputData || [{}]} />
+                            </ChartLayout>
+                        </Box>
+                        <Box mt={-3} w={"100%"}>
+                            <ChartLayout
+                                title='Max and Min SoC'
+                                width={["full", "100%"]}
+                                height='330px'
+                                icon={FaChartLine}
+                                timeWindow={true}
+                                onTimeWindowChange={handleTimeWindowMinMaxChange}
+                                onReset={MinMaxHandleReset}
+                                >
+                                <LineChart height={240} apiData={MinMaxData || [{}]}/>
+                            </ChartLayout>
+                        </Box>
+                    </VStack>
+                </GridItem>
+                <GridItem w={"auto"}>
+                    <VStack w={"auto"} spacing={0}>
+                            <SomeTitle apiData={someTitleData || [{bar : [85, 75, 65], temp : 20, volt : 7}, {bar : [35, 25, 65], temp : 20, volt : 7}]} />
+                        {/* <GridItem> */}
+                            <BatteryBank />
+                        {/* </GridItem> */}
+                    </VStack>
+                </GridItem>
             </Grid>
     </Box>
   )

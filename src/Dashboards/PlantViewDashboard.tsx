@@ -6,6 +6,8 @@ import {
     BreadcrumbLink,
     Grid,
     GridItem,
+    HStack,
+    VStack,
   } from '@chakra-ui/react';
   import { FaCaretRight } from 'react-icons/fa';
   import { Link } from 'react-router-dom';
@@ -28,31 +30,47 @@ import { useTimeHandle } from '../Services/TimeWindowSetting';
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily';
 import UsePlantCard from '../Services/Hooks/PlantView/UsePlantCard';
 import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
+import { html } from 'gridjs';
+import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysChart';
   const PlantViewDashboard = () => {
 
     // *********************************Power FLow****************
     var search = {
-        devName : "inverter-1",
-        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt"
+        devName : "Calculation",
+        keys : "INV_Total_Power_cal,Generator_Power,load_power"
     }
     const batteryStatus = UseBatteryStatus(search) || [];
 
 
-    // ********************* Power Column *********************
+    // ********************* Daily Energy Graph *********************
     const {
         timeWindow: timeWindowPowerColumn,
         handleTimeWindowChange: handleTimeWindowPowerColumnChange,
         handleReset: PowerColumnHandleReset
-    } = useTimeHandle(7, "day", "AVG", [1, "day"]);
+    } = useTimeHandle(7, "day", "NONE", [5, "minute"]);
 
     
-    var searchTagPowerColumn = { 
-        devName : "Inverter-1",
-        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt",
-        type : ["column","column","column","column"],
-        name : ["Energy Total","DG Total","GRID Total","BESS Total"]
-    };
-    const PowerColumnData = UseBESSDaily(searchTagPowerColumn, timeWindowPowerColumn);
+    var searchTagPowerColumn = [
+        {
+            devName : "Calculation",
+            keys : "Generator_Daily_energy_sum,Node_Generation_Loss_BP", //Node_Generation_Loss_BP : PG API doen't work
+            type : ["column","column"],
+            name : ["DG Daily Energy","PV Generation Loss kWh"]   
+        },
+        {
+            devName : "Summation",
+            keys : "INV_DailyEnergy_Total",
+            type : ["column"],
+            name : ["PV Daily Energy"]
+        },
+        {
+            devName : "Grid",
+            keys : "AGC_EXPORT_DAY",
+            type : ["column",],
+            name : ["Grid Consumption kWh"]      
+        }
+    ];
+    const PowerColumnData = UseManyDeviceManyKeysChart(searchTagPowerColumn, timeWindowPowerColumn, "LastValue");
     useEffect(() => {
         if (PowerColumnData) {
             console.log("PowerColumnData:", PowerColumnData);
@@ -64,14 +82,14 @@ import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
         timeWindow: timeWindowPowerCurve,
         handleTimeWindowChange: handleTimeWindowPowerCurveChange,
         handleReset: PowerCurveHandleReset
-    } = useTimeHandle(7, "day", "AVG", [1, "day"]);
+    } = useTimeHandle(12, "hour", "NONE", [5, "minute"]);
 
     
     var searchTagPowerCurve = { 
-        devName : "Inverter-1",
-        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt",
+        devName : "Calculation",
+        keys : "INV_Total_Power_cal,Generator_Power,AGC4_POWER_cal,load_power",
         type : ["areaspline","areaspline","areaspline","areaspline"],
-        name : ["Energy Total","DG Total","GRID Total","BESS Total"]
+        name : ["PV kW","DG kW","Grid kW","Load kW"]
     };
     const PowerCurveData = UseBESSDaily(searchTagPowerCurve, timeWindowPowerCurve);
     useEffect(() => {
@@ -94,15 +112,41 @@ import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
     // console.log(PlantCardData)
 
 
-    // ************************* INVERTERS *****************
-
+    // ******************** Inverter Table ***********************
+    
     var searchInverterTable = {
-        Inverter : "B1_Inverter_Inverter_0_DC_String1_Watt,B1_Inverter_Inverter_0_DC_String1_Volt,B1_Inverter_Inverter_0_Active_Power_referance,B1_Inverter_Inverter_0_Volt_L1_L2"
+        Inverter : "B1_Inverter_Inverter_0_Inverter_Communication,B1_Inverter_Inverter_0_AC_Active_Power_Watt,B1_Inverter_Inverter_0_AC_Reactive_Power_var,B1_Inverter_Inverter_0_AC_Apparent_Power_VA,B1_Inverter_Inverter_0_Active_Power_referance,B1_Inverter_Inverter_0_Energy_Daily_kWh,B1_Inverter_Inverter_0_Energy_Total_kWh,B1_Inverter_Inverter_0_Frequency_Hz,B1_Inverter_Inverter_0_Volt_L1_L2,B1_Inverter_Inverter_0_Volt_L2_L3,B1_Inverter_Inverter_0_Volt_L3_L1,B1_Inverter_Inverter_0_Fault_Code"
     }
-    var InverterColumn = ["Name", "Tag1", "Tag2", "Tag3", "Tag4"]
+    var InverterColumn = ["Name", {
+        name : "State",
+        width : "200px",
+        formatter: (cell: any) => parseFloat(cell) > 0 ? html(`<div style="width:100%; display: flex; justify-content: center; align-items: center;"><div style="background:green; height:15px; width:15px; border-radius:50%;"></div></div>`) : html(`<div style="width:100%; display: flex; justify-content: center; align-items: center;"><div style="background:red; height:15px; width:15px; border-radius:50%;"></div></div>`)
+        }, "Power kW", "Power kVAR", "Power KVA", "kW % Ref", "Daily Energy", "Total Energy", "Frequency Hz", "L1-L2 Volts", "L2-L3 Volts", "L3-L1 Volts", "Fault State"]
 
     const InverterTableData = UsePlanViewTable(searchInverterTable) as any;
     console.log("InverterTableData", InverterTableData);
+
+    // ******************** PV Meter Table ***********************
+    
+    var searchPVMeterTable = {
+        PV : "ASC4_POWER,ASC4_AMP_L1,ASC4_AMP_L2,ASC4_AMP_L3,ASC4_APPARENT_POWER,ASC4_HZ_L1,ASC4_PF,ASC4_REACTIVE_POWER,ASC4_VOLT_L1_L2,ASC4_VOLT_L2_L3,ASC4_VOLT_L3_L1,ASC4_ENERGY_Total"
+    }
+    var PVMeterColumn = ["Name", "Power kW", "L1 Amps", "L2 Amps", "L3 Amps", "Power KVA", "Frequency Hz", {
+        name : "PF      9",
+        widht : "200px",
+    }, "Power kVAR", "L1 Volts", "L2 Volts", "L3 Volts","Total Energy"]
+
+    const PVMeterTableData = UsePlanViewTable(searchPVMeterTable) as any;
+    console.log("PVMeterTableData", PVMeterTableData);
+
+    // ******************** Generator Table ***********************
+    
+    var searchGeneratorTable = {
+        DG : "B1_DG_DG_0_Energy_Daily_kwh,B1_DG_DG_0_Energy_Total_kwh,B1_DG_DG_0_AC_Reactive_Power_var,B1_DG_DG_0_AMP_L1,B1_DG_DG_0_AMP_L2,B1_DG_DG_0_AMP_L2,B1_DG_DG_0_AMP_L3,B1_DG_DG_0_Frequency_Hz_L1,B1_DG_DG_0_VOLT_L1_L2,B1_DG_DG_0_VOLT_L2_L3,B1_DG_DG_0_VOLT_L3_L1,B1_DG_DG_0_Fuel_Rate,B1_DG_DG_0_Engine_Speed_RPM"
+    }
+    var GeneratorColumn = ["Name","Power kW","Daily Export kWh","Power kVAR","L1 Amps","L2 Amps","L3 Amps","Frequency Hz","L1-L2 Volts","L2-L3 Volts","L3-L1 Volts","Fuel Rate","Engine Speed"]
+    const GeneratorTableData = UsePlanViewTable(searchGeneratorTable) as any;
+    console.log("GeneratorTableData", GeneratorTableData);
 
 
     return (
@@ -165,7 +209,7 @@ import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
                         SolarValue={batteryStatus[0] || 0}
                         DGValue={batteryStatus[1] || 0}
                         GridValue={batteryStatus[2] || 0}
-                        LoadValue={batteryStatus[3] || 0}
+                        LoadValue={batteryStatus[0]+batteryStatus[1]+batteryStatus[2] || 0}
                     />
                 </ChartLayout>
             </Box>
@@ -233,12 +277,12 @@ import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
                         onTimeWindowChange={handleTimeWindowPowerCurveChange}
                         onReset={PowerCurveHandleReset}
                     >
-                        <AreaSplineChart apiData={PowerCurveData || [{}]} />
+                        <AreaSplineChart height={270} props={{yAxis : {title : {text : "AC Power"}}}} apiData={PowerCurveData || [{}]} />
                     </ChartLayout>
                 </GridItem>
                 <GridItem w={"auto"}>
                     <ChartLayout
-                        title=''
+                        title='Daily Energy'
                         width={["full", "auto"]}
                         height='317px'
                         icon={FaChartColumn}
@@ -246,54 +290,57 @@ import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
                         onTimeWindowChange={handleTimeWindowPowerColumnChange}
                         onReset={PowerColumnHandleReset}
                     >
-                        <ColumnChart apiData={PowerColumnData || [{}]} />
+                        <ColumnChart props={{yAxis : {title : {text : "kWh"}}}} apiData={PowerColumnData || [{}]} />
                     </ChartLayout>
                 </GridItem>
             </Grid>
-            <Grid 
-                h={410}
-                templateRows="repeat(2, 1fr)"
-                templateColumns="repeat(2, 1fr)"
-                gap={1}
+            <HStack
+                h={420}
+                w={"full"}
                 mb={4}
             >
-                <GridItem colSpan={1} rowSpan={2} height={404} w={"auto"}>
+                <Box width={"710px"}>
                     <PlantViewTableLayout
-                     title='Inverter'
-                     width={["full", "100%"]}
-                     height='400px'
+                        title='Inverter'
+                        width={["full", "710px"]}
+                        height='400px'
                     >
-                
-                        <PlantTable 
+                        <PlantTable
                             paginationLimitProps={8}
                             column={InverterColumn}
                             apiData={InverterTableData || []}
                         />
                     </PlantViewTableLayout>
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={1} height={150}>
-                    <PlantViewTableLayout
-                     title='Inverter'
-                     width={["full", "100%"]}
-                     height='150px'
-                    >
-                        <PlantTable 
-                            paginationLimitProps={5}
-                        />
-                    </PlantViewTableLayout>
-                </GridItem>
-                <GridItem rowSpan={1} colSpan={1} h={244} mt={-12}>
-                    <PlantViewTableLayout
-                     title='Inverter'
-                     width={["full", "100%"]}
-                     height='244px'
-                    >
-                        <PlantTable 
-                            paginationLimitProps={5}
-                        />
-                    </PlantViewTableLayout>
-                </GridItem>
-            </Grid>
+                </Box>
+                <VStack w={"710px"} spacing={"0"}>
+                    <Box w={"100%"}>
+                        <PlantViewTableLayout
+                            title='PV Meter'
+                            width={["full", "100%"]}
+                            height='150px'
+                        >
+                            <PlantTable
+                                paginationLimitProps={5}
+                                column={PVMeterColumn}
+                                apiData={PVMeterTableData || []}
+                            />
+                        </PlantViewTableLayout>
+                    </Box>
+                    <Box w={"100%"} mt={-3}>    
+                        <PlantViewTableLayout
+                            title='Generator'
+                            width={["full", "100%"]}
+                            height='244px'
+                        >
+                            <PlantTable
+                                paginationLimitProps={5}
+                                column={GeneratorColumn}
+                                apiData={GeneratorTableData || []}
+                            />
+                        </PlantViewTableLayout>
+                    </Box>
+                </VStack>
+            </HStack>
       </Box>
     );
   };

@@ -15,9 +15,10 @@ interface ColumnChartProps {
   apiData? : Object[];
   height? : Number;
   category? : string[];
+  props? : any;
 }
 
-const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270, category}) => {
+const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270, category, props}) => {
 console.log(category)
   const [chartOptions, setChartOptions] = useState({
     chart: {
@@ -92,7 +93,8 @@ console.log(category)
     if (apiData) {
       setChartOptions((prevOptions) => ({
         ...prevOptions,
-        series: apiData
+        series: apiData,
+        ...props
       }));
 
       if (category) {
@@ -105,7 +107,7 @@ console.log(category)
         }));
       }
     }
-  }, [apiData, category]);
+  }, [apiData, category, props]);
 
     return (
     <>

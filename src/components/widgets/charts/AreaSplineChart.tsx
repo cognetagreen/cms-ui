@@ -4,17 +4,19 @@ import HighchartsReact from 'highcharts-react-official';
 
 interface AreaSplineChartProps {
     apiData? : Object[];
+    height? : number | string;
+    props? : any;
 }
 
-const AreaSplineChart : React.FC <AreaSplineChartProps> = ({apiData}) => {
+const AreaSplineChart : React.FC <AreaSplineChartProps> = ({apiData, height="300px", props}) => {
     const [chartOption, setChartOptions] = useState({
         chart: {
             type: 'areaspline',
-            height : '300px',
+            height : height,
             backgroundColor : 'transparent'
         },
         title: {
-            text: 'Monthly Sales Data'
+            text: ''
         },
         xAxis: {
             type : "datetime"
@@ -27,15 +29,19 @@ const AreaSplineChart : React.FC <AreaSplineChartProps> = ({apiData}) => {
         series: [] as Object[],
         legend : {
             align : "left"
+        },
+        credits : {
+            enabled : false
         }
     });
 
     useEffect(() => {
         setChartOptions((prevOptions) => ({
             ...prevOptions,
-            series : apiData || [{}]
+            series : apiData || [{}],
+            ...props
         }))
-    }, [apiData])
+    }, [apiData, props])
 
     return (
         <HighchartsReact highcharts={Highcharts} options={chartOption} />

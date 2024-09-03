@@ -5,7 +5,26 @@ interface BatteryDigitalProgressBarProps {
     value : string;
 }
 
-const BatteryDigitalProgressBar : React.FC<BatteryDigitalProgressBarProps> = ({title, value}) => (
+function scaleValue(value : number, srcRange : number[], dstRange: number[]) : any {
+  const [srcMin, srcMax] = srcRange;
+  const [dstMin, dstMax] = dstRange;
+
+  // Perform the scaling
+  const scaledValue = dstMin + ((value - srcMin) / (srcMax - srcMin)) * (dstMax - dstMin);
+  return scaledValue;
+}
+
+
+const BatteryDigitalProgressBar : React.FC<BatteryDigitalProgressBarProps> = ({title, value}) => {
+  
+  var srcRange = [0, 450];
+  var dstRange = [0, 270];
+  
+  // Example usage
+  // var value1 = 1400; // A value in the range 0 to 1500
+  const scaledValue = scaleValue(parseFloat(value), srcRange, dstRange);
+  
+  return (
   <svg
     width={345}
     height={206}
@@ -15,8 +34,8 @@ const BatteryDigitalProgressBar : React.FC<BatteryDigitalProgressBarProps> = ({t
   >
     <rect width={315} height={186} rx={4} fill="url(#a)" />
     <rect x={40} y={102} width={230} height={40} rx={4} fill="#686B83" />
-    <rect x={40} y={96} width={169} height={52} rx={4} fill="url(#b)" />
-    <rect x={40} y={102} width={169} height={40} rx={4} fill="url(#c)" />
+    <rect x={40} y={96} width={scaledValue} height={52} rx={4} fill="url(#b)" />
+    <rect x={40} y={102} width={scaledValue} height={40} rx={4} fill="url(#c)" />
     <path
       stroke="#fff"
       d="M45.5 102v40m5-40v40m4-40v40m5-40v40m5-40v40m5-40v40m5-40v40m5-40v40m4-40v40m5-40v40m5-40v40m5-40v40m5-40v40m5-40v40m4-40v40m5-40v40m5-40v40m5-40v40m5-40v40m5-40v40m4-40v40m5-40v40m5-40v40m5-40v40m5-40v40m4-40v40m5-40v40m5-40v40m4-40v40m0-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4-40v40m4"
@@ -65,4 +84,5 @@ const BatteryDigitalProgressBar : React.FC<BatteryDigitalProgressBarProps> = ({t
     </defs>
   </svg>
 );
+};
 export default BatteryDigitalProgressBar;
