@@ -23,6 +23,8 @@ import PlantTableLayout from "../components/Layouts/TableLayouts/PlantTableLayou
 import BarChart from "../components/widgets/charts/BarChart";
 import ColumnLineChart from "../components/widgets/charts/ColumnLineChart";
 import UseAssetSummary from "../Services/Hooks/UseAssetSummary";
+import UseColumnLine from "../Services/Hooks/UseColumnLine";
+import UseSpecificYield from "../Services/Hooks/UseSpecificYield";
 const DonutPieChart = lazy(() => import('../components/widgets/charts/DonutPieChart'));
 
 const MainDashboard = () => {
@@ -37,10 +39,26 @@ const MainDashboard = () => {
         var endTs = inMS(to)
 
         setTimeWindow({ startTs, endTs, aggregate });
-        console.log(from, to, aggregate)
+        // console.log(from, to, aggregate)
         // Fetch and update the data based on the new time window
     };
 
+    // ********************Specific Yield / Ranking Bar Chart ********************
+
+    var textSearch = "Calculation";
+    var key = "BP_Plant_Daily_Energy";
+    const specificYieldData = UseSpecificYield(textSearch, key);
+
+    // ***********************Energy Yield******************
+
+    var textSearch = "inverter-1";
+    const type = { // Line for PV PR only
+        column : "B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Frequency_Hz",
+        line : "B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Energy_Total_kWh,B1_Inverter_Inverter_1_Frequency_Hz,B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Energy_Total_kWh,B1_Inverter_Inverter_1_Frequency_Hz,B1_Inverter_Inverter_1_Energy_Total_kWh",
+    };
+    const ColumnLineData = UseColumnLine(textSearch, type) || [{}];
+
+    // *********PIE*************
   var textSearch = "inverter-1";
   var key = "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt";
   const EnergyYield = UsePieChart(textSearch, key) || [];
@@ -90,7 +108,7 @@ const MainDashboard = () => {
             icon={FaChartBar}
             onTimeWindowChange = {handleTimeWindowChange}
           >
-            <BarChart />
+            <BarChart apiData={specificYieldData || [{}]} />
           </ChartLayout>
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]}>
@@ -102,7 +120,9 @@ const MainDashboard = () => {
             timeWindow = {true}
             onTimeWindowChange = {handleTimeWindowChange}
           >
-            <ColumnLineChart />
+            <Suspense fallback={<div style={{position:"relative", top : "45%", left : "45%"}}>sddsf</div>}>
+              <ColumnLineChart apiData={ColumnLineData || [{}]} />
+            </Suspense>
           </ChartLayout>
         </GridItem>
         <GridItem rowSpan={2} colSpan={[1, 2]} mt={-7}>
@@ -125,7 +145,7 @@ const MainDashboard = () => {
             icon={PiChartDonutFill}
             onTimeWindowChange = {handleTimeWindowChange}
           >
-            <Suspense>
+            <Suspense fallback={<div style={{position:"relative", top : "45%", left : "45%"}}>Loading...</div>}>
               <DonutPieChart apiData={EnergyYield} />
             </Suspense>
           </ChartLayout>

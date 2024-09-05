@@ -14,6 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
 import PlantTable from '../../widgets/tables/PlantTable';
+import { html } from 'gridjs';
+import UsePlantTable from '../../../Services/Hooks/UsePlantTable';
 
 interface PlantTableLayoutProps {
   children: React.ReactNode;
@@ -24,9 +26,24 @@ interface PlantTableLayoutProps {
 }
 
 const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, icon, width, height }) => {
+  var textSearch = "PV";
+  var searchTags = {
+    calculation : "BP_Plant_Daily_Energy,AC Capacity,DG Make & Model,Country",
+    "inverter-1" : "B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Frequency_Hz"
 
-  const tabList = ["All", "PV", "Wind", "PV-BESS", "PV-DG"];
-  const dotColor = ["transparent","#0086CC", "#F8931F", "#7EC800", "#704199"]
+  }
+  const PVData = UsePlantTable(searchTags, textSearch) as any;
+
+  var textSearch = "Hybrid";
+  var searchTags = {
+    calculation : "BP_Plant_Daily_Energy,AC Capacity,DG Make & Model,Country",
+    "inverter-1" : "B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Frequency_Hz"
+
+  }
+  const HybridData = UsePlantTable(searchTags, textSearch) as any;
+
+  const tabList = ["PV", "Wind", "Hybrid"];
+  const dotColor = ["#0086CC", "#F8931F", "#7EC800"]
 
   const stateNumber = [12, 6, 4];
   const stateColor = ["#13CD26", "#CB0511", "#837F97"];
@@ -64,7 +81,7 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
                   fontSize={14}
                     >
                       <span 
-                        style={{width:"10px",height:"10px",backgroundColor:dotColor[index], display:`${dotColor[index] == "transparent"? "none" : "flex"}`, borderRadius:"50%", marginRight:"7px"}}
+                        style={{width:"10px",height:"10px",backgroundColor:dotColor[index], display:"flex", borderRadius:"50%", marginRight:"7px"}}
                         ></span>
                       {value}
                   </Tab>
@@ -84,7 +101,9 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
             <TabPanels>
                 <TabPanel>
                     <PlantTable
-                      paginationLimitProps={10}
+                     column={[{name : "Plant Name", width : 170, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:3px solid ${parseFloat(row.cells[4].data) > 1 ? 'green' : 'red'};" >${cell}</b>`)}, {name : "Type", sort : true}, {name : "Energy System", width : 200}, "Capacity", "Country", "PV Power", "Irradiation", "PV Today kWh", "PR", "Availability"]}
+                     apiData={PVData || []}
+                     paginationLimitProps={10}
                     />
                 </TabPanel>
                 <TabPanel>
@@ -94,16 +113,8 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
                 </TabPanel>
                 <TabPanel>
                     <PlantTable 
-                      paginationLimitProps={10}
-                    />
-                </TabPanel>
-                <TabPanel>
-                    <PlantTable 
-                      paginationLimitProps={10}
-                    />
-                </TabPanel>
-                <TabPanel>
-                    <PlantTable 
+                      column={["Plant Name", {name : "Type", sort : true}, "Energy System", "PV Capacity", "BESS Capacity", "DG Capacity", "Country", "PV Power", "Irradiation", "PV Today kWh", "BESS Power", "BESS Discharge kWh", "DG Power", "DG Today kWh", "PR", "Availability"]}
+                      apiData={HybridData || []}
                       paginationLimitProps={10}
                     />
                 </TabPanel>

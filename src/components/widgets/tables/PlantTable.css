@@ -349,6 +349,7 @@ th.gridjs-th-fixed {
   }
   
   .plant-table .gridjs-th {
+    text-align: left;
     line-height: 18px;
     width: 106px;
     /* overflow-x: auto; */
@@ -369,7 +370,7 @@ th.gridjs-th-fixed {
   }
   
   .plant-table .gridjs-td {
-    text-align: center;
+    text-align: left;
     font-size: 12px;
     font-weight: 600;
     color: #657079;

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import UseSpecificYield from '../../../Services/Hooks/UseSpecificYield';
 
-const BarChart = () => {
-    const textSearch = "inverter-1";
-    const key = "B1_Inverter_Inverter_1_AC_Active_Power_Watt";
-    const apiData = UseSpecificYield(textSearch, key);
+interface BarChartType {
+    apiData? : [{}];
+}
+
+const BarChart : React.FC <BarChartType> = ({apiData}) => {
 
     const [chartOptions, setChartOptions] = useState({
         chart: {
@@ -80,7 +80,7 @@ const BarChart = () => {
         if (apiData) {
             setChartOptions({
                 ...chartOptions,
-                series: apiData
+                series: apiData 
             });
         }
     }, [apiData]);
