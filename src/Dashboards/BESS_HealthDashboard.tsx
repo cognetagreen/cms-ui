@@ -46,11 +46,11 @@ const BESS_HealthDashboard = () => {
         name : ["String2 Volt", "String3 Volt"]
     };
     const DegradationData = UseBESSDaily(searchTagDegradation, timeWindowDegradation);
-    useEffect(() => {
-        if (DegradationData) {
-            console.log("DegradationData:", DegradationData);
-        }
-    }, [DegradationData]);
+    // useEffect(() => {
+    //     if (DegradationData) {
+    //         console.log("DegradationData:", DegradationData);
+    //     }
+    // }, [DegradationData]);
 
     // ************************Delta V Distribution********************
     const {
@@ -66,11 +66,11 @@ const BESS_HealthDashboard = () => {
         name : ["String2 Volt"]
     };
     const VDistributionData = UseBESSDaily(searchTagVDistribution, timeWindowVDistribution);
-    useEffect(() => {
-        if (VDistributionData) {
-            console.log("VDistributionData:", VDistributionData);
-        }
-    }, [VDistributionData]);
+    // useEffect(() => {
+    //     if (VDistributionData) {
+    //         console.log("VDistributionData:", VDistributionData);
+    //     }
+    // }, [VDistributionData]);
 
     // ************************Cell V Delta*********************
     
@@ -81,11 +81,11 @@ const BESS_HealthDashboard = () => {
         name : ["String2 Volt"]
     };
     const CellVData = UseCellVDelta(searchTagCellV);
-    useEffect(() => {
-        if (CellVData) {
-            console.log("CellVData:", CellVData);
-        }
-    }, [CellVData]);
+    // useEffect(() => {
+    //     if (CellVData) {
+    //         console.log("CellVData:", CellVData);
+    //     }
+    // }, [CellVData]);
 
     // ************************Cell V Delta********************
     const {
@@ -101,11 +101,11 @@ const BESS_HealthDashboard = () => {
         name : ["String2 Volt", "String3 Volt"]
     };
     const TrendData = UseBESSDaily(searchTagTrend, timeWindowTrend);
-    useEffect(() => {
-        if (TrendData) {
-            console.log("TrendData:", TrendData);
-        }
-    }, [TrendData]);
+    // useEffect(() => {
+    //     if (TrendData) {
+    //         console.log("TrendData:", TrendData);
+    //     }
+    // }, [TrendData]);
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>

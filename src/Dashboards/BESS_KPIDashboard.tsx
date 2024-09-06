@@ -35,11 +35,11 @@ const BESS_KPIDashboard = () => {
         name : ["MIN", "MAX"]
     };
     const CumulativeData = UseBESSDaily(searchTagCumulative, timeWindowCumulative);
-    useEffect(() => {
-        if (CumulativeData) {
-            console.log("CumulativeData:", CumulativeData);
-        }
-    }, [CumulativeData]);
+    // useEffect(() => {
+    //     if (CumulativeData) {
+    //         console.log("CumulativeData:", CumulativeData);
+    //     }
+    // }, [CumulativeData]);
 
     // ************************ DailDischargey********************
     const {
@@ -55,11 +55,11 @@ const BESS_KPIDashboard = () => {
         name : ["String2 Volt", "String3 Volt"]
     };
     const DailyDischargeData = UseBESSDaily(searchTagDailyDischarge, timeWindowDailyDischarge);
-    useEffect(() => {
-        if (DailyDischargeData) {
-            console.log("DailyDischargeData:", DailyDischargeData);
-        }
-    }, [DailyDischargeData]);
+    // useEffect(() => {
+    //     if (DailyDischargeData) {
+    //         console.log("DailyDischargeData:", DailyDischargeData);
+    //     }
+    // }, [DailyDischargeData]);
 
     // **************************** CARDS ******************
 
@@ -83,7 +83,7 @@ const BESS_KPIDashboard = () => {
         special : "temp30"
     }
     const batteryStatus2 = UseBatteryStatus(search2) || [];
-    console.log(2, batteryStatus2)
+    // console.log(2, batteryStatus2)
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>

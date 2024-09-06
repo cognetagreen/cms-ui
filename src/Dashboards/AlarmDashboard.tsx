@@ -25,7 +25,7 @@ const AlarmDashboard = () => {
         // console.log(Promise.resolve(val))
         if((val)) {
             const responseAlarmEvent = await AlarmAckClrAPI(id, event);
-            console.log(responseAlarmEvent)
+            // console.log(responseAlarmEvent)
             if (responseAlarmEvent?.status == 200) {
                 await swal("Acknowledged!", "Alarm Event Successfull!", "success");
                 window.location.reload();
@@ -35,7 +35,7 @@ const AlarmDashboard = () => {
             // console.log(9000);
             
         }else {
-            console.log(8000)
+            // console.log(8000)
         }
     }
     
@@ -86,7 +86,7 @@ const AlarmDashboard = () => {
     }]
 
     const AlarmLiveTable = UseAlarmLiveTable(searchDev, timeWindowAlarmLiveTable) as any;
-    console.log("AlarmLiveTable", AlarmLiveTable);
+    // console.log("AlarmLiveTable", AlarmLiveTable);
     
     return (
         <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>

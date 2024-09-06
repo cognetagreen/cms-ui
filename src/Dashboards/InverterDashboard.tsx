@@ -76,8 +76,8 @@ const InverterDashboard = () => {
             var len = InverterDailyEnergyData[0].data.length;
             var tempData = InverterDailyEnergyData[0].data;
             setInverterDETitle(tempData[len-1][1]);
-            console.log("InverterDETitle : ", InverterDETitle);
-            console.log("InverterDailyEnergyData:", InverterDailyEnergyData);
+            // console.log("InverterDETitle : ", InverterDETitle);
+            // console.log("InverterDailyEnergyData:", InverterDailyEnergyData);
         }
     }, [InverterDailyEnergyData]);
     
@@ -104,11 +104,11 @@ const InverterDashboard = () => {
         name : "INV-"
     };
     const InverterPowerData = UseManyDeviceSameKeyChart(searchTagInverterPower, timeWindowInverterPower);
-    useEffect(() => {
-        if (InverterPowerData) {
-            console.log("InverterPowerData:", InverterPowerData);
-        }
-    }, [InverterPowerData]);
+    // useEffect(() => {
+    //     if (InverterPowerData) {
+    //         console.log("InverterPowerData:", InverterPowerData);
+    //     }
+    // }, [InverterPowerData]);
     
     // ********************* Daily Energy kWh *********************
     const {
@@ -125,11 +125,11 @@ const InverterDashboard = () => {
         name : "INV - "
     };
     const DailyEnergykWhData = UseManyDeviceSameKeyChart(searchTagDailyEnergykWh, timeWindowDailyEnergykWh);
-    useEffect(() => {
-        if (DailyEnergykWhData) {
-            console.log("DailyEnergykWhData:", DailyEnergykWhData);
-        }
-    }, [DailyEnergykWhData]);
+    // useEffect(() => {
+    //     if (DailyEnergykWhData) {
+    //         console.log("DailyEnergykWhData:", DailyEnergykWhData);
+    //     }
+    // }, [DailyEnergykWhData]);
     
     // ********************* Inverter Control *********************
     const {
@@ -146,11 +146,11 @@ const InverterDashboard = () => {
         name : "INV - "
     };
     const InverterControlData = UseManyDeviceSameKeyChart(searchTagInverterControl, timeWindowInverterControl);
-    useEffect(() => {
-        if (InverterControlData) {
-            console.log("InverterControlData:", InverterControlData);
-        }
-    }, [InverterControlData]);
+    // useEffect(() => {
+    //     if (InverterControlData) {
+    //         console.log("InverterControlData:", InverterControlData);
+    //     }
+    // }, [InverterControlData]);
     
     // ******************** Inverter Table ***********************
     

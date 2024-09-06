@@ -71,11 +71,11 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
         }
     ];
     const PowerColumnData = UseManyDeviceManyKeysChart(searchTagPowerColumn, timeWindowPowerColumn, "LastValue");
-    useEffect(() => {
-        if (PowerColumnData) {
-            console.log("PowerColumnData:", PowerColumnData);
-        }
-    }, [PowerColumnData]);
+    // useEffect(() => {
+    //     if (PowerColumnData) {
+    //         console.log("PowerColumnData:", PowerColumnData);
+    //     }
+    // }, [PowerColumnData]);
 
     // ********************* Power Curve *********************
     const {
@@ -92,11 +92,11 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
         name : ["PV kW","DG kW","Grid kW","Load kW"]
     };
     const PowerCurveData = UseBESSDaily(searchTagPowerCurve, timeWindowPowerCurve);
-    useEffect(() => {
-        if (PowerCurveData) {
-            console.log("PowerCurveData:", PowerCurveData);
-        }
-    }, [PowerCurveData]);
+    // useEffect(() => {
+    //     if (PowerCurveData) {
+    //         console.log("PowerCurveData:", PowerCurveData);
+    //     }
+    // }, [PowerCurveData]);
 
     //******************************Solar Card*************** */
 
@@ -124,7 +124,7 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
         }, "Power kW", "Power kVAR", "Power KVA", "kW % Ref", "Daily Energy", "Total Energy", "Frequency Hz", "L1-L2 Volts", "L2-L3 Volts", "L3-L1 Volts", "Fault State"]
 
     const InverterTableData = UsePlanViewTable(searchInverterTable) as any;
-    console.log("InverterTableData", InverterTableData);
+    // console.log("InverterTableData", InverterTableData);
 
     // ******************** PV Meter Table ***********************
     
@@ -137,7 +137,7 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
     }, "Power kVAR", "L1 Volts", "L2 Volts", "L3 Volts","Total Energy"]
 
     const PVMeterTableData = UsePlanViewTable(searchPVMeterTable) as any;
-    console.log("PVMeterTableData", PVMeterTableData);
+    // console.log("PVMeterTableData", PVMeterTableData);
 
     // ******************** Generator Table ***********************
     
@@ -146,7 +146,7 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
     }
     var GeneratorColumn = ["Name","Power kW","Daily Export kWh","Power kVAR","L1 Amps","L2 Amps","L3 Amps","Frequency Hz","L1-L2 Volts","L2-L3 Volts","L3-L1 Volts","Fuel Rate","Engine Speed"]
     const GeneratorTableData = UsePlanViewTable(searchGeneratorTable) as any;
-    console.log("GeneratorTableData", GeneratorTableData);
+    // console.log("GeneratorTableData", GeneratorTableData);
 
 
     return (

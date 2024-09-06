@@ -19,7 +19,7 @@ interface ColumnChartProps {
 }
 
 const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270, category, props}) => {
-console.log(category)
+// console.log(category)
   const [chartOptions, setChartOptions] = useState({
     chart: {
       type: 'column',

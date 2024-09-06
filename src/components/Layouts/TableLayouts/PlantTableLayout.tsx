@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   HStack,
@@ -16,6 +16,8 @@ import { IconType } from 'react-icons';
 import PlantTable from '../../widgets/tables/PlantTable';
 import { html } from 'gridjs';
 import UsePlantTable from '../../../Services/Hooks/UsePlantTable';
+import UseAssetSummary from '../../../Services/Hooks/UseAssetSummary';
+import UsePlantTableSummary from '../../../Services/Hooks/UsePlantTableSummary';
 
 interface PlantTableLayoutProps {
   children: React.ReactNode;
@@ -24,29 +26,51 @@ interface PlantTableLayoutProps {
   width: string[];
   height: string;
 }
-
+// ***************PV***********
 const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, icon, width, height }) => {
   var textSearch = "PV";
   var searchTags = {
-    calculation : "BP_Plant_Daily_Energy,AC Capacity,DG Make & Model,Country",
+    calculation : "INV_Total_Power_cal,AC Capacity,DG Make & Model,Country",
     "inverter-1" : "B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Frequency_Hz"
-
   }
   const PVData = UsePlantTable(searchTags, textSearch) as any;
 
+  // **************Hybrid***************
   var textSearch = "Hybrid";
   var searchTags = {
     calculation : "BP_Plant_Daily_Energy,AC Capacity,DG Make & Model,Country",
-    "inverter-1" : "B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Frequency_Hz"
-
+    "inverter-1" : "B1_Inverter_Inverter_1_AC_Active_Power_Watt,B1_Inverter_Inverter_1_Frequency_Hz" 
   }
   const HybridData = UsePlantTable(searchTags, textSearch) as any;
+  
+  // *****************Summary*************
+  var textSearchSummary = ["kW", "PV", "Wind", "Hybrid"];
+  var searchTagsSummary = {
+    calculation : "INV_Total_Power_cal"
+  }
+  const PlantTableSummaryData = UsePlantTableSummary(searchTagsSummary, textSearchSummary) || [];
 
+  const stateNumber : number[] = PlantTableSummaryData[0] || [0,0,0] as number[];
+  const PVSummary = PlantTableSummaryData[1] || [0,0,0,0] as number[];
+  const WindSummary = PlantTableSummaryData[2] || [0,0,0,0] as number[];
+  const HybridSummary = PlantTableSummaryData[3] || [0,0,0,0] as number[];
+
+
+  const stateColor = ["#13CD26", "#CB0511", "#837F97"];
+  
   const tabList = ["PV", "Wind", "Hybrid"];
   const dotColor = ["#0086CC", "#F8931F", "#7EC800"]
-
-  const stateNumber = [12, 6, 4];
-  const stateColor = ["#13CD26", "#CB0511", "#837F97"];
+  
+  
+  const handleBorderColor = (data : number) => {
+    if(data > 0) {
+      return "#13CD26";
+    } else if(data == 0) {
+      return "#CB0511";
+    } else {
+      return "#837F97";
+    }
+  }
   return (
     <Box
       w={width}
@@ -83,7 +107,7 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
                       <span 
                         style={{width:"10px",height:"10px",backgroundColor:dotColor[index], display:"flex", borderRadius:"50%", marginRight:"7px"}}
                         ></span>
-                      {value}
+                      {value} &nbsp; <sub><b style={{color : "red"}}>{PlantTableSummaryData[index+1]?.[2] || 0}</b>/{PlantTableSummaryData[index+1]?.[0] || 0}</sub>  
                   </Tab>
                 ))}
 
@@ -101,7 +125,7 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
             <TabPanels>
                 <TabPanel>
                     <PlantTable
-                     column={[{name : "Plant Name", width : 170, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:3px solid ${parseFloat(row.cells[4].data) > 1 ? 'green' : 'red'};" >${cell}</b>`)}, {name : "Type", sort : true}, {name : "Energy System", width : 200}, "Capacity", "Country", "PV Power", "Irradiation", "PV Today kWh", "PR", "Availability"]}
+                     column={[{name : "Plant Name", width : 200, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:4px solid ${handleBorderColor(parseFloat(row.cells[5].data))};" >${cell}</b>`)}, {name : "Type", sort : true}, {name : "Energy System", width : 200}, "Capacity", "Country", {name : "PV Power", width : 200, formatter : (cell : any) => cell == "-1" ? "NA" : cell}, "Irradiation", "PV Today kWh", "PR", "Availability"]}
                      apiData={PVData || []}
                      paginationLimitProps={10}
                     />

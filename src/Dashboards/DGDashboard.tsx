@@ -68,7 +68,7 @@ const DGDashboard = () => {
     }
     var GeneratorColumn = ["Name","Power kW","Daily Export kWh","Power kVAR","L1 Amps","L2 Amps","L3 Amps","Frequency Hz","L1-L2 Volts","L2-L3 Volts","L3-L1 Volts","Fuel Rate","Engine Speed"]
     const GeneratorTableData = UsePlanViewTable(searchGeneratorTable) as any;
-    console.log("GeneratorTableData", GeneratorTableData);
+    // console.log("GeneratorTableData", GeneratorTableData);
 
 
     // ********************* Generator Daily Energy *********************
@@ -86,11 +86,11 @@ const DGDashboard = () => {
         name : ["Generator Daily Energy"]
     };
     const GeneratorDailyEnergyData = UseBESSDaily(searchTagGeneratorDailyEnergy, timeWindowGeneratorDailyEnergy);
-    useEffect(() => {
-        if (GeneratorDailyEnergyData) {
-            console.log("GeneratorDailyEnergyData:", GeneratorDailyEnergyData);
-        }
-    }, [GeneratorDailyEnergyData]);
+    // useEffect(() => {
+    //     if (GeneratorDailyEnergyData) {
+    //         console.log("GeneratorDailyEnergyData:", GeneratorDailyEnergyData);
+    //     }
+    // }, [GeneratorDailyEnergyData]);
 
     // ************************* Load Power ******************
     const runtimeWidget = [1,2,3,4,5,6];
@@ -116,11 +116,11 @@ const DGDashboard = () => {
         name : "DG-"
     };
     const DGPowerData = UseManyDeviceSameKeyChart(searchTagDGPower, timeWindowDGPower);
-    useEffect(() => {
-        if (DGPowerData) {
-            console.log("DGPowerData:", DGPowerData);
-        }
-    }, [DGPowerData]);
+    // useEffect(() => {
+    //     if (DGPowerData) {
+    //         console.log("DGPowerData:", DGPowerData);
+    //     }
+    // }, [DGPowerData]);
 
     // ********************* DG Ampere *********************
     const {
@@ -137,11 +137,11 @@ const DGDashboard = () => {
         name : "DG-Ampere-"
     };
     const DGAmpereData = UseManyDeviceSameKeyChart(searchTagDGAmpere, timeWindowDGAmpere);
-    useEffect(() => {
-        if (DGAmpereData) {
-            console.log("DGAmpereData:", DGAmpereData);
-        }
-    }, [DGAmpereData]);
+    // useEffect(() => {
+    //     if (DGAmpereData) {
+    //         console.log("DGAmpereData:", DGAmpereData);
+    //     }
+    // }, [DGAmpereData]);
 
     // ********************* Fuel Consumption *********************
     const {
@@ -158,11 +158,11 @@ const DGDashboard = () => {
         name : " Fuel Consumtion (kWh) "
     };
     const FuelConsumtionData = UseManyDeviceSameKeyChart(searchTagFuelConsumtion, timeWindowFuelConsumtion);
-    useEffect(() => {
-        if (FuelConsumtionData) {
-            console.log("FuelConsumtionData:", FuelConsumtionData);
-        }
-    }, [FuelConsumtionData]);
+    // useEffect(() => {
+    //     if (FuelConsumtionData) {
+    //         console.log("FuelConsumtionData:", FuelConsumtionData);
+    //     }
+    // }, [FuelConsumtionData]);
 
 
 return (

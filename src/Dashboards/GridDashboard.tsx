@@ -48,7 +48,7 @@ const GridDashboard = () => {
     }
     // const plantCardDailyData = UseBatteryStatus(searchGridCard)
     const PlantCardData = UsePlantCard(searchGridCard) || [[]];
-    console.log("PlantCardData", PlantCardData)
+    // console.log("PlantCardData", PlantCardData)
 
     // ********************* Grid Voltage & Hz *********************
     const {
@@ -65,11 +65,11 @@ const GridDashboard = () => {
         name : ["line-1 V","line-2 V","line-3 V","Hz"]
     };
     const GridVoltData = UseBESSDaily(searchTagGridVolt, timeWindowGridVolt);
-    useEffect(() => {
-        if (GridVoltData) {
-            console.log("GridVoltData:", GridVoltData);
-        }
-    }, [GridVoltData]);
+    // useEffect(() => {
+    //     if (GridVoltData) {
+    //         console.log("GridVoltData:", GridVoltData);
+    //     }
+    // }, [GridVoltData]);
 
     // ********************* Grid Power *********************
     const {
@@ -86,11 +86,11 @@ const GridDashboard = () => {
         name : ["Power kWh","Power kVAR","L1 kW","L2 kW","L3 kW","L1 kVAR","L2 kVAR","L3 kVAR"]
     };
     const GridPowerData = UseBESSDaily(searchTagGridPower, timeWindowGridPower);
-    useEffect(() => {
-        if (GridPowerData) {
-            console.log("GridPowerData:", GridPowerData);
-        }
-    }, [GridPowerData]);
+    // useEffect(() => {
+    //     if (GridPowerData) {
+    //         console.log("GridPowerData:", GridPowerData);
+    //     }
+    // }, [GridPowerData]);
 
     // ********************* Grid Energy Flow *********************
     const {
@@ -113,11 +113,11 @@ const GridDashboard = () => {
         name : ["Grid Penetration %","PV Penetration %"]   
     }];
     const GridEnergyData = UseManyDeviceManyKeysChart(searchTagGridEnergy, timeWindowGridEnergy);
-    useEffect(() => {
-        if (GridEnergyData) {
-            console.log("GridEnergyData:", GridEnergyData);
-        }
-    }, [GridEnergyData]);
+    // useEffect(() => {
+    //     if (GridEnergyData) {
+    //         console.log("GridEnergyData:", GridEnergyData);
+    //     }
+    // }, [GridEnergyData]);
 
     // ********************* Grid Current *********************
     const {
@@ -134,11 +134,11 @@ const GridDashboard = () => {
         name : ["L1 Amps","L2 Amps","L3 Amps"]
     };
     const GridCurrentData = UseBESSDaily(searchTagGridCurrent, timeWindowGridCurrent);
-    useEffect(() => {
-        if (GridCurrentData) {
-            console.log("GridCurrentData:", GridCurrentData);
-        }
-    }, [GridCurrentData]);
+    // useEffect(() => {
+    //     if (GridCurrentData) {
+    //         console.log("GridCurrentData:", GridCurrentData);
+    //     }
+    // }, [GridCurrentData]);
 
 
   return (

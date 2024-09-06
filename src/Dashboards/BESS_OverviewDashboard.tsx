@@ -47,11 +47,11 @@ const BESS_OverviewDashboard = () => {
         name : ["Energy Total"]
     };
     const BESSOutputData = UseBESSDaily(searchTagBESSOutput, timeWindowBESSOutput);
-    useEffect(() => {
-        if (BESSOutputData) {
-            console.log("BESSOutputData:", BESSOutputData);
-        }
-    }, [BESSOutputData]);
+    // useEffect(() => {
+    //     if (BESSOutputData) {
+    //         console.log("BESSOutputData:", BESSOutputData);
+    //     }
+    // }, [BESSOutputData]);
 
     // ************************BESS Daily********************
     const {
@@ -67,11 +67,11 @@ const BESS_OverviewDashboard = () => {
         name : ["String2 Volt", "String3 Volt"]
     };
     const BESSDailyData = UseBESSDaily(searchTagBESSDaily, timeWindowBESSDaily);
-    useEffect(() => {
-        if (BESSDailyData) {
-            console.log("BESSDailyData:", BESSDailyData);
-        }
-    }, [BESSDailyData]);
+    // useEffect(() => {
+    //     if (BESSDailyData) {
+    //         console.log("BESSDailyData:", BESSDailyData);
+    //     }
+    // }, [BESSDailyData]);
 
     // ******************BESS MIN MAX *******************
     const {
@@ -87,11 +87,11 @@ const BESS_OverviewDashboard = () => {
         name : ["MIN", "MAX"]
     };
     const MinMaxData = UseBESSDaily(searchTagMinMax, timeWindowMinMax);
-    useEffect(() => {
-        if (MinMaxData) {
-            console.log("MinMaxData:", MinMaxData);
-        }
-    }, [MinMaxData]);
+    // useEffect(() => {
+    //     if (MinMaxData) {
+    //         console.log("MinMaxData:", MinMaxData);
+    //     }
+    // }, [MinMaxData]);
 
 
     // ******************* Some Title ******************
@@ -102,11 +102,11 @@ const BESS_OverviewDashboard = () => {
     }
     const [someTitleData, setSomeTitleData] =  useState([{bar : [85, 75, 65], temp : 20, volt : 7}, {bar : [35, 25, 65], temp : 20, volt : 7}])
     const fetchSomeTitleData = UseSomeTitle(searchTagSomeTitle);
-    useEffect(()=> {
-        if(fetchSomeTitleData) {
-            setSomeTitleData(fetchSomeTitleData);
-        }
-    }, [fetchSomeTitleData])
+    // useEffect(()=> {
+    //     if(fetchSomeTitleData) {
+    //         setSomeTitleData(fetchSomeTitleData);
+    //     }
+    // }, [fetchSomeTitleData])
 
   return (
     <Box maxW="full" ml={10} px={{ base: 2, sm: 12, md: 17 }}>
