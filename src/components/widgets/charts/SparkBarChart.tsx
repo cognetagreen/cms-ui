@@ -8,7 +8,7 @@ interface SparkBarChartProps {
 }
 
 const SparkBarChart: React.FC <SparkBarChartProps> = ({apiData}) => {
-    console.log(apiData)
+    // console.log(apiData)
     const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'bar',

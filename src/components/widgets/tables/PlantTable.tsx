@@ -21,7 +21,7 @@ interface PlantTableProps {
 const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, column}) => {
 
   var data = [
-    ["","","",""]
+    ["","","","","","","","","","","",""]
     // ['Plant Name', 'PV', '900', 'Vienna', '2,675.7', '259.10', 'Col Name', '3478'],
     // ['Plant Name', 'Wind', '259.10', 'Berlin', '2,675.7', '259.10', 'Col Name', '5678'],
     // ['Plant Name', 'PV', '259.10', 'Berlin', '2,675.7', '259.10', 'Col Name', '5678'],
