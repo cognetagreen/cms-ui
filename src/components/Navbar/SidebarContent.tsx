@@ -1,5 +1,5 @@
 // src/components/Sidebar.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -7,6 +7,8 @@ import {
   Icon,
   Collapse,
   useDisclosure,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -14,6 +16,9 @@ import { CiSliderVertical } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import NavItem from "./NavItem";
 import { Home, AlertTicket, Analysis, Site, Tools, Alarm } from "../../assets/Navbar/SideNavBar";
+import { Select } from "chakra-react-select";
+import { useCustomerOptionsContext } from "../../Context/CustomerOptionsContext";
+import { useSelectedCustomerIDContext } from "../../Context/SelectedCustomerIDContext";
 
 interface SidebarContentProps {
   isSidebarExpanded: boolean;
@@ -26,9 +31,31 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
   onToggleSidebar,
   ...props
 }) => {
-  const home = useDisclosure();
+
+  //****************Handle Select Customer */
+  const { customerOptions } = useCustomerOptionsContext();
+  const {selectedCustomerID, setSelectedCustomerID} = useSelectedCustomerIDContext();
+
+  const handlePlantChange = (selectedOption: any) => {
+    setSelectedCustomerID(selectedOption?.value);
+    localStorage.setItem("SelectedCustomerId", selectedOption?.value || "");
+    // window.location.reload();
+  };
+  // console.log(customerOptions)
+  // console.log(selectedCustomerID)
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
+  useEffect(() => {
+    if (customerOptions) {
+      // console.log(customerOptions)
+      setSelectedCustomerId(selectedCustomerID);
+      localStorage.setItem("SelectedCustomerId", selectedCustomerID || "")
+    } 
+  }, []);
+
+  const portfolio = useDisclosure();
   const sites = useDisclosure();
-  const integrations = useDisclosure();
+  const Assets = useDisclosure();
+  const tools = useDisclosure();
   const showLabels = isSidebarExpanded;
 
   return (
@@ -45,7 +72,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
       bg="white"
       _dark={{ bg: "gray.800" }}
       borderRightWidth="1px"
-      w={showLabels ? "200px" : "60px"}
+      w={showLabels ? "300px" : "60px"}
       transition="width 0.3s"
       {...props}
     >
@@ -72,20 +99,20 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
         />
         <NavItem
           icon={Home}
-          onClick={home.onToggle}
+          onClick={portfolio.onToggle}
           fontSize={"md"}
           fontWeight={600}
           showLabel={showLabels}
-          color={home.isOpen ? "#19CA16" : "white"}
+          color={portfolio.isOpen ? "#19CA16" : "white"}
         >
-          &nbsp; Home
+          &nbsp; Portfolio
           <Icon
             as={MdKeyboardArrowRight}
             ml="auto"
-            transform={home.isOpen ? "rotate(90deg)" : undefined}
+            transform={portfolio.isOpen ? "rotate(90deg)" : undefined}
           />
         </NavItem>
-        <Collapse in={home.isOpen}>
+        <Collapse in={portfolio.isOpen}>
           <NavItem
             pl="12"
             py="2"
@@ -93,120 +120,170 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
             color={"#FFFFFFFF"}
             fontWeight={600}
             as={Link}
-            to="/"
+            to="/portfolio"
           >
-            Portfolio
+            Dashboard
           </NavItem>
           <NavItem
             pl="12"
             py="2"
-            onClick={sites.onToggle}
             showLabel={showLabels}
-            color={home.isOpen ? "#19CA16" : "#FFFFFFFF"}
+            color={portfolio.isOpen ? "#19CA16" : "#FFFFFFFF"}
             fontWeight={500}
+            as={Link}
+            to="/alarm"
           >
-            Sites
-            <Icon
-              as={MdKeyboardArrowRight}
-              ml="auto"
-              transform={sites.isOpen ? "rotate(90deg)" : undefined}
-            />
+            Alterts
           </NavItem>
-          <Collapse in={sites.isOpen}>
-            <NavItem
-              pl="12"
-              py="2"
-              showLabel={showLabels}
-              color={"#FFFFFFFF"}
-              fontWeight={500}
-              as={Link}
-              to="/grid"
-            >
-              &nbsp; BESS
-            </NavItem>
-            <NavItem
-              pl="12"
-              py="2"
-              showLabel={showLabels}
-              color={"#FFFFFFFF"}
-              fontWeight={500}
-              as={Link}
-              to="/grid"
-            >
-              &nbsp; Grid
-            </NavItem>
-          </Collapse>
         </Collapse>
         <NavItem
-          icon={AlertTicket}
+          icon={Site}
           fontSize={"md"}
           color={"#FFFFFFFF"}
           fontWeight={600}
           showLabel={showLabels}
-          as={Link}
-          to={'/plantview'}
-        >
-          &nbsp; Plant view
+          onClick={sites.onToggle}
+          >
+          &nbsp; Sites
+          <Icon
+              as={MdKeyboardArrowRight}
+              transform={sites.isOpen ? "rotate(90deg)" : undefined}
+              ml="auto"
+            />
         </NavItem>
+        <Collapse in={sites.isOpen}>
+        <FormControl
+            ml={showLabels? 5 : 60}
+            px={5}
+            width={300}
+            h={14}
+            borderLeft={"1px solid #D1D8DD"}
+          >
+            <FormLabel
+              fontFamily={"inter"}
+              fontSize={10}
+              fontWeight={10}
+              color={"#747474"}
+              mt={2}
+            >
+              Select Plant
+            </FormLabel>
+            <Box mt={-3} fontWeight={600}>
+              <Select
+                isMulti={false}
+                maxMenuHeight={200}
+                name="plants"
+                placeholder="Select Any Plant"
+                closeMenuOnSelect={true}
+                variant="unstyle"
+                focusBorderColor="transparent"
+                options={customerOptions || []}
+                value={customerOptions?.find(option => option.value === localStorage.getItem("SelectedCustomerId"))}
+                onChange={handlePlantChange}
+                useBasicStyles={true}
+              />
+            </Box>
+          </FormControl>
+          <NavItem
+            showLabel={showLabels}
+            color={"#FFFFFFFF"}
+            fontSize={"md"}
+            fontWeight={600}
+          >
+            &nbsp; Dashboard
+            <Icon
+              as={MdKeyboardArrowRight}
+              ml="auto"
+              transform={"rotate(90deg)"}
+            />
+          </NavItem>
+          <NavItem
+            onClick={Assets.onToggle}
+            showLabel={showLabels}
+            color={"#FFFFFFFF"}
+            fontSize={"md"}
+            fontWeight={600}
+            as={Link}
+            to={'/inverter'}
+          >
+            &nbsp; Assets
+            <Icon
+              as={MdKeyboardArrowRight}
+              ml="auto"
+              transform={Assets.isOpen ? "rotate(90deg)" : undefined}
+            />
+          </NavItem>
+          <Collapse in={Assets.isOpen}>
+              <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels} as={Link} to={'/plantview'}>
+              Overview
+              </NavItem>
+              <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels} as={Link} to={'/inverter'}>
+                Inverter
+              </NavItem>
+              <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels}>
+                String
+              </NavItem>
+              <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels} as={Link} to={'/grid'}>
+                Grid
+              </NavItem>
+              <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels} as={Link} to={'/bess/overview'}>
+                BESS
+              </NavItem>
+              <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels} as={Link} to={'/dg'}>
+                Diesel Generator
+              </NavItem>
+          </Collapse>
+        </Collapse>
         <NavItem
-          icon={Analysis}
+          icon={Tools}
           fontSize={"md"}
           color={"#FFFFFFFF"}
           fontWeight={600}
+          onClick={tools.onToggle}
           showLabel={showLabels}
           as={Link}
           to={'/dg'}
         >
-          &nbsp; Collections
-        </NavItem>
-        <NavItem
-          icon={Site}
-          showLabel={showLabels}
-          color={"#FFFFFFFF"}
-          fontSize={"md"}
-          fontWeight={600}
-          as={Link}
-          to={'/bess/overview'}
-          >
-          &nbsp; Checklists
-        </NavItem>
-        <NavItem
-          icon={Alarm}
-          showLabel={showLabels}
-          color={"#FFFFFFFF"}
-          fontSize={"md"}
-          fontWeight={600}
-          as={Link}
-          to={'/alarm'}
-        >
-          &nbsp; Alarm
-        </NavItem>
-        <NavItem
-          icon={Tools}
-          onClick={integrations.onToggle}
-          showLabel={showLabels}
-          color={"#FFFFFFFF"}
-          fontSize={"md"}
-          fontWeight={600}
-          as={Link}
-          to={'/inverter'}
-        >
-          &nbsp; Integrations
+          &nbsp; Tools
           <Icon
-            as={MdKeyboardArrowRight}
-            ml="auto"
-            transform={integrations.isOpen ? "rotate(90deg)" : undefined}
-          />
+              as={MdKeyboardArrowRight}
+              ml="auto"
+              transform={tools.isOpen? "rotate(90deg)" : undefined}
+            />
         </NavItem>
-        <Collapse in={integrations.isOpen}>
-          <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels}>
-            Shopify
+        <Collapse in={tools.isOpen}>
+          <NavItem
+            fontSize={"md"}
+            color={"#FFFFFFFF"}
+            fontWeight={600}
+            showLabel={showLabels}
+            pl={12}
+            as={Link}
+            to={'/dg'}
+          >
+          Reports
           </NavItem>
-          <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels}>
-            Slack
+          <NavItem
+            showLabel={showLabels}
+            pl={12}
+            color={"#FFFFFFFF"}
+            fontSize={"md"}
+            fontWeight={600}
+            as={Link}
+            to={'/bess/overview'}
+            >
+            Analytics
           </NavItem>
-          <NavItem pl="12" py="2" color={"#FFFFFFFF"} showLabel={showLabels}>
-            Zapier
+          <NavItem
+            showLabel={showLabels}
+            pl={12}
+            color={"#FFFFFFFF"}
+            fontSize={"md"}
+            fontWeight={600}
+            as={Link}
+            to={'/alarm'}
+          >
+          Intel-IQ
           </NavItem>
         </Collapse>
       </Flex>
