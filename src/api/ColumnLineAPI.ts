@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const ColumnLineAPI  = async (textSearch : string, type : Object) => {
-    const BASE_URL = "http://localhost:7001/api";
+    const BASE_URL = "https://etaflux-api.cogneta.cloud/api";
 
     const token = localStorage.getItem("token");
     // const customerID = localStorage.getItem("SelectedCustomerId");

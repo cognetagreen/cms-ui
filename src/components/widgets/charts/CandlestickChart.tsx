@@ -30,6 +30,12 @@ const [chartOption, setChartOption] = useState<Object>({
             backgroundColor: '#ffffff',
             borderColor: '#cccccc',
         },
+        rangeSelector: {
+            enabled: false // Disable the range selector
+        },
+        navigator: {
+            enabled: false // Disable the navigator (footer part)
+        },
         series: [{
             type: 'candlestick',
             name: 'AAPL',

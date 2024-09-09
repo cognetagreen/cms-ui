@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const LatestValueCardAPI  = async (deviceLabel : string, telemetry : string, title : string) => {
-    const BASE_URL = "http://localhost:7001/api";
+    const BASE_URL = "https://etaflux-api.cogneta.cloud/api";
 
     const token = localStorage.getItem("token");
     const customerID = localStorage.getItem("SelectedCustomerId");

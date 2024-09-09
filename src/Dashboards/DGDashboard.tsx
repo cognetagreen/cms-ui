@@ -30,6 +30,7 @@ import UseBatteryStatus from '../Services/Hooks/Battery/UseBatteryStatus'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
 import UseManyDeviceSameKeyChart from '../Services/Hooks/UseManyDeviceSameKeyChart'
 import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable'
+import StripsPieChart from '../components/widgets/charts/StripsPieChart'
 
 
 interface APIData {
@@ -255,9 +256,10 @@ return (
                         height='277px'
                         icon={PiChartDonutFill}
                     >
-                        <DonutPieChart
+                        {/* <DonutPieChart
                             apiData={pieData}
-                        />
+                        /> */}
+                        <StripsPieChart />
                     </ChartLayout>
                 </GridItem>
             </Grid>

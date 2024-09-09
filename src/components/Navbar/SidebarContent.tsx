@@ -171,7 +171,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
             <Box mt={-3} fontWeight={600}>
               <Select
                 isMulti={false}
-                maxMenuHeight={200}
+                maxMenuHeight={80}
                 name="plants"
                 placeholder="Select Any Plant"
                 closeMenuOnSelect={true}
@@ -203,8 +203,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
             color={"#FFFFFFFF"}
             fontSize={"md"}
             fontWeight={600}
-            as={Link}
-            to={'/inverter'}
           >
             &nbsp; Assets
             <Icon
@@ -241,8 +239,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
           fontWeight={600}
           onClick={tools.onToggle}
           showLabel={showLabels}
-          as={Link}
-          to={'/dg'}
         >
           &nbsp; Tools
           <Icon
@@ -258,8 +254,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
             fontWeight={600}
             showLabel={showLabels}
             pl={12}
-            as={Link}
-            to={'/dg'}
           >
           Reports
           </NavItem>
@@ -269,8 +263,6 @@ const SidebarContent: React.FC<SidebarContentProps> = ({
             color={"#FFFFFFFF"}
             fontSize={"md"}
             fontWeight={600}
-            as={Link}
-            to={'/bess/overview'}
             >
             Analytics
           </NavItem>

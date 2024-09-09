@@ -97,7 +97,7 @@ const MainDashboard = () => {
             icon={IoLocation}
             onTimeWindowChange = {handleTimeWindowChange}
           >
-            <LocationMapChart lat="19.07283000" long="72.88261000" />
+            <LocationMapChart lat="13.7774154" long="77.3136672" />
           </ChartLayout>
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]}>
@@ -117,7 +117,6 @@ const MainDashboard = () => {
             width={["full", "auto"]}
             height={"270px"}
             icon={FaChartColumn}
-            timeWindow = {true}
             onTimeWindowChange = {handleTimeWindowChange}
           >
             <Suspense fallback={<div style={{position:"relative", top : "45%", left : "45%"}}>sddsf</div>}>

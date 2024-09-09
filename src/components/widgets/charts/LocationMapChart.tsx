@@ -22,7 +22,7 @@ const LocationMapChart: React.FC<LocationMapChartProps> = ({ lat, long, ...props
   return (
     <MapContainer
       center={[lats, longs]}
-      zoom={13}
+      zoom={3}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={true}
       attributionControl={false}
@@ -30,7 +30,28 @@ const LocationMapChart: React.FC<LocationMapChartProps> = ({ lat, long, ...props
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Circle center={[lats, longs]} radius={200} />
+      <Circle center={[lats, longs]} radius={200}>
+        <Popup >
+          <div>
+            <b>
+              <h1>PV Power</h1>
+              <span>Power : 302 kW</span><br />
+              <span>Daily Energy : 1340 kWh</span>
+            </b>
+          </div>
+        </Popup>
+      </Circle>
+      <Circle center={[12.5545, 77.8989]} radius={200}>
+        <Popup >
+          <div>
+            <b>
+              <h1>Hybrid Power</h1>
+              <span>Power : 302 kW</span><br />
+              <span>Daily Energy : 1340 kWh</span>
+            </b>
+          </div>
+        </Popup>
+      </Circle>
       {/* ... other map elements */}
     </MapContainer>
   );

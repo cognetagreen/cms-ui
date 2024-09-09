@@ -74,11 +74,12 @@ const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, 
       data={apiData && apiData[0]?.dataFromAPI ? apiData[0].dataFromAPI : data }
       search={true}
       sort={true}
+      width='max-content'
       pagination={{
         limit: paginationLimit,
         summary: false,
       }}
-      autoWidth={true}
+      // autoWidth={true}
       className={{
           table: 'plant-table',
           thead: 'gridjs-thead',

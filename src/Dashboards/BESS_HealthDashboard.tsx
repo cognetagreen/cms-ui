@@ -21,6 +21,7 @@ import { useTimeHandle } from '../Services/TimeWindowSetting'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
 import { useEffect } from 'react'
 import UseCellVDelta from '../Services/Hooks/Battery/UseCellVDelta'
+import UseCandleStickChart from '../Services/Hooks/UseCandleStickChart'
 
 const BESS_HealthDashboard = () => {
 
@@ -92,15 +93,23 @@ const BESS_HealthDashboard = () => {
         timeWindow: timeWindowTrend,
         handleTimeWindowChange: handleTimeWindowTrendChange,
         handleReset: TrendHandleReset
-    } = useTimeHandle(12, "hour", "AVG", [30, "minute"]);
+    } = useTimeHandle(7, "day", "NONE", [5, "minute"]);
     
-    var searchTagTrend = { 
-        devName : "Inverter-1",
-        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
-        type : ["candlestick"],
-        name : ["String2 Volt", "String3 Volt"]
-    };
-    const TrendData = UseBESSDaily(searchTagTrend, timeWindowTrend);
+    var searchTagTrend = [
+        {
+            devName : "Inverter-1",
+            keys : "B1_Inverter_Inverter_1_AC_Active_Power_Watt",
+            type : ["candlestick"],
+            name : ["Daily Energy 1"]   
+        },
+        {
+            devName : "Inverter-2",
+            keys : "B1_Inverter_Inverter_2_AC_Active_Power_Watt",
+            type : ["candlestick"],
+            name : ["Daily Energy 2"]  
+        }
+    ];
+    const TrendData = UseCandleStickChart(searchTagTrend, timeWindowTrend);
     // useEffect(() => {
     //     if (TrendData) {
     //         console.log("TrendData:", TrendData);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BESSDailyAPI  = async (searchTag : Object, timeWindow : {startTs:Number, endTs:Number, aggregate:string, interval: number}) => {
+const CandleStickChartAPI  = async (searchTag : Object[], timeWindow : {startTs:Number, endTs:Number, aggregate:string, interval: number}) => {
     const BASE_URL = "https://etaflux-api.cogneta.cloud/api";
 
     const token = localStorage.getItem("token");
@@ -15,13 +15,14 @@ const BESSDailyAPI  = async (searchTag : Object, timeWindow : {startTs:Number, e
             "searchTag" : searchTag,
             "timeWindow" : timeWindow,
         };
-        try {
-            const response = await axios.post(`${BASE_URL}/v1/getBESSDailyData`, body);
-            return response;
-        } catch (error) {
-            console.error(error)
-        }
+            
+            try {
+                const response = await axios.post(`${BASE_URL}/v1/GetCandleStickChartData`, body);
+                return response;
+            } catch (error) {
+                console.error(error)
+            }
     }
 }
 
-export default BESSDailyAPI;
+export default CandleStickChartAPI;

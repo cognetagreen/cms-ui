@@ -106,6 +106,22 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
         resolution : ["Daily", "Monthly", "Yearly"],
         agg : ["AVG", "SUM"]
     }
+    /* SHakir REquirement
+    [
+        {
+            column : "B.key",
+            value : "B1_Inverter_Inverter_2_DC_String1_Volt",
+            status : 0 // AVG
+        },
+        {
+            column : "B.key",
+            value : "B1_Inverter_Inverter_2_DC_String1_Volt",
+            status : 1 // SUM
+        }
+    
+    ]
+
+    */
     // const plantCardDailyData = UseBatteryStatus(searchSolarCard)
     // console.log("455454545454545", plantCardDailyData)
     const PlantCardData = UsePlantCard(searchSolarCard) || [[]];

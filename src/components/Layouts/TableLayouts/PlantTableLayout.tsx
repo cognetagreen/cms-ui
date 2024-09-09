@@ -123,21 +123,21 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
                 </Flex>
             </TabList>
             <TabPanels>
-                <TabPanel>
+                <TabPanel overflow={"auto"}>
                     <PlantTable
-                     column={[{name : "Plant Name", width : 200, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:4px solid ${handleBorderColor(parseFloat(row.cells[5].data))};" >${cell}</b>`)}, {name : "Type", sort : true}, {name : "Energy System", width : 200}, "Capacity", "Country", {name : "PV Power", width : 200, formatter : (cell : any) => cell == "-1" ? "NA" : cell}, "Irradiation", "PV Today kWh", "PR", "Availability"]}
+                     column={[{name : "Plant Name", width : 150, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:4px solid ${handleBorderColor(parseFloat(row.cells[5].data))};" >${cell}</b>`)}, {name : "Type", width : 100, sort : true}, {name : "Energy System", width : 130}, {name : "Capacity", width : 100}, {name : "Country", width : 100}, {name : "PV Power", width : 100, formatter : (cell : any) => cell == "-1" ? "NA" : cell}, {name : "Irradiation", width : 100}, {name : "PV Today kWh", width : 130}, {name : "PR", width : 70}, {name : "Availability", width : 120}]}
                      apiData={PVData || []}
                      paginationLimitProps={10}
                     />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel overflow={"auto"}>
                     <PlantTable 
                       paginationLimitProps={10}
                     />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel overflow={"auto"}>
                     <PlantTable 
-                      column={["Plant Name", {name : "Type", sort : true}, "Energy System", "PV Capacity", "BESS Capacity", "DG Capacity", "Country", "PV Power", "Irradiation", "PV Today kWh", "BESS Power", "BESS Discharge kWh", "DG Power", "DG Today kWh", "PR", "Availability"]}
+                      column={[{name : "Plant Name", width : 150, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:4px solid ${handleBorderColor(parseFloat(row.cells[7].data))};" >${cell}</b>`)}, {name : "Type", width : 100, sort : true}, {name : "Energy System", width : 130}, {name : "PV Capacity", width : 120}, {name : "BESS Capacity", width : 120}, {name : "DG Capacity", width : 120}, {name : "Country", width : 100}, {name : "PV Power", width : 100, formatter : (cell : any) => cell == "-1" ? "NA" : cell}, {name : "Irradiation", width : 100}, {name : "PV Today kWh", width : 130}, {name : "BESS Power", width : 120}, {name : "BESS Discharge kWh", width : 160}, {name : "DG Power", width : 100}, {name : "DG Today kWh", width : 130},{name : "PR", width : 70}, {name : "Availability", width : 120}]}
                       apiData={HybridData || []}
                       paginationLimitProps={10}
                     />
