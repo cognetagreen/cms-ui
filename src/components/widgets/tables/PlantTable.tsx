@@ -3,7 +3,7 @@ import { Grid } from 'gridjs-react';
 import { _ } from "gridjs-react";
 import './PlantTable.css';
 import { MdFullscreen } from "react-icons/md";
-import { Icon } from '@chakra-ui/react';
+import { Box, Icon } from '@chakra-ui/react';
 
 interface APIData {
   column : string[] | ['Name', 'Type', 'Capacities', 'Country', 'PV Power', 'Irr', 'Energy Today', 'PRV'];
@@ -14,11 +14,12 @@ interface PlantTableProps {
   paginationLimitProps : number;
   apiData? : APIData[];
   column? : string[] | any[];  // column={[{name : "Name", formatter: (cell : any, row: any) => html(`<b style="padding: 4px; border-left:3px solid ${parseFloat(row.cells[4].data) > 1 ? 'green' : 'red'};" >${cell}</b>`)}, 'Type', 'Capacities', 'Country', 'PV Power', 'Irr', 'Energy Today', 'PRV']}
-
+  width? : string;
+  autoWidth? : boolean;
 }
 
 
-const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, column}) => {
+const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, column, width, autoWidth}) => {
 
   var data = [
     ["","","","","","","","","","","",""]
@@ -68,18 +69,18 @@ const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, 
     };
   }, [paginationLimitProps]);
   return (
-    <div ref={tableRef} className="plant-table-container">
+    <Box ref={tableRef} className="plant-table-container">
       <Grid
       columns={column? column : apiData[0].column}
       data={apiData && apiData[0]?.dataFromAPI ? apiData[0].dataFromAPI : data }
       search={true}
       sort={true}
-      width='max-content'
+      width= {width || 'max-content'}
       pagination={{
         limit: paginationLimit,
         summary: false,
       }}
-      // autoWidth={true}
+      autoWidth={autoWidth || false}
       className={{
           table: 'plant-table',
           thead: 'gridjs-thead',
@@ -102,7 +103,7 @@ const PlantTable : React.FC<PlantTableProps> = ({paginationLimitProps, apiData, 
         }}
         cursor={"pointer"}
         />
-    </div>
+    </Box>
   );
 }
 

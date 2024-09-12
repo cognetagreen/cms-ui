@@ -3,14 +3,15 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 interface columnLineType {
-    apiData? : Object[]
+    apiData? : Object[];
+    bg? : string;
 }
 
-const ColumnLineChart : React.FC <columnLineType> = ({apiData}) => {
+const ColumnLineChart : React.FC <columnLineType> = ({apiData, bg}) => {
 
     const [chartOptions, setChartOptions] = useState({
         chart : {
-            backgroundColor : "transparent",
+            backgroundColor : bg || "transparent",
             height : "220px"
         },
         title: {

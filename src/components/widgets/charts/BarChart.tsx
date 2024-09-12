@@ -4,14 +4,17 @@ import HighchartsReact from 'highcharts-react-official';
 
 interface BarChartType {
     apiData? : [{}];
+    bg? : string;
+    barColors? : string[];
+    props? : any;
 }
 
-const BarChart : React.FC <BarChartType> = ({apiData}) => {
+const BarChart : React.FC <BarChartType> = ({apiData, bg, barColors, props}) => {
 
     const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'bar',
-            backgroundColor: "transparent",
+            backgroundColor: bg || "transparent",
             height: "240px"
         },
         title: {
@@ -80,10 +83,22 @@ const BarChart : React.FC <BarChartType> = ({apiData}) => {
         if (apiData) {
             setChartOptions({
                 ...chartOptions,
-                series: apiData 
+                series: apiData.map((series : object, index : number) => {
+                    if(barColors?.length){
+                        return ({
+                            ...series,
+                            color : barColors[index]
+                        })
+                    } else {
+                        return {
+                            ...series
+                        }
+                    }
+                }),
+                ...props
             });
         }
-    }, [apiData]);
+    }, [apiData, props]);
 
     return (
         <HighchartsReact

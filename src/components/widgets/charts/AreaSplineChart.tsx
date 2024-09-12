@@ -5,15 +5,16 @@ import HighchartsReact from 'highcharts-react-official';
 interface AreaSplineChartProps {
     apiData? : Object[];
     height? : number | string;
+    bg? : string;
     props? : any;
 }
 
-const AreaSplineChart : React.FC <AreaSplineChartProps> = ({apiData, height="300px", props}) => {
+const AreaSplineChart : React.FC <AreaSplineChartProps> = ({apiData, height="300px", bg, props}) => {
     const [chartOption, setChartOptions] = useState({
         chart: {
             type: 'areaspline',
             height : height,
-            backgroundColor : 'transparent'
+            backgroundColor : bg || "transparent"
         },
         title: {
             text: ''

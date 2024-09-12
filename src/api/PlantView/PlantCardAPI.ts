@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const PlantCardAPI  = async (searchTag : Object) => {
-    const BASE_URL = "https://etaflux-api.cogneta.cloud/api";
+const PlantCardAPI  = async (searchTag : string, DataLabel : string[]) => {
+    const BASE_URL = "http://localhost:7001/api";
 
     const token = localStorage.getItem("token");
     const customerID = localStorage.getItem("SelectedCustomerId");
@@ -13,6 +13,7 @@ const PlantCardAPI  = async (searchTag : Object) => {
             "token" : token,
             "customerID" : customerID,
             "searchTag" : searchTag,
+            "DataLabel" : DataLabel
         };
         try {
             const response = await axios.post(`${BASE_URL}/v1/getPlantCardData`, body);

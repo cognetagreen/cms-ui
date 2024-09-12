@@ -28,12 +28,12 @@ export const StateOfBattery : React.FC<StateOfBatteryProps> = ( {data} ) => {
                         ["Chargeable Energy ", `${data[1]}kW`],
                         ["Units Running", data[2]],
                         ["Reactive Power", `${data[3]}MVAR`],
-                        ["Chargeable Power", `${data[3]}kW`],
-                        ["Dischargeable Energy", `${data[3]}kWh`],
-                        ["Dischargeable Power", `${data[3]}kW`],
-                        ["Apparent Power", `${data[3]}MVA`],
-                        ["Active power", `${data[3]}MW`], 
-                        ["Grid Forming Voltage Slew", `${data[3]}%/s`]];
+                        ["Chargeable Power", `${data[4]}kW`],
+                        ["Dischargeable Energy", `${data[5]}kWh`],
+                        ["Dischargeable Power", `${data[6]}kW`],
+                        ["Apparent Power", `${data[7]}MVA`],
+                        ["Active power", `${data[8]}MW`], 
+                        ["Grid Forming Voltage Slew", `${data[9]}%/s`]];
     return (
         <ChartLayout
             title="State Of Battery"

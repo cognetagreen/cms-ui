@@ -5,7 +5,8 @@ import {
   GridItem,
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink
+  BreadcrumbLink,
+  SimpleGrid
 } from "@chakra-ui/react";
 
 import { IoLocation } from "react-icons/io5";
@@ -25,6 +26,7 @@ import ColumnLineChart from "../components/widgets/charts/ColumnLineChart";
 import UseAssetSummary from "../Services/Hooks/UseAssetSummary";
 import UseColumnLine from "../Services/Hooks/UseColumnLine";
 import UseSpecificYield from "../Services/Hooks/UseSpecificYield";
+import UseLocationMap from "../Services/Hooks/UseLocationMap";
 const DonutPieChart = lazy(() => import('../components/widgets/charts/DonutPieChart'));
 
 const MainDashboard = () => {
@@ -42,6 +44,13 @@ const MainDashboard = () => {
         // console.log(from, to, aggregate)
         // Fetch and update the data based on the new time window
     };
+
+    // ******************LOCATION MAP*********************
+
+    const searchLocationTag = "Plant_Name,AC_Capacity,Latitude,Longitude"
+    
+    const LocationMapData = UseLocationMap(searchLocationTag);
+
 
     // ********************Specific Yield / Ranking Bar Chart ********************
 
@@ -82,11 +91,13 @@ const MainDashboard = () => {
         </BreadcrumbItem>
       </Breadcrumb>
       <StatisticsCard />
-      <Grid
+      <SimpleGrid
         // mt={10}
-        h="max"
-        templateRows="repeat(2, 1fr)"
-        templateColumns="repeat(3, 1fr)"
+        maxW={"8xl"}
+        // h="max"
+        minChildWidth={["260px", "400px"]}
+        // templateRows="repeat(2, 1fr)"
+        // templateColumns="repeat(3, 1fr)"
         gap={1}
       >
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]}>
@@ -95,9 +106,10 @@ const MainDashboard = () => {
             width={["auto", "auto"]}
             height={"270px"}
             icon={IoLocation}
+            fullScreen={true}
             onTimeWindowChange = {handleTimeWindowChange}
           >
-            <LocationMapChart lat="13.7774154" long="77.3136672" />
+            <LocationMapChart apiData={LocationMapData || [{country : "", lat : 0, long : 0, name : "", type : ""}]} />
           </ChartLayout>
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]}>
@@ -106,9 +118,12 @@ const MainDashboard = () => {
             width={["full", "auto"]}
             height={"270px"}
             icon={FaChartBar}
+            fullScreen = {true}
             onTimeWindowChange = {handleTimeWindowChange}
           >
-            <BarChart apiData={specificYieldData || [{}]} />
+            <BarChart apiData={specificYieldData || [{}]}
+              barColors={["#0086CC", "#03BB7D"]}
+            />
           </ChartLayout>
         </GridItem>
         <GridItem rowSpan={[1, 1]} colSpan={[3, 1]}>
@@ -124,11 +139,11 @@ const MainDashboard = () => {
             </Suspense>
           </ChartLayout>
         </GridItem>
-        <GridItem rowSpan={2} colSpan={[1, 2]} mt={-7}>
+        <GridItem rowSpan={2} colSpan={[1, 2]} mt={-3}>
           <PlantTableLayout
             title="Plants"
             icon={MdGrid4X4}
-            width={["full", "auto"]}
+            width={["full", "100%"]}
             height={"550px"}
           >
             <PlantTable
@@ -136,7 +151,7 @@ const MainDashboard = () => {
             />
           </PlantTableLayout>
         </GridItem>
-        <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-7}>
+        <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-3}>
           <ChartLayout
             title="Source Contribution"
             width={["full", "auto"]}
@@ -145,11 +160,16 @@ const MainDashboard = () => {
             onTimeWindowChange = {handleTimeWindowChange}
           >
             <Suspense fallback={<div style={{position:"relative", top : "45%", left : "45%"}}>Loading...</div>}>
-              <DonutPieChart apiData={EnergyYield} />
+              <DonutPieChart apiData={EnergyYield}
+                pieColors={["#704199", "#0086CC", "#66D1C9", "#F8931F",'#9b20d9', '#9215ac', '#861ec9', '#7a17e6', '#7010f9', '#691af3',
+                  '#6225ed', '#5b30e7', '#533be1', '#4c46db', '#4551d5', '#3e5ccf',
+                  '#3667c9', '#2f72c3', '#277dbd', '#1f88b7', '#1693b1', '#0a9eaa',
+                  '#03c69b', '#00f194']}
+              />
             </Suspense>
           </ChartLayout>
         </GridItem>
-        <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-14}>
+        <GridItem rowSpan={[1, 1]} colSpan={[3, 1]} mt={-4}>
           <ChartLayout
             title="Asset Summary"
             width={["full", "auto"]}
@@ -158,11 +178,16 @@ const MainDashboard = () => {
             onTimeWindowChange = {handleTimeWindowChange}
           >
             <Suspense fallback={<div style={{position:"relative", top : "45%", left : "45%"}}>Loading...</div>}>
-              <DonutPieChart  apiData={AssetSummary}/>
+              <DonutPieChart  apiData={AssetSummary}
+                pieColors={["#704199", "#0086CC", "#66D1C9", "#F8931F",'#9b20d9', '#9215ac', '#861ec9', '#7a17e6', '#7010f9', '#691af3',
+                  '#6225ed', '#5b30e7', '#533be1', '#4c46db', '#4551d5', '#3e5ccf',
+                  '#3667c9', '#2f72c3', '#277dbd', '#1f88b7', '#1693b1', '#0a9eaa',
+                  '#03c69b', '#00f194']}
+              />
             </Suspense>
           </ChartLayout>
         </GridItem>
-      </Grid>
+      </SimpleGrid>
     </Box>
   );
 };

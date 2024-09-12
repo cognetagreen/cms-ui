@@ -1,71 +1,93 @@
 import React, { useEffect, useState } from 'react';
-import Highcharts, { Series } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 interface LineChartProps {
-    apiData? : Object[];
-    height? : Number
-    props? : any;
+    apiData?: Object[];
+    height?: number;
+    bg?: string;
+    props?: any;
 }
 
-const LineChart : React.FC<LineChartProps> = ({apiData, height=210, props}) => {
-
+const LineChart: React.FC<LineChartProps> = ({ apiData, height = null, bg, props }) => {
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            backgroundColor : "transparent",
-            height : height,
-            zoomType : "x"
+            backgroundColor: bg || 'transparent',
+            height: height,
+            zoomType: 'x',
         },
         title: {
-            text: "",
+            text: '',
         },
         xAxis: {
             type: 'datetime',
-            labels: {
-                formatter: function (this: Highcharts.AxisLabelsFormatterContextObject): string {
-                    const value = this.value as number; // Type assertion for value
-                    const date = new Date(value);
-                    // Adjusting for timezone offset
-                    const utcOffset = date.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
-                    const localDate = new Date(date.getTime() - utcOffset);
-                    return localDate.toISOString().slice(10, 16).replace('T', ' '); // Format as 'YYYY-MM-DD HH:mm:ss'
-                }
-            }
         },
-        yAxis : {
-            title : {
-                text : ""
-            }
+        yAxis: {
+            title: {
+                text: '',
+            },
         },
         tooltip: {
             shared: true,
             valueSuffix: ' unit',
-            formatter: function (this: Highcharts.TooltipFormatterContextObject | any): string {
-                const date = new Date(this.x);
-                const utcOffset = date.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
-                const localDate = new Date(date.getTime() - utcOffset);
-                return `<b>${localDate.toISOString().slice(0, 19).replace('T', ' ')}</b><br/>${this.series.name}: ${this.y}`;
-            }
         },
-        series: apiData,
-        credits : {
-            enabled : false,
+        series: apiData || [],
+        credits: {
+            enabled: false,
         },
+        // responsive: {
+        //     rules: [
+        //         // {
+        //         //     condition: {
+        //         //         maxHeight: 400,
+        //         //     },
+        //         //     chartOptions: {
+        //         //         chart: {
+        //         //             height: 240,
+        //         //         },
+        //         //     },
+        //         // },
+        //         // {
+        //         //     condition: {
+        //         //         maxHeight: 800,
+        //         //     },
+        //         //     chartOptions: {
+        //         //         chart: {
+        //         //             height: 540,
+        //         //         },
+        //         //     },
+        //         // },
+        //     ],
+        // },
     });
 
     useEffect(() => {
         if (apiData) {
-            setChartOptions({
-                ...chartOptions,
+            setChartOptions((prevOptions) => ({
+                ...prevOptions,
                 series: apiData,
-                ...props
-            });
+                ...(props || {}),
+            }));
         }
     }, [apiData, props]);
+    
+    useEffect(() => {
+        const handleResize = () => {
+            // Highcharts.charts.forEach((chart: Highcharts.Chart | undefined) => {
+                if (Highcharts.charts) {
+                    console.log("zakir")
+                    chartOptions.chart.height = 800
+                }
+            // });
+        };
+    
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
-    return (
-        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-    );
+    return <HighchartsReact highcharts={Highcharts} options={chartOptions} />;
 };
 
 export default LineChart;

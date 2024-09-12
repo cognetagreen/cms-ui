@@ -46,7 +46,11 @@ const BESS_HealthDashboard = () => {
         type : ["area"],
         name : ["String2 Volt", "String3 Volt"]
     };
-    const DegradationData = UseBESSDaily(searchTagDegradation, timeWindowDegradation);
+    const DegradationColor = ["#3853A5", "#F4B725"];
+    const DegradationData = UseBESSDaily(searchTagDegradation, timeWindowDegradation)?.map((series : object, index : number) => ({
+        ...series,
+        color : DegradationColor[index]
+    }));
     // useEffect(() => {
     //     if (DegradationData) {
     //         console.log("DegradationData:", DegradationData);
@@ -66,7 +70,11 @@ const BESS_HealthDashboard = () => {
         type : ["column"],
         name : ["String2 Volt"]
     };
-    const VDistributionData = UseBESSDaily(searchTagVDistribution, timeWindowVDistribution);
+    const VDistributionColor = "#00CC9D"
+    const VDistributionData = UseBESSDaily(searchTagVDistribution, timeWindowVDistribution)?.map((series : object, index : number) => ({
+        ...series,
+        color : VDistributionColor
+    }));
     // useEffect(() => {
     //     if (VDistributionData) {
     //         console.log("VDistributionData:", VDistributionData);
@@ -76,10 +84,11 @@ const BESS_HealthDashboard = () => {
     // ************************Cell V Delta*********************
     
     var searchTagCellV = { 
-        devName : "Inverter-1",
-        keys: "B1_Inverter_Inverter_1_DC_String2_Volt",
+        devName : "BESS",
+        keys: "BESS1_VOLT_L1_L2",
         type : ["column"],
-        name : ["String2 Volt"]
+        name : ["Volt"],
+        color : "#8842E0"
     };
     const CellVData = UseCellVDelta(searchTagCellV);
     // useEffect(() => {
@@ -191,6 +200,7 @@ const BESS_HealthDashboard = () => {
                     title='Delta V Distribution'
                     width={["full", "auto"]}
                     height='300px'
+                    fullScreen={true}
                 >
                     <ColumnChart category={["0.01","0.02","0.03","0.04","0.05","0.06","0.07","0.08","0.09"]} apiData={CellVData || [{}]}/>
                 </ChartLayout>
@@ -250,6 +260,8 @@ const BESS_HealthDashboard = () => {
                 >
                     <PlantTable
                         paginationLimitProps={5}
+                        width='auto'
+                        autoWidth = {true}
                     />
                 </PlantViewTableLayout>
             </GridItem>

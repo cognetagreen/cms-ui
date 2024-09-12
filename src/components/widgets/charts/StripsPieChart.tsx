@@ -40,7 +40,8 @@ const StripsPieChart: React.FC = () => {
                 //         });
                 //     }
                 // },
-                height : 250
+                height : 250,
+                backgroundColor : "transparent"
             },
             accessibility: {
                 point: {
@@ -59,6 +60,10 @@ const StripsPieChart: React.FC = () => {
             legend: {
                 enabled: false
             },
+            colors : ["#704199", "#0086CC", "#66D1C9", "#F8931F",'#9b20d9', '#9215ac', '#861ec9', '#7a17e6', '#7010f9', '#691af3',
+                  '#6225ed', '#5b30e7', '#533be1', '#4c46db', '#4551d5', '#3e5ccf',
+                  '#3667c9', '#2f72c3', '#277dbd', '#1f88b7', '#1693b1', '#0a9eaa',
+                  '#03c69b', '#00f194'],
             plotOptions: {
                 series: {
                     allowPointSelect: true,

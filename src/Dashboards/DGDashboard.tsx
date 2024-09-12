@@ -7,7 +7,8 @@ import {
     GridItem,
     HStack,
     VStack,
-    Text
+    Text,
+    SimpleGrid
 } from '@chakra-ui/react'
 import { Fieldset_Devices, Fieldset_kW52860, Fieldset_Mode, Fieldset_Power, Fieldset_State, Fieldset_Temp } from '../components/widgets/FieldsetContent'
 import { FaCaretRight } from 'react-icons/fa'
@@ -158,7 +159,11 @@ const DGDashboard = () => {
         type : "column",
         name : " Fuel Consumtion (kWh) "
     };
-    const FuelConsumtionData = UseManyDeviceSameKeyChart(searchTagFuelConsumtion, timeWindowFuelConsumtion);
+    const FuelConsumtionColor = ["#A068E6", "#03BB7D", "#1284C0"] // 3 keys
+    const FuelConsumtionData = UseManyDeviceSameKeyChart(searchTagFuelConsumtion, timeWindowFuelConsumtion)?.map((series : object, index : number) => ({
+        ...series,
+        color : FuelConsumtionColor[index]
+    }));
     // useEffect(() => {
     //     if (FuelConsumtionData) {
     //         console.log("FuelConsumtionData:", FuelConsumtionData);
@@ -189,50 +194,63 @@ return (
                 </BreadcrumbItem>
             </Breadcrumb>
 
-            <Grid
-                h="68px"
-                templateRows="repeat(1, 1fr)"
-                templateColumns="repeat(6, 1fr)"
-                gap={1}
+            {/* ****************** TOP RIBBON ************ */}
+            <Box
+                display={{base : "none", sm : "none", md : "block"}}
             >
-                <GridItem w={"580px"} h={59}>
-                    <Fieldset_kW52860 />
-                </GridItem>
+                <Grid
+                    h={["300px","200px","200px","130px","60px","60px"]}
+                    templateRows={["repeat(6, 1fr)", "repeat(3, 1fr)", "repeat(3, 1fr)", "repeat(2, 1fr)", "repeat(1, 1fr)", "repeat(1, 1fr)"]}
+                    templateColumns={["repeat(1, 1fr)","repeat(2, 1fr)","repeat(2, 1fr)","repeat(3, 1fr)","repeat(6, 1fr)","repeat(6, 1fr)"]}
+                    gap={[5,5,5,4,1,1]}
+                >
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 9, 12, 12]} h={59}>
+                        <Fieldset_kW52860 />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 5, 7, 12, 12]} h={58}>
+                        <Fieldset_Mode />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 5, 10, 12, 12]} h={59}>
+                        <Fieldset_Power />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 10, 12, 12]} h={58}>
+                        <Fieldset_State />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 9, 12, 12]} h={58}>
+                        <Fieldset_Temp />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 10, 12, 12]}>
+                        <Fieldset_Devices />
+                    </GridItem>
+                </Grid>
+            </Box>
 
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_Mode />
-                </GridItem>
-                <GridItem w={"auto"} h={59}>
-                    <Fieldset_Power />
-                </GridItem>
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_State />
-                </GridItem>
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_Temp />
-                </GridItem>
-                <GridItem w={"279px"}>
-                    <Fieldset_Devices />
-                </GridItem>
-            </Grid>
-
-            <Grid
+            <SimpleGrid
                 mt={5}
-                h={265}
-                templateRows={"repeat(1, 1fr)"}
-                templateColumns={"repeat(3, 1fr)"}
+                h={["100%", "min-content"]}
+                minW={["full", "8xl"]}
+                minChildWidth={["280px","400px"]}
+                column={3}
+                row={3}
                 gap={1}
             >
-                <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
-                    <GeneratorPowerDG
-                        value={(GeneratorPower[0]) || 1400}
-                    />
-                </GridItem>
-                <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
+                <GridItem h={"285px"} w={"100%"} colSpan={1}>
+                    <ChartLayout
+                        width={["100%", "470px", "470px", "100%"]}
+                        height={["100%" ,'100%']}
+                        px='0'
+                        mt='-8'
+                    >
+                        <GeneratorPowerDG
+                            value={(GeneratorPower[0]) || 0}
+                        />
+                </ChartLayout>
+                    </GridItem>
+                <GridItem h={"100%"} w={"100%"} colSpan={1}>
                     <ChartLayout
                         title='Generator Daily Energy'
-                        width={["full", "auto"]}
-                        height='auto'
+                        width={["full", "100%"]}
+                        height='282px'
                         timeWindow={true}
                         onTimeWindowChange={handleTimeWindowGeneratorDailyEnergyChange}
                         onReset={GeneratorDailyEnergyHandleReset}
@@ -249,11 +267,11 @@ return (
                         />
                     </ChartLayout>
                 </GridItem>
-                <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
+                <GridItem h={"100%"} w={"100%"} colSpan={1}>
                     <ChartLayout
                         title='% Load Power'
-                        width={["full", "auto"]}
-                        height='277px'
+                        width={["full", "100%"]}
+                        height='282px'
                         icon={PiChartDonutFill}
                     >
                         {/* <DonutPieChart
@@ -262,20 +280,12 @@ return (
                         <StripsPieChart />
                     </ChartLayout>
                 </GridItem>
-            </Grid>
 
-            <Grid
-                mt={5}
-                h={265}
-                templateRows={"repeat(1, 1fr)"}
-                templateColumns={"repeat(3, 1fr)"}
-                gap={1}
-            >
-                <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
+                <GridItem h={"100%"} w={"100%"} colSpan={1}>
                     <ChartLayout
                         title='DG Power'
-                        width={["full", "auto"]}
-                        height='277'
+                        width={["full", "100%"]}
+                        height='282px'
                         timeWindow={true}
                         onTimeWindowChange={handleTimeWindowDGPowerChange}
                         onReset={DGPowerHandleReset}
@@ -283,11 +293,11 @@ return (
                         <LineChart height={240} apiData={DGPowerData || [{}]} />
                     </ChartLayout>
                 </GridItem>
-                <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
+                <GridItem h={"100%"} w={"100%"} colSpan={1}>
                     <ChartLayout
                         title='Generator Daily Energy'
-                        width={["full", "auto"]}
-                        height='277'
+                        width={["full", "100%"]}
+                        height='282px'
                         timeWindow={true}
                         onTimeWindowChange={handleTimeWindowDGAmpereChange}
                         onReset={DGAmpereHandleReset}
@@ -295,11 +305,11 @@ return (
                         <LineChart height={241} apiData={DGAmpereData || [{}]} />
                     </ChartLayout>
                 </GridItem>
-                <GridItem h={261} w={"auto"} colSpan={1} rowSpan={1}>
+                <GridItem h={"100%"} w={"100%"} colSpan={1}>
                     <ChartLayout
                         title='Fuel Consumption'
-                        width={["full", "auto"]}
-                        height='277px'
+                        width={["full", "100%"]}
+                        height='282px'
                         icon={FaChartColumn}
                         timeWindow ={true}
                         onTimeWindowChange={handleTimeWindowFuelConsumtionChange}
@@ -308,20 +318,11 @@ return (
                         <ColumnChart height={240} apiData={FuelConsumtionData || [{}]} />
                     </ChartLayout>
                 </GridItem>
-            </Grid>
 
-            <Grid
-                mt={5}
-                h={275}
-                templateRows={"repeat(1, 1fr)"}
-                templateColumns={"repeat(3, 1fr)"}
-                gap={1}
-                mb={3}
-            >
-                <GridItem h={271} w={"auto"} colSpan={2} rowSpan={1}>
+                <GridItem h={"100%"} w={"100%"} colSpan={[1, 2]}>
                     <PlantViewTableLayout
                         title='Generators'
-                        width={["full", "auto"]}
+                        width={["full", "100%"]}
                         height='271px'
                         // timeWindow={true}
                         // onTimeWindowChange = {handleTimeWindowGeneratorTableChange}
@@ -334,7 +335,7 @@ return (
                         />
                     </PlantViewTableLayout>
                 </GridItem>
-                <GridItem h={271} w={"100%"} colSpan={1} rowSpan={1}>
+                <GridItem h={"100%"} w={"100%"} colSpan={1}>
                     <PlantViewTableLayout
                         title='DG Runtime'
                         width={["full", "477px"]}
@@ -366,7 +367,7 @@ return (
                         </Box>
                     </PlantViewTableLayout>
                 </GridItem>
-            </Grid>
+            </SimpleGrid>
     </Box>
   )
 }

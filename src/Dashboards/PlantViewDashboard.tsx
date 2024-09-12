@@ -7,6 +7,7 @@ import {
     Grid,
     GridItem,
     HStack,
+    SimpleGrid,
     VStack,
   } from '@chakra-ui/react';
   import { FaCaretRight } from 'react-icons/fa';
@@ -32,6 +33,7 @@ import UsePlantCard from '../Services/Hooks/PlantView/UsePlantCard';
 import UsePlanViewTable from '../Services/Hooks/PlantView/UsePlantViewTable';
 import { html } from 'gridjs';
 import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysChart';
+import { objectEach } from 'highcharts';
   const PlantViewDashboard = () => {
 
     // *********************************Power FLow****************
@@ -70,7 +72,11 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
             name : ["Grid Consumption kWh"]      
         }
     ];
-    const PowerColumnData = UseManyDeviceManyKeysChart(searchTagPowerColumn, timeWindowPowerColumn, "LastValue");
+    const PowerColumnColor = ["#10BDF3", "#19CA16", "#8842E0", "#CF4E4E"];
+    const PowerColumnData = UseManyDeviceManyKeysChart(searchTagPowerColumn, timeWindowPowerColumn, "LastValue")?.map((series : object, index : number) => ({
+        ...series,
+        color : PowerColumnColor[index]
+    }));
     // useEffect(() => {
     //     if (PowerColumnData) {
     //         console.log("PowerColumnData:", PowerColumnData);
@@ -91,7 +97,12 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
         type : ["areaspline","areaspline","areaspline","areaspline"],
         name : ["PV kW","DG kW","Grid kW","Load kW"]
     };
-    const PowerCurveData = UseBESSDaily(searchTagPowerCurve, timeWindowPowerCurve);
+
+    const PowerCurveColor = ["#4E6DCA", "#189269", "#8842E0", "#CF4E4E"];
+    const PowerCurveData = UseBESSDaily(searchTagPowerCurve, timeWindowPowerCurve)?.map((series : object, index : number) => ({
+        ...series,
+        color : PowerCurveColor[index]
+    }));
     // useEffect(() => {
     //     if (PowerCurveData) {
     //         console.log("PowerCurveData:", PowerCurveData);
@@ -99,32 +110,12 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
     // }, [PowerCurveData]);
 
     //******************************Solar Card*************** */
-
-    var searchSolarCard = {
-        devName : "Inverter-2",
-        keys : "B1_Inverter_Inverter_2_DC_String1_Volt,B1_Inverter_Inverter_2_Active_Power_referance,B1_Inverter_Inverter_2_DC_String1_Watt,B1_Inverter_Inverter_2_DC_String2_Watt",
-        resolution : ["Daily", "Monthly", "Yearly"],
-        agg : ["AVG", "SUM"]
-    }
-    /* SHakir REquirement
-    [
-        {
-            column : "B.key",
-            value : "B1_Inverter_Inverter_2_DC_String1_Volt",
-            status : 0 // AVG
-        },
-        {
-            column : "B.key",
-            value : "B1_Inverter_Inverter_2_DC_String1_Volt",
-            status : 1 // SUM
-        }
-    
-    ]
-
-    */
-    // const plantCardDailyData = UseBatteryStatus(searchSolarCard)
-    // console.log("455454545454545", plantCardDailyData)
-    const PlantCardData = UsePlantCard(searchSolarCard) || [[]];
+    // Columns => Always "Key"
+    // Values => Telemetry Name
+    // Status => 0 : AVG / 1 : SUM
+    var searchSolarCard = '[{"columns" : "Key","values" : "INV_Total_Power_cal","status" : 0},{"columns" : "Key","values" : "INV_DailyEnergy_Total","status" : 1},{"columns" : "Key","values" : "INV_Tilldate_Energy_MWh","status" : 1},{"columns" : "Key","values" : "CUF","status" : 0},{"columns" : "Key","values" : "CO2_Saving","status" : 0}]'
+    var DataLabel = ["PV Power kW", "PV Generation kWh", "PV Lifetime Generation MWh", "CUF %", "CO2 Saving Tons"]
+    const PlantCardData = UsePlantCard(searchSolarCard, DataLabel) || [[]];
     // console.log(PlantCardData)
 
 
@@ -187,33 +178,38 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             </Breadcrumb>
-            <Grid
-                h="68px"
-                templateRows="repeat(1, 1fr)"
-                templateColumns="repeat(6, 1fr)"
-                gap={1}
+            {/* ****************** TOP RIBBON ************ */}
+            <Box
+                display={{base : "none", sm : "none", md : "block"}}
             >
-                <GridItem w={"580px"} h={59}>
-                    <Fieldset_kW52860 />
-                </GridItem>
+                <Grid
+                    h={["300px","200px","200px","130px","60px","60px"]}
+                    templateRows={["repeat(6, 1fr)", "repeat(3, 1fr)", "repeat(3, 1fr)", "repeat(2, 1fr)", "repeat(1, 1fr)", "repeat(1, 1fr)"]}
+                    templateColumns={["repeat(1, 1fr)","repeat(2, 1fr)","repeat(2, 1fr)","repeat(3, 1fr)","repeat(6, 1fr)","repeat(6, 1fr)"]}
+                    gap={[5,5,5,4,1,1]}
+                >
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 9, 12, 12]} h={59}>
+                        <Fieldset_kW52860 />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 5, 7, 12, 12]} h={58}>
+                        <Fieldset_Mode />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 5, 10, 12, 12]} h={59}>
+                        <Fieldset_Power />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 10, 12, 12]} h={58}>
+                        <Fieldset_State />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 9, 12, 12]} h={58}>
+                        <Fieldset_Temp />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 10, 12, 12]}>
+                        <Fieldset_Devices />
+                    </GridItem>
+                </Grid>
+            </Box>
 
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_Mode />
-                </GridItem>
-                <GridItem w={"auto"} h={59}>
-                    <Fieldset_Power />
-                </GridItem>
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_State />
-                </GridItem>
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_Temp />
-                </GridItem>
-                <GridItem w={"279px"}>
-                    <Fieldset_Devices />
-                </GridItem>
-            </Grid>
-            <Box my={5}>
+            <Box mt={10} mb={3} display={["none", "none", "block"]}>
                 <ChartLayout
                     width={["full", "100%"]}
                     height='265px'
@@ -229,7 +225,7 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                     />
                 </ChartLayout>
             </Box>
-            <Box w={"full"} overflowX={"auto"}>
+            <Box w={["280px","full"]} overflowX={"auto"}>
                 <Grid
                     h={"auto"}
                     w={"max-content"}
@@ -241,10 +237,11 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                     <GridItem h={300}>
                         <PlantViewCalculationCardLayout
                             width={["full", "auto"]}
-                            height='full'
                             title='Solar'
+                            height='full'
                             bg={`url(${SolarBG}) no-repeat center/cover`}
                             data={PlantCardData || [[]]}
+                            DataLabel={DataLabel}
                         />
                     </GridItem>
                     <GridItem h={300}>
@@ -254,6 +251,7 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                             title='DG'
                             bg={`url(${DGBG}) no-repeat center/cover`}
                             data={PlantCardData || [[]]}
+                            DataLabel={DataLabel}
                         />
                     </GridItem>
                     <GridItem h={300}>
@@ -263,6 +261,7 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                             title='Grid'
                             bg={`url(${GridBG}) no-repeat center/cover`}
                             data={PlantCardData || [[]]}
+                            DataLabel={DataLabel}
                         />
                     </GridItem>
                     <GridItem h={300}>
@@ -272,21 +271,25 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                             title='Grid'
                             bg={`url(${GridBG}) no-repeat center/cover`}
                             data={PlantCardData || [[]]}
+                            DataLabel={DataLabel}
                         />
                     </GridItem>
                 </Grid>
             </Box>
-            <Grid
+            <SimpleGrid
                 h={"auto"}
-                templateRows="repeat(1, 1fr)"
-                templateColumns="repeat(2, 1fr)"
+                maxW={"8xl"}
+                minChildWidth={["280px","500px"]}
+                // templateRows="repeat(1, 1fr)"
+                // templateColumns="repeat(2, 1fr)"
                 gap={1}
+                mt={[0, 0, -3]}
                 // mb={0}
             >
-                <GridItem w={"auto"}>
+                <GridItem w={"100%"}>
                     <ChartLayout
                         title='Power Curve'
-                        width={["full", "auto"]}
+                        width={["full", "100%"]}
                         height='317px'
                         icon={FaChartArea}
                         timeWindow={true}
@@ -296,10 +299,10 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                         <AreaSplineChart height={270} props={{yAxis : {title : {text : "AC Power"}}}} apiData={PowerCurveData || [{}]} />
                     </ChartLayout>
                 </GridItem>
-                <GridItem w={"auto"}>
+                <GridItem w={"100%"}>
                     <ChartLayout
                         title='Daily Energy'
-                        width={["full", "auto"]}
+                        width={["full", "100%"]}
                         height='317px'
                         icon={FaChartColumn}
                         timeWindow={true}
@@ -309,54 +312,55 @@ import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysC
                         <ColumnChart props={{yAxis : {title : {text : "kWh"}}}} apiData={PowerColumnData || [{}]} />
                     </ChartLayout>
                 </GridItem>
-            </Grid>
-            <HStack
-                h={420}
-                w={"full"}
-                mb={4}
+            </SimpleGrid>
+            <SimpleGrid
+                h={"auto"}
+                maxW={"8xl"}
+                minChildWidth={["280px","500px"]}
+                mt={[0, 0, -3]}
             >
-                <Box width={"710px"}>
-                    <PlantViewTableLayout
-                        title='Inverter'
-                        width={["full", "710px"]}
-                        height='400px'
-                    >
-                        <PlantTable
-                            paginationLimitProps={8}
-                            column={InverterColumn}
-                            apiData={InverterTableData || []}
-                        />
-                    </PlantViewTableLayout>
-                </Box>
-                <VStack w={"710px"} spacing={"0"}>
-                    <Box w={"100%"}>
+                    <Box width={["100%","710px"]} h={"100%"}>
                         <PlantViewTableLayout
-                            title='PV Meter'
-                            width={["full", "100%"]}
-                            height='150px'
+                            title='Inverter'
+                            width={["full", "710px"]}
+                            height='400px'
                         >
                             <PlantTable
-                                paginationLimitProps={5}
-                                column={PVMeterColumn}
-                                apiData={PVMeterTableData || []}
+                                paginationLimitProps={8}
+                                column={InverterColumn}
+                                apiData={InverterTableData || []}
                             />
                         </PlantViewTableLayout>
                     </Box>
-                    <Box w={"100%"} mt={-3}>    
-                        <PlantViewTableLayout
-                            title='Generator'
-                            width={["full", "100%"]}
-                            height='244px'
-                        >
-                            <PlantTable
-                                paginationLimitProps={5}
-                                column={GeneratorColumn}
-                                apiData={GeneratorTableData || []}
-                            />
-                        </PlantViewTableLayout>
-                    </Box>
-                </VStack>
-            </HStack>
+                    <VStack w={["100%","710px"]} h={"100%"}>
+                        <Box w={"100%"} overflow={'auto'}>
+                            <PlantViewTableLayout
+                                title='PV Meter'
+                                width={["full", "100%"]}
+                                height='150px'
+                            >
+                                <PlantTable
+                                    paginationLimitProps={5}
+                                    column={PVMeterColumn}
+                                    apiData={PVMeterTableData || []}
+                                />
+                            </PlantViewTableLayout>
+                        </Box>
+                        <Box w={"100%"} mt={[0, 0, -6]}>    
+                            <PlantViewTableLayout
+                                title='Generator'
+                                width={["full", "100%"]}
+                                height='244px'
+                            >
+                                <PlantTable
+                                    paginationLimitProps={5}
+                                    column={GeneratorColumn}
+                                    apiData={GeneratorTableData || []}
+                                />
+                            </PlantViewTableLayout>
+                        </Box>
+                    </VStack>
+            </SimpleGrid>
       </Box>
     );
   };

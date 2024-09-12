@@ -1,15 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import PlantCardAPI from '../../../api/PlantView/PlantCardAPI';
+import LocationMapAPI from '../../api/LocationMapAPI'
 
-
-const UsePlantCard = (searchTag : string, DataLabel : string[]) => {
+const UseLocationMap = (searchTag : string) => {
   const [data, setData] = useState(null);
   const hasFetchedRef = useRef(false);
-
-
   const fetchTelemetryData = useCallback(async () => {
     try {
-      const response = await PlantCardAPI(searchTag, DataLabel);
+      const response = await LocationMapAPI(searchTag);
       setData(response?.data);
     } catch (error) {
       console.error('Error fetching telemetry data:', error);
@@ -17,15 +14,13 @@ const UsePlantCard = (searchTag : string, DataLabel : string[]) => {
   }, [searchTag]);
 
   useEffect(() => {
-    if(!hasFetchedRef.current) {
+    if (!hasFetchedRef.current) {
         fetchTelemetryData();
         hasFetchedRef.current = true;
-      }
-    const interval = setInterval(fetchTelemetryData, 300000);
-    return () => clearInterval(interval);
+    }
   }, [fetchTelemetryData]);
 
   return data;
 };
 
-export default UsePlantCard;
+export default UseLocationMap;

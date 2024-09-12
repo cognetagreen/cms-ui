@@ -1,12 +1,13 @@
 import React, { memo, useEffect, useState } from 'react';
-import Highcharts from 'highcharts';
+import Highcharts, { color } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 interface DonutPieChartProps {
   apiData : Object[];
+  pieColors : string[];
 }
 
-const DonutPieChart: React.FC<DonutPieChartProps> = ({apiData}) => {
+const DonutPieChart: React.FC<DonutPieChartProps> = ({apiData, pieColors}) => {
 
   const options = {
     chart: {
@@ -56,6 +57,12 @@ const DonutPieChart: React.FC<DonutPieChartProps> = ({apiData}) => {
         color: '#657079',
       },
     },
+    colors : pieColors || [
+                  '#9b20d9', '#9215ac', '#861ec9', '#7a17e6', '#7010f9', '#691af3',
+                  '#6225ed', '#5b30e7', '#533be1', '#4c46db', '#4551d5', '#3e5ccf',
+                  '#3667c9', '#2f72c3', '#277dbd', '#1f88b7', '#1693b1', '#0a9eaa',
+                  '#03c69b', '#00f194'
+              ],
     series: [
       {
         enableMouseTracking: true,

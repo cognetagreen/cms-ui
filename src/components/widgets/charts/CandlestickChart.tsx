@@ -10,14 +10,16 @@ import HighchartsReact from 'highcharts-react-official';
 
 interface CandlestickChartProps {
     apiData? : any[];
+    bg? : string;
 }
 
-const CandlestickChart: React.FC <CandlestickChartProps> = ({apiData}) => {
+const CandlestickChart: React.FC <CandlestickChartProps> = ({apiData, bg}) => {
 
     console.log(apiData, "candlestick")
 const [chartOption, setChartOption] = useState<Object>({
         chart : {
-            height : 270
+            height : 270,
+            backgroundColor : bg || "transparent"
         },
         title: {
             text: ''

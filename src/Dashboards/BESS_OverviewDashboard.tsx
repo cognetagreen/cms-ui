@@ -21,14 +21,15 @@ import { useEffect, useState } from 'react'
 import { useTimeHandle } from '../Services/TimeWindowSetting'
 import UseBESSDaily from '../Services/Hooks/Battery/UseBESSDaily'
 import UseSomeTitle from '../Services/Hooks/Battery/UseSomeTitle'
+import UseManyDeviceManyKeysChart from '../Services/Hooks/UseManyDeviceManyKeysChart'
 
 // *********************** Battery Status **********************
 
 const BESS_OverviewDashboard = () => {
 
     var search = {
-        devName : "inverter-1",
-        keys : "B1_Inverter_Inverter_1_DC_String1_Volt,B1_Inverter_Inverter_1_Active_Power_referance,B1_Inverter_Inverter_1_DC_String1_Watt,B1_Inverter_Inverter_1_DC_String2_Watt"
+        devName : "BESS",
+        keys : "BESS1_REACTIVE_POWER,BESS1_REACTIVE_POWER,BESS1_REACTIVE_POWER,BESS1_REACTIVE_POWER,BESS1_REACTIVE_POWER,BESS1_REACTIVE_POWER,BESS1_REACTIVE_POWER,BESS1_APPARENT_POWER,BESS1_POWER,BESS1_POWER"
     }
     const batteryStatus = UseBatteryStatus(search) || [];
 
@@ -41,12 +42,16 @@ const BESS_OverviewDashboard = () => {
 
     
     var searchTagBESSOutput = { 
-        devName : "Inverter-1",
-        keys: "B1_Inverter_Inverter_1_DC_String2_Volt",
-        type : ["spline"],
-        name : ["Energy Total"]
+        devName : "BESS",
+        keys: "BESS1_POWER,BESS1_REACTIVE_POWER,BESS1_APPARENT_POWER",
+        type : ["spline","spline","spline"],
+        name : ["kW", "kVar", "KVA"]
     };
-    const BESSOutputData = UseBESSDaily(searchTagBESSOutput, timeWindowBESSOutput);
+    const BESSOutpuColor = "#3853A5";
+    const BESSOutputData = UseBESSDaily(searchTagBESSOutput, timeWindowBESSOutput)?.map((series : object, index : number) =>({
+        ...series,
+        color : BESSOutpuColor
+    }));
     // useEffect(() => {
     //     if (BESSOutputData) {
     //         console.log("BESSOutputData:", BESSOutputData);
@@ -58,15 +63,19 @@ const BESS_OverviewDashboard = () => {
         timeWindow: timeWindowBESSDaily,
         handleTimeWindowChange: handleTimeWindowBESSDailyChange,
         handleReset: BESSDailyHandleReset
-    } = useTimeHandle(5, "hour", "AVG", [1, "hour"]);
+    } = useTimeHandle(1, "day", "NONE", [5, "minute"]);
     
-    var searchTagBESSDaily = { 
-        devName : "Inverter-1",
-        keys: "B1_Inverter_Inverter_1_DC_String2_Volt,B1_Inverter_Inverter_1_DC_String3_Volt",
+    var searchTagBESSDaily = [{ 
+        devName : "BESS",
+        keys: "BESS1_ENERGY_Total",
         type : ["column"],
-        name : ["String2 Volt", "String3 Volt"]
-    };
-    const BESSDailyData = UseBESSDaily(searchTagBESSDaily, timeWindowBESSDaily);
+        name : ["Daily Discharge kWh"]
+    }];
+    const BESSDailyColor = ["#B11F24", "#7F5B9F", "#3853A5", "#F4B725", "#01875A"]
+    const BESSDailyData = UseManyDeviceManyKeysChart(searchTagBESSDaily, timeWindowBESSDaily, "LastValue")?.map((series : object, index : number) => ({
+        ...series,
+        color : BESSDailyColor[index]
+    }));
     // useEffect(() => {
     //     if (BESSDailyData) {
     //         console.log("BESSDailyData:", BESSDailyData);
@@ -86,7 +95,11 @@ const BESS_OverviewDashboard = () => {
         type : ["spline", "spline"],
         name : ["MIN", "MAX"]
     };
-    const MinMaxData = UseBESSDaily(searchTagMinMax, timeWindowMinMax);
+    const MinMaxColor = ["#3853A5", "#F4B725"];
+    const MinMaxData = UseBESSDaily(searchTagMinMax, timeWindowMinMax)?.map((series : object, index : number) => ({
+        ...series,
+        color : MinMaxColor[index]
+    }));
     // useEffect(() => {
     //     if (MinMaxData) {
     //         console.log("MinMaxData:", MinMaxData);
@@ -130,32 +143,42 @@ const BESS_OverviewDashboard = () => {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             </Breadcrumb>
-            <Grid
-                h="68px"
-                templateRows="repeat(1, 1fr)"
-                templateColumns="repeat(6, 1fr)"
-                gap={1}
-            >
-                <GridItem w={"580px"} h={59}>
-                    <Fieldset_kW52860 />
-                </GridItem>
+            
+            
+{/* ****************** TOP RIBBON ************ */}
 
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_Mode />
-                </GridItem>
-                <GridItem w={"auto"} h={59}>
-                    <Fieldset_Power />
-                </GridItem>
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_State />
-                </GridItem>
-                <GridItem w={"auto"} h={58}>
-                    <Fieldset_Temp />
-                </GridItem>
-                <GridItem w={"279px"}>
-                    <Fieldset_Devices />
-                </GridItem>
-            </Grid>
+<GridItem colSpan={1} rowSpan={1}
+                
+                display={{base : "none", sm : "none", md : "block"}}
+            >    
+                <Grid
+                    // h={["300px","200px","200px","130px","60px","60px"]}
+                    templateRows={["repeat(6, 1fr)", "repeat(3, 1fr)", "repeat(3, 1fr)", "repeat(2, 1fr)", "repeat(1, 1fr)", "repeat(1, 1fr)"]}
+                    templateColumns={["repeat(1, 1fr)","repeat(2, 1fr)","repeat(2, 1fr)","repeat(3, 1fr)","repeat(6, 1fr)","repeat(6, 1fr)"]}
+                    gap={[1]}
+                >
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 9, 12, 12]} h={59}>
+                        <Fieldset_kW52860 />
+                    </GridItem>
+
+                    <GridItem w={"auto"} fontSize={[7, 7, 5, 7, 12, 12]} h={58}>
+                        <Fieldset_Mode />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 5, 10, 12, 12]} h={59}>
+                        <Fieldset_Power />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 10, 12, 12]} h={58}>
+                        <Fieldset_State />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 9, 12, 12]} h={58}>
+                        <Fieldset_Temp />
+                    </GridItem>
+                    <GridItem w={"auto"} fontSize={[7, 7, 7, 10, 12, 12]}>
+                        <Fieldset_Devices />
+                    </GridItem>
+                </Grid>
+    </GridItem>
+
             <Grid
                 w={"full"}
                 m={0}
@@ -187,6 +210,7 @@ const BESS_OverviewDashboard = () => {
                             timeWindow = {true}
                             onTimeWindowChange={handleTimeWindowBESSDailyChange}
                             onReset={BESSDailyHandleReset}
+                            fullScreen={true}
                         >
                             <StackedColumnChart height={260} apiData={BESSDailyData || [{}]} />
                         </ChartLayout>

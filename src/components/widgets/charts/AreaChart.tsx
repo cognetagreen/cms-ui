@@ -5,13 +5,14 @@ import HighchartsReact from 'highcharts-react-official';
 interface AreaChartProps {
     apiData? : Object[];
     height? : Number;
+    bg ? : string;
 }
 
-const AreaChart : React.FC <AreaChartProps> = ({apiData, height=290}) => {
+const AreaChart : React.FC <AreaChartProps> = ({apiData, height=290, bg}) => {
     const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'area',
-            backgroundColor : "transparent",
+            backgroundColor : bg || "transparent",
             height : height,
             zoomType : "x"
         },

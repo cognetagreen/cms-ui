@@ -59,7 +59,7 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
   const stateColor = ["#13CD26", "#CB0511", "#837F97"];
   
   const tabList = ["PV", "Wind", "Hybrid"];
-  const dotColor = ["#0086CC", "#F8931F", "#7EC800"]
+  const dotColor = ["#0086CC", "#F8931F", "#704199"] // "#7EC800"
   
   
   const handleBorderColor = (data : number) => {
@@ -80,7 +80,7 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
       p={3}
       mt={5}
       boxShadow="md"
-      overflow={"hidden"}
+      overflow={"auto"}
     >
       
           <Tabs variant='solid-rounded' colorScheme='gray'>
@@ -107,7 +107,7 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
                       <span 
                         style={{width:"10px",height:"10px",backgroundColor:dotColor[index], display:"flex", borderRadius:"50%", marginRight:"7px"}}
                         ></span>
-                      {value} &nbsp; <sub><b style={{color : "red"}}>{PlantTableSummaryData[index+1]?.[2] || 0}</b>/{PlantTableSummaryData[index+1]?.[0] || 0}</sub>  
+                      <Text>{value}</Text> &nbsp; <sub><b style={{color : "red"}}>{PlantTableSummaryData[index+1]?.[2] || 0}</b>/{PlantTableSummaryData[index+1]?.[0] || 0}</sub>  
                   </Tab>
                 ))}
 
@@ -123,19 +123,19 @@ const PlantTableLayout: React.FC<PlantTableLayoutProps> = ({ children, title, ic
                 </Flex>
             </TabList>
             <TabPanels>
-                <TabPanel overflow={"auto"}>
+                <TabPanel overflow={"visible"}>
                     <PlantTable
                      column={[{name : "Plant Name", width : 150, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:4px solid ${handleBorderColor(parseFloat(row.cells[5].data))};" >${cell}</b>`)}, {name : "Type", width : 100, sort : true}, {name : "Energy System", width : 130}, {name : "Capacity", width : 100}, {name : "Country", width : 100}, {name : "PV Power", width : 100, formatter : (cell : any) => cell == "-1" ? "NA" : cell}, {name : "Irradiation", width : 100}, {name : "PV Today kWh", width : 130}, {name : "PR", width : 70}, {name : "Availability", width : 120}]}
                      apiData={PVData || []}
                      paginationLimitProps={10}
                     />
                 </TabPanel>
-                <TabPanel overflow={"auto"}>
+                <TabPanel overflow={"visible"}>
                     <PlantTable 
                       paginationLimitProps={10}
                     />
                 </TabPanel>
-                <TabPanel overflow={"auto"}>
+                <TabPanel overflow={"visible"}>
                     <PlantTable 
                       column={[{name : "Plant Name", width : 150, formatter: (cell : any, row: any) => html(`<b style="padding: 4px; margin-left:4px; border-left:4px solid ${handleBorderColor(parseFloat(row.cells[7].data))};" >${cell}</b>`)}, {name : "Type", width : 100, sort : true}, {name : "Energy System", width : 130}, {name : "PV Capacity", width : 120}, {name : "BESS Capacity", width : 120}, {name : "DG Capacity", width : 120}, {name : "Country", width : 100}, {name : "PV Power", width : 100, formatter : (cell : any) => cell == "-1" ? "NA" : cell}, {name : "Irradiation", width : 100}, {name : "PV Today kWh", width : 130}, {name : "BESS Power", width : 120}, {name : "BESS Discharge kWh", width : 160}, {name : "DG Power", width : 100}, {name : "DG Today kWh", width : 130},{name : "PR", width : 70}, {name : "Availability", width : 120}]}
                       apiData={HybridData || []}

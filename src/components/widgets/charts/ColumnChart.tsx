@@ -14,16 +14,17 @@ HighchartsFullScreen(Highcharts);
 interface ColumnChartProps {
   apiData? : Object[];
   height? : Number;
+  bg? : string;
   category? : string[];
   props? : any;
 }
 
-const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=270, category, props}) => {
+const ColumnChart : React.FC <ColumnChartProps> = ({apiData, height=null, bg, category, props}) => {
 // console.log(category)
   const [chartOptions, setChartOptions] = useState({
     chart: {
       type: 'column',
-      backgroundColor: "transparent",
+      backgroundColor : bg || "transparent",
       height: height,
       // options3d: {
       //   enabled : true,
